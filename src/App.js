@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import { Fragment } from 'react';
+import {Routes, Route, Outlet} from "react-router-dom";
+
+import Home from './views/Home';
+import About from './views/About';
+import Add from './views/Add';
+import Edit from './views/Edit';
+import Incoming from './views/Incoming';
+import NoMatch from './views/NoMatch';
+import Received from './views/Received';
+
+import { CssBaseline } from '@mui/material';
+import ButtonAppBar from './components/ButtonAppBar';
+
 import './App.css';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="incoming" element={<Incoming />} />
+        <Route path="received" element={<Received />} />
+        <Route path="add" element={<Add />} />
+        <Route path="/edit/:id" element={<Edit />} />
+        <Route path="about" element={<About />} />
+        <Route path="*" element={<NoMatch />} />
+      </Route>
+    </Routes>
   );
 }
 
-export default App;
+function Layout() {
+  return (
+    <Fragment>
+      <CssBaseline />
+      <ButtonAppBar />
+      <Outlet />
+    </Fragment>
+  );
+}

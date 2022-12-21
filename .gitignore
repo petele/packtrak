@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# fake data
+/src/tempData
+/public/tempData
+
 # production
 /build
 

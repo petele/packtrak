@@ -1,0 +1,47 @@
+import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+
+import TrackingLink from './TrackingLink';
+import OrderFromLink from './OrderFromLink';
+
+class PackageTableRow extends React.Component {
+
+  onCheckChange(e) {
+    console.log('todo - check changed', e.target.checked);
+  }
+
+  render() {
+    const row = this.props.row;
+    const dtExpected = new Date(row.dateExpected);
+    const opts = {dateStyle: 'full'};
+    const dtFormatter = new Intl.DateTimeFormat('en-US', opts);
+    const dtExpectedFormatted = dtFormatter.format(dtExpected);
+
+    return (
+      <TableRow
+        key={row.id}
+        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      >
+        <TableCell>
+          <Checkbox
+            checked={row.arrived}
+            onChange={this.onCheckChange} />
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {dtExpectedFormatted}
+        </TableCell>
+        <TableCell>
+          <OrderFromLink row={row} />
+        </TableCell>
+        <TableCell>{row.what}</TableCell>
+        <TableCell>
+          <TrackingLink row={row} />
+        </TableCell>
+      </TableRow>
+    );
+  }
+}
+
+export default PackageTableRow;
