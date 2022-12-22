@@ -4,7 +4,7 @@ import { update, ref } from 'firebase/database';
 /**
  * Updates the package record in the database.
  *
- * @param {string} kind incoming or received
+ * @param {string} kind incoming or delivered
  * @param {string} id Package ID
  * @param {object} data Package details
  * @param {?string} data.dateExpected Date expected (YYYY-MM-DD)

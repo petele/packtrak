@@ -18,7 +18,7 @@ export default async function addPackage(data) {
 
   // TODO: Validate input
   const now = Date.now();
-  data.arrived = false;
+  data.delivered = false;
   data.dtAdded = now;
   data.dtUpdated = now;
 

@@ -3,10 +3,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 import PackageTable from '../components/PackageTable';
 
-export default function Received() {
+export default function Delivered() {
   return (
     <div>
-      <PackageTable kind="received" />
+      <PackageTable kind="delivered" />
       <Fab color="primary" aria-label="add">
         <AddIcon />
       </Fab>

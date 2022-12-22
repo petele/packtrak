@@ -39,7 +39,7 @@ class PackageTableRow extends React.Component {
       >
         <TableCell>
           <Checkbox
-            checked={row.arrived}
+            checked={row.delivered}
             onChange={this.onCheckChange} />
         </TableCell>
         <TableCell>

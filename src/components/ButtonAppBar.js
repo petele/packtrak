@@ -52,7 +52,7 @@ export default function ButtonAppBar() {
             Incoming
           </Button>
           <Button
-            href="/received"
+            href="/delivered"
             sx={{ my: 2, color: 'white', display: 'block' }}>
             Delivered
           </Button>

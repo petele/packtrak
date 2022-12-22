@@ -7,7 +7,7 @@ import Add from './views/Add';
 import Edit from './views/Edit';
 import Incoming from './views/Incoming';
 import NoMatch from './views/NoMatch';
-import Received from './views/Received';
+import Delivered from './views/Delivered';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
 import Profile from './views/Profile';
@@ -23,7 +23,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/incoming" element={<Incoming />} />
-        <Route path="/received" element={<Received />} />
+        <Route path="/delivered" element={<Delivered />} />
         <Route path="/add" element={<Add />} />
         <Route path="/edit/:kind/:id" element={<Edit />} />
         <Route path="/about" element={<About />} />
