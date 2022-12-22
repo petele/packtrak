@@ -1,18 +1,39 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+
+import { auth } from '../helpers/fbHelper';
+
+
 export default function ButtonAppBar() {
-  const [auth, setAuth] = React.useState(true);
+  const navigate = useNavigate();
+
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('yes', user.uid);
+        setIsSignedIn(true);
+      } else {
+        console.log('no');
+        setIsSignedIn(false);
+      }
+    });
+  }, []);
+
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,7 +41,9 @@ export default function ButtonAppBar() {
 
   const clickSignOut = () => {
     console.log('click sign out');
+    signOut(auth);
     setAnchorEl(null);
+    navigate('/');
   };
 
   const handleClose = () => {
@@ -58,7 +81,7 @@ export default function ButtonAppBar() {
           </Button>
 
           <Box sx={{ flexGrow: 1 }}></Box>
-          {!auth && (
+          {!isSignedIn && (
             <IconButton
               size="large"
               href="/signin"
@@ -67,7 +90,7 @@ export default function ButtonAppBar() {
               <AccountCircle />
             </IconButton>
           )}
-          {auth && (
+          {isSignedIn && (
             <div>
               <IconButton
                 size="large"
