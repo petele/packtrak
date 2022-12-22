@@ -12,6 +12,9 @@
 /src/tempData
 /public/tempData
 
+# Firebase Credentials
+fb-credentials.js
+
 # production
 /build
 
