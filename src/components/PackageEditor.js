@@ -11,7 +11,7 @@ import addPackage from '../helpers/addPackage';
 import updatePackage from '../helpers/updatePackage';
 
 import { db } from '../helpers/fbHelper';
-import { onValue, ref } from 'firebase/database';
+import { get, ref } from 'firebase/database';
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -41,31 +41,34 @@ class PackageEditor extends React.Component {
     if (this.state.mode === 'add') {
       return;
     }
+    this.getPackage();
+  }
+
+  async getPackage() {
     const userID = 'petele';
     const kind = this.state.kind;
     const id = this.state.id;
     const queryPath = `userData/${userID}/${kind}/${id}`;
     const query = ref(db, queryPath);
-    const unsub = onValue(query, (snapshot) => {
-      if (snapshot.exists()) {
-        const pkgObj = snapshot.val();
-        console.log('pkgObj', pkgObj);
-        pkgObj.beforeEdit = Object.assign({}, pkgObj);
-        if (pkgObj.shipper === 'Custom') {
-          pkgObj.trackingLinkEditDisabled = false;
-        } else {
-          pkgObj.trackingLinkEditDisabled = true;
-          const shipper = pkgObj.shipper;
-          const trackingNumber = pkgObj.trackingNumber;
-          const url = getTrackingURL(shipper, trackingNumber);
-          if (url) {
-            pkgObj.trackingURL = url;
-          }
-        }
-        this.setState(pkgObj);
+    const snapshot = await get(query);
+    if (!snapshot.exists()) {
+      console.log('no data');
+      return;
+    }
+    const pkgObj = snapshot.val();
+    pkgObj.beforeEdit = Object.assign({}, pkgObj);
+    if (pkgObj.shipper === 'Custom') {
+      pkgObj.trackingLinkEditDisabled = false;
+    } else {
+      pkgObj.trackingLinkEditDisabled = true;
+      const shipper = pkgObj.shipper;
+      const trackingNumber = pkgObj.trackingNumber;
+      const url = getTrackingURL(shipper, trackingNumber);
+      if (url) {
+        pkgObj.trackingURL = url;
       }
-      unsub();
-    });
+    }
+    this.setState(pkgObj);
   }
 
   handleInputChange(event) {
@@ -75,7 +78,7 @@ class PackageEditor extends React.Component {
     this.setState({
       [name]: value
     });
-
+    // console.log('inputChange', name, value);
     if (name === 'shipper') {
       this.setState(
         {trackingLinkEditDisabled: value !== 'Custom'}
@@ -108,11 +111,19 @@ class PackageEditor extends React.Component {
       dateExpected: this.state.dateExpected,
       from: this.state.from,
       what: this.state.what,
-      shipper: this.state.shipper,
-      orderURL: this.state.orderURL,
-      trackingNumber: this.state.trackingNumber,
-      trackingURL: this.state.trackingURL,
     };
+    if (this.state.shipper) {
+      pkg.shipper = this.state.shipper;
+    }
+    if (this.state.orderURL) {
+      pkg.orderURL = this.state.orderURL;
+    }
+    if (this.state.trackingNumber) {
+      pkg.trackingNumber = this.state.trackingNumber;
+    }
+    if (this.state.shipper === 'Custom' && this.state.trackingURL) {
+      pkg.trackingURL = this.state.trackingURL;
+    }
 
     if (this.state.mode === 'add') {
       return addPackage(pkg)
@@ -122,16 +133,16 @@ class PackageEditor extends React.Component {
         });
     }
     if (this.state.mode === 'edit') {
+      const kind = this.state.kind;
       const id = this.state.id;
       const before = this.state.beforeEdit;
-      return updatePackage(id, pkg, before)
+      return updatePackage(kind, id, pkg, before)
         .then((success) => {
           alert(`success: ${success}`);
           // TODO: redirect
         });
     }
   }
-
 
   render() {
     return (

@@ -22,6 +22,7 @@ export default function PackageTable(props) {
     const query = ref(db, queryPath);
     return onValue(query, (snapshot) => {
       if (!snapshot.exists()) {
+        setRows([]);
         return;
       }
       const pkgObj = snapshot.val();

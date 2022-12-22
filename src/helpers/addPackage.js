@@ -21,10 +21,12 @@ export default async function addPackage(data) {
   data.arrived = false;
   data.dtAdded = now;
   data.dtUpdated = now;
-  console.log('addPackage', data);
 
   const userID = 'petele';
   const queryPath = `userData/${userID}/incoming`;
+
+  console.log('addPackage', queryPath, data);
+
   const fbRef = ref(db, queryPath);
   const newRef = await push(fbRef, data);
   return newRef.key;

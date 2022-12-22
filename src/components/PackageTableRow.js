@@ -8,10 +8,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import TrackingLink from './TrackingLink';
 import OrderFromLink from './OrderFromLink';
 
+import markAsDelivered from '../helpers/markAsDelivered';
+
 class PackageTableRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onCheckChange = this.onCheckChange.bind(this);
+  }
 
   onCheckChange(e) {
-    console.log('todo - check changed', e.target.checked);
+    const kind = this.props.kind;
+    const id = this.props.row.id;
+    markAsDelivered(kind, id, e.target.checked);
   }
 
   render() {
