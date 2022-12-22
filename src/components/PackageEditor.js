@@ -6,31 +6,35 @@ import MenuItem from '@mui/material/MenuItem';
 import { FormControl, InputLabel } from '@mui/material';
 import { Button, Stack } from '@mui/material';
 
-import getTrackingURL from './getTrackingURL';
+import getTrackingURL from '../helpers/getTrackingURL';
+import addPackage from '../helpers/addPackage';
 
 class PackageEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+
       id: props.package?.id || 'new',
-      saveLabel: props.package?.id ? 'Save' : 'Add',
       dateExpected: props.package?.dateExpected || '',
       from: props.package?.from || '',
       what: props.package?.what || '',
-      orderLink: props.package?.orderLink || '',
+      orderURL: props.package?.orderURL || '',
       shipper: props.package?.shipper || '',
       trackingNumber: props.package?.trackingNumber || '',
-      trackingLink: props.package?.trackingLink || '',
+      trackingURL: props.package?.trackingURL || '',
+
+      saveLabel: props.package?.id ? 'Save' : 'Add',
+      trackingLinkEditDisabled: true,
     };
 
-    console.log('props', props);
+    // console.log('props', props);
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidUpdate(prevProps, newProps) {
-    console.log('did update', prevProps, newProps);
+    // console.log('did update', prevProps, newProps);
   }
 
 
@@ -38,25 +42,60 @@ class PackageEditor extends React.Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
+    // console.log('inputChange', name, value);
     this.setState({
       [name]: value
     });
+
+    if (name === 'shipper') {
+      this.setState(
+        {trackingLinkEditDisabled: value !== 'Custom'}
+      );
+    }
+    if (name === 'shipper' && value === 'TBD') {
+      this.setState({
+        trackingNumber: null,
+        trackingURL: null,
+      });
+    }
     if (name === 'shipper' || name === 'trackingNumber') {
-      this.updateTrackingURL(this.state.shipper, this.state.trackingNumber);
+      const shipper = name === 'shipper' ? value : this.state.shipper;
+      const number = name === 'trackingNumber' ? value : this.state.trackingNumber;
+      this.updateTrackingURL(shipper, number);
     }
   }
 
   updateTrackingURL(shipper, trackingNumber) {
     const url = getTrackingURL(shipper, trackingNumber);
     if (url) {
-      this.setState({trackingLink: url});
+      this.setState({trackingURL: url});
     }
   }
 
   handleSubmit(event) {
-    console.log('submit', this.state);
     event.preventDefault();
+    const pkg = {
+      dateExpected: this.state.dateExpected,
+      from: this.state.from,
+      what: this.state.what,
+      shipper: this.state.shipper,
+    }
+    if (this.state.orderURL.length > 0) {
+      pkg.orderURL = this.state.orderURL;
+    }
+    if (this.state.trackingNumber.length > 0) {
+      pkg.trackingNumber = this.state.trackingNumber;
+    }
+    if (this.state.shipper === 'custom' && this.state.trackingURL.length > 0) {
+      pkg.trackingURL = this.state.trackingURL;
+    }
+    addPackage(pkg)
+      .then((id) => {
+        alert(`package ${id} added.`);
+        // TODO: redirect to listing page.
+      });
   }
+
 
   render() {
     return (
@@ -89,11 +128,12 @@ class PackageEditor extends React.Component {
           onChange={this.handleInputChange}
         />
         <TextField
-          name="orderLink"
+          name="orderURL"
+          type="url"
           fullWidth
-          id="pkg-order-link"
-          label="Order Link"
-          value={this.state.orderLink}
+          id="pkg-order-url"
+          label="Order URL"
+          value={this.state.orderURL}
           onChange={this.handleInputChange}
         />
         <FormControl fullWidth>
@@ -112,6 +152,7 @@ class PackageEditor extends React.Component {
             <MenuItem value="TBA">TBA</MenuItem>
             <MenuItem value="UPS">UPS</MenuItem>
             <MenuItem value="USPS">USPS</MenuItem>
+            <MenuItem value="Unknown">Unknown</MenuItem>
             <MenuItem value="Custom">Custom</MenuItem>
           </Select>
         </FormControl>
@@ -124,11 +165,13 @@ class PackageEditor extends React.Component {
           onChange={this.handleInputChange}
         />
         <TextField
-          name="trackingLink"
+          name="trackingURL"
           fullWidth
-          id="pkg-tracking-link"
-          label="Tracking Link"
-          value={this.state.trackingLink}
+          type="url"
+          disabled={this.state.trackingLinkEditDisabled}
+          id="pkg-tracking-url"
+          label="Tracking URL"
+          value={this.state.trackingURL}
           onChange={this.handleInputChange}
         />
         <Stack direction="row" spacing={2}>

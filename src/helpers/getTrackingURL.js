@@ -1,3 +1,10 @@
+/**
+ * Returns a tracking URL for the specified shipper/tracking number.
+ *
+ * @param {string} shipper Name of the shipper
+ * @param {string} trackingNumber Tracking number
+ * @return {?string} Tracking URL for package/shipper
+ */
 export default function getTrackingURL(shipper, trackingNumber) {
   if (!trackingNumber) {
     return null;
