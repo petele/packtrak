@@ -7,17 +7,31 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import { db } from '../helpers/fbHelper';
+import { onValue, ref } from 'firebase/database';
+
 import PackageTableRow from './PackageTableRow';
 
 export default function PackageTable(props) {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/tempData/${props.kind}.json`)
-      .then(res => res.json())
-      .then((result) => {
-        setRows(result);
-      })
+    const userID = 'petele';
+    const kind = props.kind;
+    const queryPath = `userData/${userID}/${kind}`;
+    const query = ref(db, queryPath);
+    return onValue(query, (snapshot) => {
+      if (!snapshot.exists()) {
+        return;
+      }
+      const pkgObj = snapshot.val();
+      const pkgList = Object.keys(pkgObj).map((key) => {
+        const pkg = pkgObj[key];
+        pkg.id = key;
+        return pkg;
+      });
+      setRows(pkgList);
+    });
   }, []);
 
   return (
@@ -26,6 +40,7 @@ export default function PackageTable(props) {
         <TableHead>
           <TableRow>
             <TableCell>Arrived</TableCell>
+            <TableCell></TableCell>
             <TableCell>Date Expected</TableCell>
             <TableCell>From</TableCell>
             <TableCell>What</TableCell>
@@ -34,7 +49,7 @@ export default function PackageTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <PackageTableRow  key={row.id} row={row} />
+            <PackageTableRow  key={row.id} row={row} kind={props.kind} />
           ))}
         </TableBody>
       </Table>

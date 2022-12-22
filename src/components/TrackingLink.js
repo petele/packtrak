@@ -5,17 +5,23 @@ import getTrackingURL from "../helpers/getTrackingURL";
 class TrackingLink extends React.Component {
 
   getTrackingURL(row) {
-    if (row.trackingLink) {
-      return {link: row.trackingLink, label: 'Track'};
+    if (row.trackingURL) {
+      return {link: row.trackingURL, label: 'Track'};
     }
-    if (!row.trackingNumber) {
-      return null;
-    }
+    // if (!row.trackingNumber) {
+    //   return null;
+    // }
     const url = getTrackingURL(row.shipper, row.trackingNumber);
     if (url) {
       return {
         label: row.trackingNumber,
         link: url,
+      };
+    }
+    if (row.orderURL) {
+      return {
+        label: 'Track',
+        link: row.orderURL,
       };
     }
     return null;

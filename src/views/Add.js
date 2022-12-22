@@ -5,7 +5,7 @@ import PackageEditor from '../components/PackageEditor';
 export default function Add() {
   return (
     <Container>
-      <PackageEditor />
+      <PackageEditor mode="add" />
     </Container>
   );
 }

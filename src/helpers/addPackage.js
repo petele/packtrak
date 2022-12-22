@@ -1,3 +1,6 @@
+import { db } from '../helpers/fbHelper';
+import { push, ref } from 'firebase/database';
+
 /**
  * Add a package to the database
  *
@@ -11,7 +14,7 @@
  * @param {?string} data.trackingURL Tracking URL from shipper
  * @return {Promise<string>} Package ID
  */
-export default function addPackage(data) {
+export default async function addPackage(data) {
 
   // TODO: Validate input
   const now = Date.now();
@@ -19,5 +22,10 @@ export default function addPackage(data) {
   data.dtAdded = now;
   data.dtUpdated = now;
   console.log('addPackage', data);
-  return Promise.resolve('pack12345');
+
+  const userID = 'petele';
+  const queryPath = `userData/${userID}/incoming`;
+  const fbRef = ref(db, queryPath);
+  const newRef = await push(fbRef, data);
+  return newRef.key;
 }

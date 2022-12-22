@@ -8,41 +8,70 @@ import { Button, Stack } from '@mui/material';
 
 import getTrackingURL from '../helpers/getTrackingURL';
 import addPackage from '../helpers/addPackage';
+import updatePackage from '../helpers/updatePackage';
+
+import { db } from '../helpers/fbHelper';
+import { onValue, ref } from 'firebase/database';
 
 class PackageEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mode: props.mode,
+      kind: props.kind,
 
-      id: props.package?.id || 'new',
-      dateExpected: props.package?.dateExpected || '',
-      from: props.package?.from || '',
-      what: props.package?.what || '',
-      orderURL: props.package?.orderURL || '',
-      shipper: props.package?.shipper || '',
-      trackingNumber: props.package?.trackingNumber || '',
-      trackingURL: props.package?.trackingURL || '',
+      id: props.id,
+      dateExpected: '',
+      from: '',
+      what: '',
+      orderURL: '',
+      shipper:  '',
+      trackingNumber: '',
+      trackingURL: '',
 
-      saveLabel: props.package?.id ? 'Save' : 'Add',
+      saveLabel: props.mode === 'add' ? 'Add' : 'Save',
       trackingLinkEditDisabled: true,
     };
-
-    // console.log('props', props);
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidUpdate(prevProps, newProps) {
-    // console.log('did update', prevProps, newProps);
+  componentDidMount() {
+    if (this.state.mode === 'add') {
+      return;
+    }
+    const userID = 'petele';
+    const kind = this.state.kind;
+    const id = this.state.id;
+    const queryPath = `userData/${userID}/${kind}/${id}`;
+    const query = ref(db, queryPath);
+    const unsub = onValue(query, (snapshot) => {
+      if (snapshot.exists()) {
+        const pkgObj = snapshot.val();
+        console.log('pkgObj', pkgObj);
+        pkgObj.beforeEdit = Object.assign({}, pkgObj);
+        if (pkgObj.shipper === 'Custom') {
+          pkgObj.trackingLinkEditDisabled = false;
+        } else {
+          pkgObj.trackingLinkEditDisabled = true;
+          const shipper = pkgObj.shipper;
+          const trackingNumber = pkgObj.trackingNumber;
+          const url = getTrackingURL(shipper, trackingNumber);
+          if (url) {
+            pkgObj.trackingURL = url;
+          }
+        }
+        this.setState(pkgObj);
+      }
+      unsub();
+    });
   }
-
 
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    // console.log('inputChange', name, value);
     this.setState({
       [name]: value
     });
@@ -74,26 +103,33 @@ class PackageEditor extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
     const pkg = {
       dateExpected: this.state.dateExpected,
       from: this.state.from,
       what: this.state.what,
       shipper: this.state.shipper,
+      orderURL: this.state.orderURL,
+      trackingNumber: this.state.trackingNumber,
+      trackingURL: this.state.trackingURL,
+    };
+
+    if (this.state.mode === 'add') {
+      return addPackage(pkg)
+        .then((id) => {
+          alert(`package ${id} added.`);
+          // TODO: redirect to listing page.
+        });
     }
-    if (this.state.orderURL.length > 0) {
-      pkg.orderURL = this.state.orderURL;
+    if (this.state.mode === 'edit') {
+      const id = this.state.id;
+      const before = this.state.beforeEdit;
+      return updatePackage(id, pkg, before)
+        .then((success) => {
+          alert(`success: ${success}`);
+          // TODO: redirect
+        });
     }
-    if (this.state.trackingNumber.length > 0) {
-      pkg.trackingNumber = this.state.trackingNumber;
-    }
-    if (this.state.shipper === 'custom' && this.state.trackingURL.length > 0) {
-      pkg.trackingURL = this.state.trackingURL;
-    }
-    addPackage(pkg)
-      .then((id) => {
-        alert(`package ${id} added.`);
-        // TODO: redirect to listing page.
-      });
   }
 
 

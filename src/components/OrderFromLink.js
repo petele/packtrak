@@ -5,9 +5,9 @@ class OrderFromLink extends React.Component {
   render() {
     const row = this.props.row;
 
-    if (row.orderLink) {
+    if (row.orderURL) {
       return (
-        <a href={row.orderLink} target="_blank" rel="noreferrer">
+        <a href={row.orderURL} target="_blank" rel="noreferrer">
           {row.from}
         </a>
       );

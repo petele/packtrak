@@ -2,6 +2,8 @@ import * as React from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 import TrackingLink from './TrackingLink';
 import OrderFromLink from './OrderFromLink';
@@ -19,6 +21,9 @@ class PackageTableRow extends React.Component {
     const dtFormatter = new Intl.DateTimeFormat('en-US', opts);
     const dtExpectedFormatted = dtFormatter.format(dtExpected);
 
+    const kind = this.props.kind;
+    const editURL = `/edit/${kind}/${row.id}`;
+
     return (
       <TableRow
         key={row.id}
@@ -28,6 +33,11 @@ class PackageTableRow extends React.Component {
           <Checkbox
             checked={row.arrived}
             onChange={this.onCheckChange} />
+        </TableCell>
+        <TableCell>
+          <IconButton href={editURL} aria-label="edit" onClick={this.onEditClick}>
+            <EditIcon />
+          </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
           {dtExpectedFormatted}

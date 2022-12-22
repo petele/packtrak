@@ -22,7 +22,7 @@ export default function App() {
         <Route path="incoming" element={<Incoming />} />
         <Route path="received" element={<Received />} />
         <Route path="add" element={<Add />} />
-        <Route path="/edit/:id" element={<Edit />} />
+        <Route path="/edit/:kind/:id" element={<Edit />} />
         <Route path="about" element={<About />} />
         <Route path="*" element={<NoMatch />} />
       </Route>
