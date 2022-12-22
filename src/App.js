@@ -8,6 +8,9 @@ import Edit from './views/Edit';
 import Incoming from './views/Incoming';
 import NoMatch from './views/NoMatch';
 import Received from './views/Received';
+import SignIn from './views/SignIn';
+import SignUp from './views/SignUp';
+import Profile from './views/Profile';
 
 import { CssBaseline } from '@mui/material';
 import ButtonAppBar from './components/ButtonAppBar';
@@ -19,11 +22,14 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="incoming" element={<Incoming />} />
-        <Route path="received" element={<Received />} />
-        <Route path="add" element={<Add />} />
+        <Route path="/incoming" element={<Incoming />} />
+        <Route path="/received" element={<Received />} />
+        <Route path="/add" element={<Add />} />
         <Route path="/edit/:kind/:id" element={<Edit />} />
-        <Route path="about" element={<About />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NoMatch />} />
       </Route>
     </Routes>
