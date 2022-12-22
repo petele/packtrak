@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper';
 import { db } from '../helpers/fbHelper';
 import { onValue, ref } from 'firebase/database';
 
+import parsePackageList from '../helpers/parsePackageList';
+
 import PackageTableRow from './PackageTableRow';
 
 export default function PackageTable(props) {
@@ -21,17 +23,9 @@ export default function PackageTable(props) {
     const queryPath = `userData/${userID}/${kind}`;
     const query = ref(db, queryPath);
     return onValue(query, (snapshot) => {
-      if (!snapshot.exists()) {
-        setRows([]);
-        return;
-      }
       const pkgObj = snapshot.val();
-      const pkgList = Object.keys(pkgObj).map((key) => {
-        const pkg = pkgObj[key];
-        pkg.id = key;
-        return pkg;
-      });
-      setRows(pkgList);
+      const reverse = kind === 'delivered';
+      setRows(parsePackageList(pkgObj, reverse));
     });
   }, []);
 
