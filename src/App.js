@@ -1,3 +1,8 @@
+import * as React from 'react';
+
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './helpers/fbHelper';
+
 import { Fragment } from 'react';
 import {Routes, Route, Outlet} from "react-router-dom";
 
@@ -19,11 +24,27 @@ import ButtonAppBar from './components/ButtonAppBar';
 import './App.css';
 
 export default function App() {
-  const uid = 'fakeUser';
+  // const uid = 'fakeUser';
+
+  const [uid, setUID] = React.useState(null);
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(`fbAuth: true (${user.uid})`);
+        setUID(user.uid);
+        window.localStorage.setItem('pktk_uid', user.uid);
+      } else {
+        console.log(`fbAuth: false`);
+        setUID(null);
+        window.localStorage.removeItem('pktk_uid');
+      }
+    });
+  }, []);
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout uid={uid} />}>
         <Route index element={<Home />} />
         <Route path="/incoming" element={<Incoming uid={uid} />} />
         <Route path="/delivered" element={<Delivered uid={uid} />} />
@@ -40,11 +61,11 @@ export default function App() {
   );
 }
 
-function Layout() {
+function Layout(props) {
   return (
     <Fragment>
       <CssBaseline />
-      <ButtonAppBar />
+      <ButtonAppBar uid={props.uid} />
       <Outlet />
     </Fragment>
   );

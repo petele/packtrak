@@ -34,7 +34,8 @@ export default function SignIn() {
 
     signIn(email, password)
         .then((fbUser) => {
-          console.log('sign in success', fbUser);
+          window.localStorage.setItem('pktk_uid', fbUser.user.uid);
+          console.log('sign in success', fbUser.user);
           navigate('/incoming');
         })
         .catch((ex) => {

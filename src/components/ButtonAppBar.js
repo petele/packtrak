@@ -11,29 +11,15 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 
 import { auth } from '../helpers/fbHelper';
 
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(props) {
   const navigate = useNavigate();
 
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  React.useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(`fbAuth: true (${user.uid})`);
-        setIsSignedIn(true);
-      } else {
-        console.log(`fbAuth: false`);
-        setIsSignedIn(false);
-      }
-    });
-  }, []);
-
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,6 +28,7 @@ export default function ButtonAppBar() {
   const clickSignOut = () => {
     console.log('click sign out');
     signOut(auth);
+    window.localStorage.removeItem('pktk_uid');
     setAnchorEl(null);
     navigate('/');
   };
@@ -81,7 +68,7 @@ export default function ButtonAppBar() {
           </Button>
 
           <Box sx={{ flexGrow: 1 }}></Box>
-          {!isSignedIn && (
+          {!props.uid && (
             <IconButton
               size="large"
               href="/signin"
@@ -90,7 +77,7 @@ export default function ButtonAppBar() {
               <AccountCircle />
             </IconButton>
           )}
-          {isSignedIn && (
+          {props.uid && (
             <div>
               <IconButton
                 size="large"

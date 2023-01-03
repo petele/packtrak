@@ -10,8 +10,15 @@ import getTrackingURL from '../helpers/getTrackingURL';
 import addPackage from '../helpers/addPackage';
 import updatePackage from '../helpers/updatePackage';
 
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import { db } from '../helpers/fbHelper';
 import { get, ref } from 'firebase/database';
+
+const theme = createTheme();
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -42,13 +49,11 @@ class PackageEditor extends React.Component {
     if (this.state.mode === 'add') {
       return;
     }
-    this.getPackage();
+    this.getPackage(this.state.kind, this.state.id);
   }
 
-  async getPackage() {
-    const userID = this.state.uid;
-    const kind = this.state.kind;
-    const id = this.state.id;
+  async getPackage(kind, id) {
+    const userID = window.localStorage.getItem('pktk_uid');
     const queryPath = `userData/${userID}/${kind}/${id}`;
     const query = ref(db, queryPath);
     const snapshot = await get(query);
@@ -147,88 +152,108 @@ class PackageEditor extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <TextField
-          name="dateExpected"
-          required
-          id="date-expected"
-          label="Date Expected"
-          type="date"
-          value={this.state.dateExpected}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="from"
-          required
-          fullWidth
-          id="pkg-from"
-          label="From"
-          value={this.state.from}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="what"
-          required
-          fullWidth
-          id="pkg-what"
-          label="What"
-          value={this.state.what}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="orderURL"
-          type="url"
-          fullWidth
-          id="pkg-order-url"
-          label="Order URL"
-          value={this.state.orderURL}
-          onChange={this.handleInputChange}
-        />
-        <FormControl fullWidth>
-          <InputLabel id="select-shipper">Shipper</InputLabel>
-          <Select
-            name="shipper"
-            id="select-shipper"
-            label="Shipper"
-            value={this.state.shipper}
-            onChange={this.handleInputChange}
-          >
-            <MenuItem value="CDL">CDL</MenuItem>
-            <MenuItem value="DHL">DHL</MenuItem>
-            <MenuItem value="FedEx">FedEx</MenuItem>
-            <MenuItem value="LaserShip">LaserShip</MenuItem>
-            <MenuItem value="TBA">TBA</MenuItem>
-            <MenuItem value="UPS">UPS</MenuItem>
-            <MenuItem value="USPS">USPS</MenuItem>
-            <MenuItem value="Unknown">Unknown</MenuItem>
-            <MenuItem value="Custom">Custom</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          name="trackingNumber"
-          fullWidth
-          id="pkg-tracking-number"
-          label="Tracking Number"
-          value={this.state.trackingNumber}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="trackingURL"
-          fullWidth
-          type="url"
-          disabled={this.state.trackingLinkEditDisabled}
-          id="pkg-tracking-url"
-          label="Tracking URL"
-          value={this.state.trackingURL}
-          onChange={this.handleInputChange}
-        />
-        <Stack direction="row" spacing={2}>
-          <Button href="/incoming" variant='outlined'>Cancel</Button>
-          <Button type="submit" value="submit" variant='contained'>
-            {this.state.saveLabel}
-          </Button>
-        </Stack>
-      </form>
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              name="dateExpected"
+              required
+              id="date-expected"
+              label="Date Expected"
+              type="date"
+              value={this.state.dateExpected}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              name="from"
+              required
+              fullWidth
+              id="pkg-from"
+              label="From"
+              value={this.state.from}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="what"
+              margin="normal"
+              required
+              fullWidth
+              id="pkg-what"
+              label="What"
+              value={this.state.what}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="orderURL"
+              type="url"
+              fullWidth
+              margin="normal"
+              id="pkg-order-url"
+              label="Order URL"
+              value={this.state.orderURL}
+              onChange={this.handleInputChange}
+            />
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="select-shipper">Shipper</InputLabel>
+              <Select
+                name="shipper"
+                id="select-shipper"
+                label="Shipper"
+                value={this.state.shipper}
+                onChange={this.handleInputChange}
+              >
+                <MenuItem value="CDL">CDL</MenuItem>
+                <MenuItem value="DHL">DHL</MenuItem>
+                <MenuItem value="FedEx">FedEx</MenuItem>
+                <MenuItem value="LaserShip">LaserShip</MenuItem>
+                <MenuItem value="TBA">TBA</MenuItem>
+                <MenuItem value="UPS">UPS</MenuItem>
+                <MenuItem value="USPS">USPS</MenuItem>
+                <MenuItem value="Unknown">Unknown</MenuItem>
+                <MenuItem value="Custom">Custom</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              name="trackingNumber"
+              fullWidth
+              margin="normal"
+              id="pkg-tracking-number"
+              label="Tracking Number"
+              value={this.state.trackingNumber}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="trackingURL"
+              fullWidth
+              margin="normal"
+              type="url"
+              disabled={this.state.trackingLinkEditDisabled}
+              id="pkg-tracking-url"
+              label="Tracking URL"
+              value={this.state.trackingURL}
+              onChange={this.handleInputChange}
+            />
+            <Stack direction="row" margin="normal" spacing={2}>
+              <Button href="/incoming" variant='outlined'>Cancel</Button>
+              <Button type="submit" value="submit" variant='contained'>
+                {this.state.saveLabel}
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
     );
   }
 }
