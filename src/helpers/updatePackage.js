@@ -1,5 +1,5 @@
-import { db } from '../helpers/fbHelper';
 import { update, ref } from 'firebase/database';
+import { db } from '../helpers/fbHelper';
 
 /**
  * Updates the package record in the database.

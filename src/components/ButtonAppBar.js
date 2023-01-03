@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import {
+  AppBar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
 
-import { signOut } from 'firebase/auth';
-
-import { auth } from '../helpers/fbHelper';
+import { signOut } from '../helpers/fbHelper';
 
 
 export default function ButtonAppBar(props) {
@@ -27,8 +27,7 @@ export default function ButtonAppBar(props) {
 
   const clickSignOut = () => {
     console.log('click sign out');
-    signOut(auth);
-    window.localStorage.removeItem('pktk_uid');
+    signOut();
     setAnchorEl(null);
     navigate('/');
   };
@@ -55,17 +54,20 @@ export default function ButtonAppBar(props) {
           >
             PackTrak
           </Typography>
-
-          <Button
-            href="/incoming"
-            sx={{ my: 2, color: 'white', display: 'block' }}>
-            Incoming
-          </Button>
-          <Button
-            href="/delivered"
-            sx={{ my: 2, color: 'white', display: 'block' }}>
-            Delivered
-          </Button>
+          {props.uid && (
+            <Button
+              href="/incoming"
+              sx={{ my: 2, color: 'white', display: 'block' }}>
+              Incoming
+            </Button>
+          )}
+          {props.uid && (
+            <Button
+              href="/delivered"
+              sx={{ my: 2, color: 'white', display: 'block' }}>
+              Delivered
+            </Button>
+          )}
 
           <Box sx={{ flexGrow: 1 }}></Box>
           {!props.uid && (

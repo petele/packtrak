@@ -1,8 +1,12 @@
 import * as React from 'react';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
+
+import {
+  Checkbox,
+  IconButton,
+  TableCell,
+  TableRow,
+} from '@mui/material';
+
 import EditIcon from '@mui/icons-material/Edit';
 
 import TrackingLink from './TrackingLink';

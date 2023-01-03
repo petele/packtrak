@@ -1,8 +1,25 @@
+import {
+  Box,
+  Container,
+  Typography
+} from '@mui/material';
+
 export default function Profile(props) {
   return (
-    <div>
-      <h1>Profile</h1>
-      <div>{props.uid}</div>
-    </div>
+    <Container component="main" fixed>
+      <Box
+        sx={{
+          marginTop: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Profile
+        </Typography>
+        <div>{props.uid}</div>
+      </Box>
+    </Container>
   );
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import getTrackingURL from "../helpers/getTrackingURL";
+import getTrackingURL from '../helpers/getTrackingURL';
 
 class TrackingLink extends React.Component {
 

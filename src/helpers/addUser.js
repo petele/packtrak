@@ -1,5 +1,5 @@
-import { signUp, db, verifyEmail } from '../helpers/fbHelper';
 import { set, ref } from 'firebase/database';
+import { signUp, db, verifyEmail } from '../helpers/fbHelper';
 
 /**
  * Create and validate the info for a new user.

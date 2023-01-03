@@ -1,4 +1,4 @@
-import { db } from '../helpers/fbHelper';
+import { db } from './fbHelper';
 import { push, ref } from 'firebase/database';
 
 /**

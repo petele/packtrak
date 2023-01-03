@@ -1,10 +1,14 @@
 import * as React from 'react';
+import { Fragment } from 'react';
+import { Routes, Route, Outlet } from 'react-router-dom';
+
+import { CssBaseline } from '@mui/material';
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './helpers/fbHelper';
 
-import { Fragment } from 'react';
-import {Routes, Route, Outlet} from "react-router-dom";
+import ButtonAppBar from './components/ButtonAppBar';
+
+import { auth } from './helpers/fbHelper';
 
 import Home from './views/Home';
 import About from './views/About';
@@ -18,26 +22,18 @@ import SignUp from './views/SignUp';
 import Forgot from './views/Forgot';
 import Profile from './views/Profile';
 
-import { CssBaseline } from '@mui/material';
-import ButtonAppBar from './components/ButtonAppBar';
-
 import './App.css';
 
 export default function App() {
-  // const uid = 'fakeUser';
 
   const [uid, setUID] = React.useState(null);
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(`fbAuth: true (${user.uid})`);
         setUID(user.uid);
-        window.localStorage.setItem('pktk_uid', user.uid);
       } else {
-        console.log(`fbAuth: false`);
         setUID(null);
-        window.localStorage.removeItem('pktk_uid');
       }
     });
   }, []);
@@ -51,9 +47,9 @@ export default function App() {
         <Route path="/add" element={<Add uid={uid} />} />
         <Route path="/edit/:kind/:id" element={<Edit uid={uid} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot" element={<Forgot />} />
+        <Route path="/signin" element={<SignIn uid={uid} />} />
+        <Route path="/signup" element={<SignUp uid={uid} />} />
+        <Route path="/forgot" element={<Forgot uid={uid} />} />
         <Route path="/profile" element={<Profile uid={uid} />} />
         <Route path="*" element={<NoMatch />} />
       </Route>

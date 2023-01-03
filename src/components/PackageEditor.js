@@ -1,24 +1,22 @@
 import * as React from 'react';
 
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { FormControl, InputLabel } from '@mui/material';
-import { Button, Stack } from '@mui/material';
+import {
+  Box,
+  Button,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from '@mui/material';
+
+import { get, ref } from 'firebase/database';
 
 import getTrackingURL from '../helpers/getTrackingURL';
 import addPackage from '../helpers/addPackage';
 import updatePackage from '../helpers/updatePackage';
-
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import { db } from '../helpers/fbHelper';
-import { get, ref } from 'firebase/database';
-
-const theme = createTheme();
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -43,6 +41,7 @@ class PackageEditor extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    console.log('con')
   }
 
   componentDidMount() {
@@ -50,10 +49,11 @@ class PackageEditor extends React.Component {
       return;
     }
     this.getPackage(this.state.kind, this.state.id);
+    console.log('mou')
   }
 
   async getPackage(kind, id) {
-    const userID = window.localStorage.getItem('pktk_uid');
+    const userID = this.state.uid;
     const queryPath = `userData/${userID}/${kind}/${id}`;
     const query = ref(db, queryPath);
     const snapshot = await get(query);
@@ -152,17 +152,6 @@ class PackageEditor extends React.Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
           <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -251,9 +240,6 @@ class PackageEditor extends React.Component {
               </Button>
             </Stack>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
     );
   }
 }
