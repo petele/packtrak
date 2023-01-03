@@ -5,6 +5,8 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 
 
@@ -22,6 +24,14 @@ export function signIn(email, password) {
 
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export function verifyEmail(fbUser) {
+  return sendEmailVerification(fbUser);
+}
+
+export function resetPassword(email) {
+  return sendPasswordResetEmail(auth, email);
 }
 
 export function getCurrentUser() {

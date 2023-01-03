@@ -19,6 +19,7 @@ class PackageEditor extends React.Component {
     this.state = {
       mode: props.mode,
       kind: props.kind,
+      uid: props.uid,
 
       id: props.id,
       dateExpected: '',
@@ -45,7 +46,7 @@ class PackageEditor extends React.Component {
   }
 
   async getPackage() {
-    const userID = 'petele';
+    const userID = this.state.uid;
     const kind = this.state.kind;
     const id = this.state.id;
     const queryPath = `userData/${userID}/${kind}/${id}`;
@@ -126,7 +127,7 @@ class PackageEditor extends React.Component {
     }
 
     if (this.state.mode === 'add') {
-      return addPackage(pkg)
+      return addPackage(this.state.uid, pkg)
         .then((id) => {
           alert(`package ${id} added.`);
           // TODO: redirect to listing page.
@@ -136,7 +137,7 @@ class PackageEditor extends React.Component {
       const kind = this.state.kind;
       const id = this.state.id;
       const before = this.state.beforeEdit;
-      return updatePackage(kind, id, pkg, before)
+      return updatePackage(this.state.uid, kind, id, pkg, before)
         .then((success) => {
           alert(`success: ${success}`);
           // TODO: redirect

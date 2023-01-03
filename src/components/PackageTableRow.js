@@ -17,9 +17,10 @@ class PackageTableRow extends React.Component {
   }
 
   onCheckChange(e) {
+    const uid = this.props.uid;
     const kind = this.props.kind;
     const id = this.props.row.id;
-    markAsDelivered(kind, id, e.target.checked);
+    markAsDelivered(uid, kind, id, e.target.checked);
   }
 
   render() {

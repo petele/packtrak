@@ -4,6 +4,7 @@ import { update, ref } from 'firebase/database';
 /**
  * Updates the package record in the database.
  *
+ * @param {string} userID User ID
  * @param {string} kind incoming or delivered
  * @param {string} id Package ID
  * @param {object} data Package details
@@ -17,11 +18,10 @@ import { update, ref } from 'firebase/database';
  * @param {?object} before - Same as data, but pre-edit version
  * @return {Promise<null>} Successful update complete
  */
-export default async function updatePackage(kind, id, data, before) {
+export default async function updatePackage(userID, kind, id, data, before) {
 
   data.dtUpdated = Date.now();
 
-  const userID = 'petele';
   const queryPath = `userData/${userID}/${kind}/${id}`;
   console.log('TODO: validate data');
   console.log('updatePackage', queryPath, data);

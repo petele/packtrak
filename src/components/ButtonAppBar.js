@@ -25,10 +25,10 @@ export default function ButtonAppBar() {
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log('yes', user.uid);
+        console.log(`fbAuth: true (${user.uid})`);
         setIsSignedIn(true);
       } else {
-        console.log('no');
+        console.log(`fbAuth: false`);
         setIsSignedIn(false);
       }
     });

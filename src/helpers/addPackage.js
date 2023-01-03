@@ -4,6 +4,7 @@ import { push, ref } from 'firebase/database';
 /**
  * Add a package to the database
  *
+ * @param {string} userID User ID
  * @param {object} data Package details
  * @param {string} data.dateExpected Date expected (YYYY-MM-DD)
  * @param {string} data.from Who the package is from
@@ -14,7 +15,7 @@ import { push, ref } from 'firebase/database';
  * @param {?string} data.trackingURL Tracking URL from shipper
  * @return {Promise<string>} Package ID
  */
-export default async function addPackage(data) {
+export default async function addPackage(userID, data) {
 
   // TODO: Validate input
   const now = Date.now();
@@ -22,7 +23,6 @@ export default async function addPackage(data) {
   data.dtAdded = now;
   data.dtUpdated = now;
 
-  const userID = 'petele';
   const queryPath = `userData/${userID}/incoming`;
 
   console.log('addPackage', queryPath, data);
