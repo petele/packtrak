@@ -50,12 +50,12 @@ class PackageTableRow extends React.Component {
         key={row.id}
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       >
-        <TableCell>
+        <TableCell padding="checkbox">
           <Checkbox
             checked={row.delivered}
             onChange={this.onCheckChange} />
         </TableCell>
-        <TableCell>
+        <TableCell align="center">
           <IconButton href={editURL} aria-label="edit" onClick={this.onEditClick}>
             <EditIcon />
           </IconButton>

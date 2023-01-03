@@ -16,7 +16,7 @@ export default function getTrackingURL(shipper, trackingNumber) {
     return `https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id=${trackingNumber}`;
   }
   if (shipper === 'FedEx') {
-    return `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`;
+    return `https://www.fedex.com/fedextrack/?tracknumbers=${removeSpaces(trackingNumber)}`;
   }
   if (shipper === 'LaserShip') {
     return `https://www.lasership.com/track/${trackingNumber}`;
@@ -31,4 +31,8 @@ export default function getTrackingURL(shipper, trackingNumber) {
     return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`;
   }
   return null;
+}
+
+function removeSpaces(trackingNumber) {
+  return trackingNumber.replace(/ /g, '');
 }

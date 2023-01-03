@@ -38,7 +38,7 @@ export default function PackageTable(props) {
       <Table sx={{ minWidth: 650 }} size="small" aria-label="list of packages">
         <TableHead>
           <TableRow>
-            <TableCell>Delivered</TableCell>
+            <TableCell padding="checkbox"></TableCell>
             <TableCell></TableCell>
             <TableCell>Date Expected</TableCell>
             <TableCell>From</TableCell>

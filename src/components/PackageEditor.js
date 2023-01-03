@@ -135,6 +135,7 @@ class PackageEditor extends React.Component {
       return addPackage(this.state.uid, pkg)
         .then((id) => {
           alert(`package ${id} added.`);
+          // useNavigate().navigate('/incoming');
           // TODO: redirect to listing page.
         });
     }
@@ -154,6 +155,7 @@ class PackageEditor extends React.Component {
     return (
           <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
             <TextField
+              placeholder=''
               margin="normal"
               name="dateExpected"
               required
@@ -235,6 +237,9 @@ class PackageEditor extends React.Component {
             />
             <Stack direction="row" margin="normal" spacing={2}>
               <Button href="/incoming" variant='outlined'>Cancel</Button>
+              {this.state.mode === 'edit' && (
+                <Button type="button" variant='outlined'>Delete</Button>
+              )}
               <Button type="submit" value="submit" variant='contained'>
                 {this.state.saveLabel}
               </Button>
