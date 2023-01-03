@@ -29,9 +29,17 @@ class PackageTableRow extends React.Component {
 
   render() {
     const row = this.props.row;
-    const dtExpected = new Date(row.dateExpected);
+
+    // Get the date by splitting
+    const dtSplit = row.dateExpected.split('-');
+    const dtExpected = new Date();
+    dtExpected.setFullYear(parseInt(dtSplit[0]));
+    dtExpected.setMonth(parseInt(dtSplit[1]) - 1);
+    dtExpected.setDate(parseInt(dtSplit[2]));
+
+    // Format the date
     const opts = {dateStyle: 'full'};
-    const dtFormatter = new Intl.DateTimeFormat('en-US', opts);
+    const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
     const dtExpectedFormatted = dtFormatter.format(dtExpected);
 
     const kind = this.props.kind;
