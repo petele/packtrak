@@ -10,7 +10,14 @@ import {
   signOut as fbSignOut
 } from 'firebase/auth';
 
-import { firebaseConfig } from '../fb-credentials';
+const firebaseConfig = {
+  apiKey: "AIzaSyDRUxI1aaoNiOw-Pz0Qp1srsahwfmgKvNg",
+  authDomain: "petele-packtrak.firebaseapp.com",
+  projectId: "petele-packtrak",
+  storageBucket: "petele-packtrak.appspot.com",
+  messagingSenderId: "368164758142",
+  appId: "1:368164758142:web:417fafae7b5fce4811ee2f"
+};
 
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
