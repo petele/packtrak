@@ -11,70 +11,44 @@ import {
   TextField,
 } from '@mui/material';
 
-import { get, ref } from 'firebase/database';
-
 import getTrackingURL from '../helpers/getTrackingURL';
-import addPackage from '../helpers/addPackage';
-import updatePackage from '../helpers/updatePackage';
-import { db } from '../helpers/fbHelper';
+import deletePackage from '../helpers/deletePackage';
 
 class PackageEditor extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       mode: props.mode,
       kind: props.kind,
       uid: props.uid,
 
+      ready: props.mode === 'edit' ? true : props.ready,
+
       id: props.id,
-      dateExpected: '',
-      from: '',
-      what: '',
-      orderURL: '',
-      shipper:  '',
-      trackingNumber: '',
-      trackingURL: '',
+      dateExpected: props.dateExpected || '',
+      from: props.from || '',
+      what: props.what || '',
+      orderURL: props.orderURL || '',
+      shipper:  props.shipper || '',
+      trackingNumber: props.trackingNumber || '',
+      trackingURL: props.trackingURL || '',
 
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
       trackingLinkEditDisabled: true,
     };
 
+    this.returnToIncoming = props.fnReturn;
+    this.savePackage = props.fnSave;
+
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    console.log('con')
+    this.handleDelete = this.handleDelete.bind(this);
   }
+
 
   componentDidMount() {
-    if (this.state.mode === 'add') {
-      return;
-    }
-    this.getPackage(this.state.kind, this.state.id);
-    console.log('mou')
-  }
-
-  async getPackage(kind, id) {
-    const userID = this.state.uid;
-    const queryPath = `userData/${userID}/${kind}/${id}`;
-    const query = ref(db, queryPath);
-    const snapshot = await get(query);
-    if (!snapshot.exists()) {
-      console.log('no data');
-      return;
-    }
-    const pkgObj = snapshot.val();
-    pkgObj.beforeEdit = Object.assign({}, pkgObj);
-    if (pkgObj.shipper === 'Custom') {
-      pkgObj.trackingLinkEditDisabled = false;
-    } else {
-      pkgObj.trackingLinkEditDisabled = true;
-      const shipper = pkgObj.shipper;
-      const trackingNumber = pkgObj.trackingNumber;
-      const url = getTrackingURL(shipper, trackingNumber);
-      if (url) {
-        pkgObj.trackingURL = url;
-      }
-    }
-    this.setState(pkgObj);
+    console.log('mount')
   }
 
   handleInputChange(event) {
@@ -84,7 +58,6 @@ class PackageEditor extends React.Component {
     this.setState({
       [name]: value
     });
-    // console.log('inputChange', name, value);
     if (name === 'shipper') {
       this.setState(
         {trackingLinkEditDisabled: value !== 'Custom'}
@@ -110,6 +83,20 @@ class PackageEditor extends React.Component {
     }
   }
 
+  handleDelete(event) {
+    event.preventDefault();
+    const sure = window.confirm('Are you sure?');
+    if (sure) {
+      deletePackage(this.state.uid, this.state.kind, this.state.id)
+        .then(() => {
+          this.returnToIncoming();
+        })
+        .catch((ex) => {
+          console.log('TODO: unable to delete');
+        });
+    }
+  }
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -131,24 +118,12 @@ class PackageEditor extends React.Component {
       pkg.trackingURL = this.state.trackingURL;
     }
 
-    if (this.state.mode === 'add') {
-      return addPackage(this.state.uid, pkg)
-        .then((id) => {
-          alert(`package ${id} added.`);
-          // useNavigate().navigate('/incoming');
-          // TODO: redirect to listing page.
-        });
-    }
-    if (this.state.mode === 'edit') {
-      const kind = this.state.kind;
-      const id = this.state.id;
-      const before = this.state.beforeEdit;
-      return updatePackage(this.state.uid, kind, id, pkg, before)
-        .then((success) => {
-          alert(`success: ${success}`);
-          // TODO: redirect
-        });
-    }
+    return this.savePackage(pkg).then((id) => {
+      this.returnToIncoming();
+    }).catch((ex) => {
+      alert(`TODO: '${this.state.mode}' ${this.state.id} failed`);
+      console.log(ex);
+    });
   }
 
   render() {
@@ -238,7 +213,9 @@ class PackageEditor extends React.Component {
             <Stack direction="row" margin="normal" spacing={2}>
               <Button href="/incoming" variant='outlined'>Cancel</Button>
               {this.state.mode === 'edit' && (
-                <Button type="button" variant='outlined'>Delete</Button>
+                <Button type="button" variant='outlined' onClick={this.handleDelete}>
+                  Delete
+                </Button>
               )}
               <Button type="submit" value="submit" variant='contained'>
                 {this.state.saveLabel}

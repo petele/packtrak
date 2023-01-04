@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
@@ -7,11 +8,22 @@ import {
 
 import PackageEditor from '../components/PackageEditor';
 
+import addPackage from '../helpers/addPackage';
+
 export default function Add(props) {
+  const navigate = useNavigate();
 
   if (!props.uid) {
     return;
   }
+
+  const savePackage = async (data) => {
+    return addPackage(props.uid, data);
+  };
+
+  const returnToIncoming = () => {
+    navigate('/incoming');
+  };
 
   return (
     <Container component="main" fixed>
@@ -23,7 +35,10 @@ export default function Add(props) {
           alignItems: 'left',
         }}
       >
-        <PackageEditor mode="add" uid={props.uid} />
+        <PackageEditor
+          mode="add"
+          uid={props.uid}
+          fnReturn={returnToIncoming} fnSave={savePackage} />
       </Box>
     </Container>
   );
