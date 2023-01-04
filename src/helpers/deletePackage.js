@@ -10,22 +10,30 @@ import { db } from '../helpers/fbHelper';
  * @return {boolean} Successful update complete
  */
 export default async function deletePackage(userID, kind, id) {
-  console.log('TODO: handle input checking');
+  if (!userID || !kind || !id) {
+    return Promise.reject(new Error(`Missing or invalid required param.`));
+  }
+
   const fromQueryPath = `userData/${userID}/${kind}/${id}`;
-  const fromRef = ref(db, fromQueryPath);
-  const fromSnap = await get(fromRef);
 
-  const val = fromSnap.val();
-  val.deleted = true;
-  val.dtDeleted = Date.now();
+  try {
+    const fromRef = ref(db, fromQueryPath);
+    const fromSnap = await get(fromRef);
 
-  // Move version to deleted
-  const toQueryPath = `userData/${userID}/deleted/${id}`;
-  const toRef = ref(db, toQueryPath);
-  await set(toRef, val);
+    const val = fromSnap.val();
+    val.deleted = true;
+    val.dtDeleted = Date.now();
 
-  // Delete the old version
-  await remove(fromRef);
+    // Move version to deleted
+    const toQueryPath = `userData/${userID}/deleted/${id}`;
+    const toRef = ref(db, toQueryPath);
+    await set(toRef, val);
 
-  return Promise.resolve();
+    // Delete the old version
+    await remove(fromRef);
+    return true;
+  } catch (ex) {
+    console.error('Unable to delete package', fromQueryPath, ex);
+    throw ex;
+  }
 }

@@ -16,8 +16,11 @@ import { push, ref } from 'firebase/database';
  * @return {Promise<string>} Package ID
  */
 export default async function addPackage(userID, data) {
-
   // TODO: Validate input
+  if (!userID) {
+    return Promise.reject(new Error(`Missing param: 'userID'`));
+  }
+
   const now = Date.now();
   data.delivered = false;
   data.dtAdded = now;
@@ -25,9 +28,12 @@ export default async function addPackage(userID, data) {
 
   const queryPath = `userData/${userID}/incoming`;
 
-  console.log('addPackage', queryPath, data);
-
-  const fbRef = ref(db, queryPath);
-  const newRef = await push(fbRef, data);
-  return newRef.key;
+  try {
+    const fbRef = ref(db, queryPath);
+    const newRef = await push(fbRef, data);
+    return newRef.key;
+  } catch (ex) {
+    console.error('Unable to add new package', queryPath, ex);
+    throw ex;
+  }
 }

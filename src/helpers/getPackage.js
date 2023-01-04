@@ -10,14 +10,22 @@ import { db } from '../helpers/fbHelper';
  * @return {Promise<Object>} Package details
  */
 export default async function getPackage(userID, kind, id) {
-  console.log('TODO: handle input checking');
-  const queryPath = `userData/${userID}/${kind}/${id}`;
-  const query = ref(db, queryPath);
-  const snapshot = await get(query);
-  if (!snapshot.exists()) {
-    console.log('TODO: Handle no data');
-    throw new Error('not-found');
+  if (!userID || !kind || !id) {
+    return Promise.reject(new Error(`Missing or invalid required param.`));
   }
-  const pkgObj = snapshot.val();
-  return pkgObj;
+
+  const queryPath = `userData/${userID}/${kind}/${id}`;
+
+  try {
+    const query = ref(db, queryPath);
+    const snapshot = await get(query);
+    if (!snapshot.exists()) {
+      throw new Error('not-found');
+    }
+    const pkgObj = snapshot.val();
+    return pkgObj;
+  } catch (ex) {
+    console.error('Unable to get package', queryPath, ex);
+    throw ex;
+  }
 }

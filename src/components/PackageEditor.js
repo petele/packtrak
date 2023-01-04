@@ -11,8 +11,10 @@ import {
   TextField,
 } from '@mui/material';
 
+import LoadingSpinner from '../components/LoadingSpinner';
 import getTrackingURL from '../helpers/getTrackingURL';
 import deletePackage from '../helpers/deletePackage';
+import { formatToISODate } from '../helpers/dtHelpers';
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -23,18 +25,18 @@ class PackageEditor extends React.Component {
       kind: props.kind,
       uid: props.uid,
 
-      ready: props.mode === 'edit' ? true : props.ready,
+      ready: props.mode === 'add' ? true : !!props.pkgData,
+      saveLabel: props.mode === 'add' ? 'Add' : 'Save',
 
       id: props.id,
-      dateExpected: props.dateExpected || '',
-      from: props.from || '',
-      what: props.what || '',
-      orderURL: props.orderURL || '',
-      shipper:  props.shipper || '',
-      trackingNumber: props.trackingNumber || '',
-      trackingURL: props.trackingURL || '',
+      dateExpected: formatToISODate(new Date()),
+      from: '',
+      what: '',
+      orderURL: '',
+      shipper:  '',
+      trackingNumber: '',
+      trackingURL: '',
 
-      saveLabel: props.mode === 'add' ? 'Add' : 'Save',
       trackingLinkEditDisabled: true,
     };
 
@@ -46,9 +48,30 @@ class PackageEditor extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-
-  componentDidMount() {
-    console.log('mount')
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.pkgData === null && this.props.pkgData) {
+      const pkgData = this.props.pkgData;
+      const newState = {
+        dateExpected: pkgData.dateExpected || '',
+        from: pkgData.from || '',
+        what: pkgData.what || '',
+        orderURL: pkgData.orderURL || '',
+        shipper: pkgData.shipper || '',
+        trackingNumber: pkgData.trackingNumber || '',
+        trackingLinkEditDisabled: true,
+        ready: true,
+      };
+      if (pkgData.trackingURL) {
+        newState.trackingURL = pkgData.trackingURL;
+        newState.trackingLinkEditDisabled = false;
+      } else if (pkgData.shipper === 'Custom') {
+        newState.trackingLinkEditDisabled = false;
+      } else {
+        const url = getTrackingURL(pkgData.shipper, pkgData.trackingNumber);
+        newState.trackingURL = url || '';
+      }
+      this.setState(newState);
+    }
   }
 
   handleInputChange(event) {
@@ -62,12 +85,6 @@ class PackageEditor extends React.Component {
       this.setState(
         {trackingLinkEditDisabled: value !== 'Custom'}
       );
-    }
-    if (name === 'shipper' && value === 'TBD') {
-      this.setState({
-        trackingNumber: null,
-        trackingURL: null,
-      });
     }
     if (name === 'shipper' || name === 'trackingNumber') {
       const shipper = name === 'shipper' ? value : this.state.shipper;
@@ -87,12 +104,12 @@ class PackageEditor extends React.Component {
     event.preventDefault();
     const sure = window.confirm('Are you sure?');
     if (sure) {
-      deletePackage(this.state.uid, this.state.kind, this.state.id)
+      deletePackage(this.props.uid, this.props.kind, this.props.id)
         .then(() => {
           this.returnToIncoming();
         })
         .catch((ex) => {
-          console.log('TODO: unable to delete');
+          console.log('TODO: unable to delete', ex);
         });
     }
   }
@@ -127,101 +144,108 @@ class PackageEditor extends React.Component {
   }
 
   render() {
+    if (!this.state.ready) {
+      return (
+        <LoadingSpinner />
+      );
+    }
+
     return (
-          <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              placeholder=''
-              margin="normal"
-              name="dateExpected"
-              required
-              id="date-expected"
-              label="Date Expected"
-              type="date"
-              value={this.state.dateExpected}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              margin="normal"
-              name="from"
-              required
-              fullWidth
-              id="pkg-from"
-              label="From"
-              value={this.state.from}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              name="what"
-              margin="normal"
-              required
-              fullWidth
-              id="pkg-what"
-              label="What"
-              value={this.state.what}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              name="orderURL"
-              type="url"
-              fullWidth
-              margin="normal"
-              id="pkg-order-url"
-              label="Order URL"
-              value={this.state.orderURL}
-              onChange={this.handleInputChange}
-            />
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="select-shipper">Shipper</InputLabel>
-              <Select
-                name="shipper"
-                id="select-shipper"
-                label="Shipper"
-                value={this.state.shipper}
-                onChange={this.handleInputChange}
-              >
-                <MenuItem value="CDL">CDL</MenuItem>
-                <MenuItem value="DHL">DHL</MenuItem>
-                <MenuItem value="FedEx">FedEx</MenuItem>
-                <MenuItem value="LaserShip">LaserShip</MenuItem>
-                <MenuItem value="TBA">TBA</MenuItem>
-                <MenuItem value="UPS">UPS</MenuItem>
-                <MenuItem value="USPS">USPS</MenuItem>
-                <MenuItem value="Unknown">Unknown</MenuItem>
-                <MenuItem value="Custom">Custom</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              name="trackingNumber"
-              fullWidth
-              margin="normal"
-              id="pkg-tracking-number"
-              label="Tracking Number"
-              value={this.state.trackingNumber}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              name="trackingURL"
-              fullWidth
-              margin="normal"
-              type="url"
-              disabled={this.state.trackingLinkEditDisabled}
-              id="pkg-tracking-url"
-              label="Tracking URL"
-              value={this.state.trackingURL}
-              onChange={this.handleInputChange}
-            />
-            <Stack direction="row" margin="normal" spacing={2}>
-              <Button href="/incoming" variant='outlined'>Cancel</Button>
-              {this.state.mode === 'edit' && (
-                <Button type="button" variant='outlined' onClick={this.handleDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type="submit" value="submit" variant='contained'>
-                {this.state.saveLabel}
-              </Button>
-            </Stack>
-          </Box>
+      <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
+
+        <TextField
+          placeholder=''
+          margin="normal"
+          name="dateExpected"
+          required
+          id="date-expected"
+          label="Date Expected"
+          type="date"
+          value={this.state.dateExpected}
+          onChange={this.handleInputChange}
+        />
+        <TextField
+          margin="normal"
+          name="from"
+          required
+          fullWidth
+          id="pkg-from"
+          label="From"
+          value={this.state.from}
+          onChange={this.handleInputChange}
+        />
+        <TextField
+          name="what"
+          margin="normal"
+          required
+          fullWidth
+          id="pkg-what"
+          label="What"
+          value={this.state.what}
+          onChange={this.handleInputChange}
+        />
+        <TextField
+          name="orderURL"
+          type="url"
+          fullWidth
+          margin="normal"
+          id="pkg-order-url"
+          label="Order URL"
+          value={this.state.orderURL}
+          onChange={this.handleInputChange}
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="select-shipper">Shipper</InputLabel>
+          <Select
+            name="shipper"
+            id="select-shipper"
+            label="Shipper"
+            value={this.state.shipper}
+            onChange={this.handleInputChange}
+          >
+            <MenuItem value="CDL">CDL</MenuItem>
+            <MenuItem value="DHL">DHL</MenuItem>
+            <MenuItem value="FedEx">FedEx</MenuItem>
+            <MenuItem value="LaserShip">LaserShip</MenuItem>
+            <MenuItem value="TBA">TBA</MenuItem>
+            <MenuItem value="UPS">UPS</MenuItem>
+            <MenuItem value="USPS">USPS</MenuItem>
+            <MenuItem value="Unknown">Unknown</MenuItem>
+            <MenuItem value="Custom">Custom</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          name="trackingNumber"
+          fullWidth
+          margin="normal"
+          id="pkg-tracking-number"
+          label="Tracking Number"
+          value={this.state.trackingNumber}
+          onChange={this.handleInputChange}
+        />
+        <TextField
+          name="trackingURL"
+          fullWidth
+          margin="normal"
+          type="url"
+          disabled={this.state.trackingLinkEditDisabled}
+          id="pkg-tracking-url"
+          label="Tracking URL"
+          value={this.state.trackingURL}
+          onChange={this.handleInputChange}
+        />
+        <Stack direction="row" margin="normal" spacing={2}>
+          <Button href="/incoming" variant='outlined'>Cancel</Button>
+          {this.state.mode === 'edit' && (
+            <Button type="button" variant='outlined' onClick={this.handleDelete}>
+              Delete
+            </Button>
+          )}
+          <Button type="submit" value="submit" variant='contained'>
+            {this.state.saveLabel}
+          </Button>
+        </Stack>
+      </Box>
     );
   }
 }

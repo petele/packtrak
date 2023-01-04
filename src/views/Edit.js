@@ -16,19 +16,23 @@ export default function Edit(props) {
   const {kind, id} = useParams();
   const navigate = useNavigate();
 
-  if (!uid || !kind || !id) {
-    console.log('Edit.js - missing uid, kind, or id');
-    return;
-  }
+  const [pkgData, setPkgData] = React.useState(null);
 
-  const prevValue = {};
-
-  getPackage(uid, kind, id)
-    .then((pkgData) => {
-      console.log('package', pkgData);
-    });
+  React.useEffect(() => {
+    if (!uid || !kind || !id) {
+      return;
+    }
+    getPackage(uid, kind, id)
+      .then((pkgData) => {
+        setPkgData(pkgData);
+      })
+      .catch((ex) => {
+        navigate('/not-found');
+      });
+  }, [uid, kind, id, navigate]);
 
   const saveEdits = async (data) => {
+    const prevValue = {};
     return updatePackage(uid, kind, id, data, prevValue);
   };
 
@@ -38,19 +42,19 @@ export default function Edit(props) {
 
   return (
     <Container component="main" fixed>
-    <Box
-      sx={{
-        marginTop: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'left',
-      }}
-    >
-       <PackageEditor
-          mode="edit"
-          id={id} kind={kind} uid={uid}
-          fnReturn={returnToIncoming} fnSave={saveEdits} />
-    </Box>
-  </Container>
+      <Box
+        sx={{
+          marginTop: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <PackageEditor
+            mode="edit"
+            id={id} kind={kind} uid={uid} pkgData={pkgData}
+            fnReturn={returnToIncoming} fnSave={saveEdits} />
+      </Box>
+    </Container>
   );
 }
