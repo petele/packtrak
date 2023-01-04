@@ -1,12 +1,9 @@
 import * as React from 'react';
 
 import {
+  Autocomplete,
   Box,
   Button,
-  InputLabel,
-  FormControl,
-  MenuItem,
-  Select,
   Stack,
   TextField,
 } from '@mui/material';
@@ -46,6 +43,12 @@ class PackageEditor extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleShipperChange = this.handleShipperChange.bind(this);
+
+    this.shipperOptions = [
+      '', 'CDL', 'DHL', 'FedEx', 'LaserShip', 'TBA', 'UPS', 'USPS',
+      'Unknown', 'Custom'
+    ];
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -81,23 +84,37 @@ class PackageEditor extends React.Component {
     this.setState({
       [name]: value
     });
-    if (name === 'shipper') {
-      this.setState(
-        {trackingLinkEditDisabled: value !== 'Custom'}
-      );
+
+    if (name === 'trackingNumber') {
+      this.updateTrackingURL(this.state.shipper, value);
     }
-    if (name === 'shipper' || name === 'trackingNumber') {
-      const shipper = name === 'shipper' ? value : this.state.shipper;
-      const number = name === 'trackingNumber' ? value : this.state.trackingNumber;
-      this.updateTrackingURL(shipper, number);
+  }
+
+  handleShipperChange(event, newVal) {
+    const was = this.state.shipper;
+    console.log('shipper changed', was, newVal);
+    const state = {
+      shipper: newVal,
+      trackingLinkEditDisabled: newVal !== 'Custom',
+    };
+    if (was !== 'Custom' && newVal === 'Custom') {
+      state.trackingURL = '';
     }
+    this.setState(state);
+    this.updateTrackingURL(newVal, this.state.trackingNumber);
   }
 
   updateTrackingURL(shipper, trackingNumber) {
     const url = getTrackingURL(shipper, trackingNumber);
-    if (url) {
-      this.setState({trackingURL: url});
+    if (shipper === 'Custom') {
+      this.setState({trackingLinkEditDisabled: false});
+      return;
     }
+    this.setState({
+      trackingURL: url || '',
+      trackingLinkEditDisabled: true,
+    });
+    // console.log('updateTrackingURL', shipper, trackingNumber, url);
   }
 
   handleDelete(event) {
@@ -192,26 +209,13 @@ class PackageEditor extends React.Component {
           value={this.state.orderURL}
           onChange={this.handleInputChange}
         />
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="select-shipper">Shipper</InputLabel>
-          <Select
-            name="shipper"
-            id="select-shipper"
-            label="Shipper"
-            value={this.state.shipper}
-            onChange={this.handleInputChange}
-          >
-            <MenuItem value="CDL">CDL</MenuItem>
-            <MenuItem value="DHL">DHL</MenuItem>
-            <MenuItem value="FedEx">FedEx</MenuItem>
-            <MenuItem value="LaserShip">LaserShip</MenuItem>
-            <MenuItem value="TBA">TBA</MenuItem>
-            <MenuItem value="UPS">UPS</MenuItem>
-            <MenuItem value="USPS">USPS</MenuItem>
-            <MenuItem value="Unknown">Unknown</MenuItem>
-            <MenuItem value="Custom">Custom</MenuItem>
-          </Select>
-        </FormControl>
+        <Autocomplete
+          label="Shipper"
+          value={this.state.shipper}
+          options={this.shipperOptions}
+          renderInput={(params) => <TextField {...params} label="Shipper" />}
+          onChange={this.handleShipperChange}
+        />
         <TextField
           name="trackingNumber"
           fullWidth
