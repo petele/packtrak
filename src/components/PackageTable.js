@@ -21,14 +21,14 @@ export default function PackageTable(props) {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
-    const userID = props.uid;
-    const kind = props.kind;
-    console.log('PackageTable userID:', userID, kind)
-    const queryPath = `userData/${userID}/${kind}`;
+    if (!props.uid || !props.kind) {
+      return;
+    }
+    const queryPath = `userData/${props.uid}/${props.kind}`;
     const query = ref(db, queryPath);
     return onValue(query, (snapshot) => {
       const pkgObj = snapshot.val();
-      const reverse = kind === 'delivered';
+      const reverse = props.kind === 'delivered';
       setRows(parsePackageList(pkgObj, reverse));
     });
   }, [props.kind, props.uid]);

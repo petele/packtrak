@@ -51,7 +51,7 @@ export default function App() {
         <Route path="/signup" element={<SignUp uid={uid} />} />
         <Route path="/forgot" element={<Forgot uid={uid} />} />
         <Route path="/profile" element={<Profile uid={uid} />} />
-        <Route path="*" element={<NoMatch />} />
+        <Route path="*" element={<NoMatch uid={uid} />} />
       </Route>
     </Routes>
   );

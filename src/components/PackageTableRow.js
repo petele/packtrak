@@ -13,6 +13,7 @@ import TrackingLink from './TrackingLink';
 import OrderFromLink from './OrderFromLink';
 
 import markAsDelivered from '../helpers/markAsDelivered';
+import { formatToLongString, parseDateFromString } from '../helpers/dtHelpers';
 
 class PackageTableRow extends React.Component {
   constructor(props) {
@@ -30,25 +31,27 @@ class PackageTableRow extends React.Component {
   render() {
     const row = this.props.row;
 
-    // Get the date by splitting
-    const dtSplit = row.dateExpected.split('-');
-    const dtExpected = new Date();
-    dtExpected.setFullYear(parseInt(dtSplit[0]));
-    dtExpected.setMonth(parseInt(dtSplit[1]) - 1);
-    dtExpected.setDate(parseInt(dtSplit[2]));
-
-    // Format the date
-    const opts = {dateStyle: 'full'};
-    const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
-    const dtExpectedFormatted = dtFormatter.format(dtExpected);
+    // Get the formatted date
+    const dtExpected = parseDateFromString(row.dateExpected);
+    const dtExpectedFormatted = formatToLongString(dtExpected);
 
     const kind = this.props.kind;
     const editURL = `/edit/${kind}/${row.id}`;
 
+    const myStyles = {
+      '&:last-child td, &:last-child th': { border: 0 },
+    };
+    if (row.isOverdue) {
+      myStyles['backgroundColor'] = '#ffebee';
+    }
+    if (row.isDueToday) {
+      myStyles['backgroundColor'] = '#e3f2fd';
+    }
+
     return (
       <TableRow
         key={row.id}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        sx={myStyles}
       >
         <TableCell padding="checkbox">
           <Checkbox
