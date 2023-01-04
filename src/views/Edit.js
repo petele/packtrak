@@ -44,7 +44,7 @@ export default function Edit(props) {
     <Container component="main" fixed>
       <Box
         sx={{
-          marginTop: 4,
+          marginTop: 2,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'left',

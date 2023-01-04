@@ -15,6 +15,34 @@ export function parseDateFromString(value) {
 }
 
 /**
+ * Returns the number of milliseconds since the epoch for 12:00am today
+ *
+ * @returns {number}
+ */
+export function getTodayStart() {
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(1);
+  return today.valueOf();
+}
+
+/**
+ * Returns the number of milliseconds since the epoch for 11:59pm today
+ *
+ * @returns {number}
+ */
+export function getTodayEnd() {
+  const today = new Date();
+  today.setHours(23);
+  today.setMinutes(59);
+  today.setSeconds(59);
+  today.setMilliseconds(1);
+  return today.valueOf();
+}
+
+/**
  * Formats a DateTime object to a long string.
  *
  * @param {DateTime} dtValue DateTime object to format
@@ -40,7 +68,6 @@ export function formatToISODate(dtValue) {
   };
   const dtFormat = new Intl.DateTimeFormat('en-us', opts);
   const parts = dtFormat.formatToParts(dtValue);
-  console.log(parts)
   const year = parts[4].value;
   const mo = parts[0].value;
   const da = parts[2].value;

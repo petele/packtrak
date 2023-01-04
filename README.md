@@ -13,8 +13,8 @@ A fun experiment with React.
 * [ ] Delete account
 * [ ] TOS page
 * [ ] Profile page
-* [ ] Mark package as RED if overdue
-* [ ] Make delete button RED
+* [X] Mark package as RED if overdue
+* [X] Make delete button RED
 * [ ] Better formatting of Add/Edit page
 
 ## Getting Started with Create React App

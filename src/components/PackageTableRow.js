@@ -38,10 +38,20 @@ class PackageTableRow extends React.Component {
     const kind = this.props.kind;
     const editURL = `/edit/${kind}/${row.id}`;
 
+    const myStyles = {
+      '&:last-child td, &:last-child th': { border: 0 },
+    };
+    if (row.isOverdue) {
+      myStyles['backgroundColor'] = '#ffebee';
+    }
+    if (row.isDueToday) {
+      myStyles['backgroundColor'] = '#e3f2fd';
+    }
+
     return (
       <TableRow
         key={row.id}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        sx={myStyles}
       >
         <TableCell padding="checkbox">
           <Checkbox

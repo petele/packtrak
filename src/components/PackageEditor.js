@@ -119,20 +119,20 @@ class PackageEditor extends React.Component {
 
     const pkg = {
       dateExpected: this.state.dateExpected,
-      from: this.state.from,
-      what: this.state.what,
+      from: this.state.from.trim(),
+      what: this.state.what.trim(),
     };
     if (this.state.shipper) {
       pkg.shipper = this.state.shipper;
     }
     if (this.state.orderURL) {
-      pkg.orderURL = this.state.orderURL;
+      pkg.orderURL = this.state.orderURL.trim();
     }
     if (this.state.trackingNumber) {
-      pkg.trackingNumber = this.state.trackingNumber;
+      pkg.trackingNumber = this.state.trackingNumber.trim();
     }
     if (this.state.shipper === 'Custom' && this.state.trackingURL) {
-      pkg.trackingURL = this.state.trackingURL;
+      pkg.trackingURL = this.state.trackingURL.trim();
     }
 
     return this.savePackage(pkg).then((id) => {
@@ -151,10 +151,8 @@ class PackageEditor extends React.Component {
     }
 
     return (
-      <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
-
+      <Box component="form" onSubmit={this.handleSubmit}>
         <TextField
-          placeholder=''
           margin="normal"
           name="dateExpected"
           required
@@ -234,14 +232,14 @@ class PackageEditor extends React.Component {
           value={this.state.trackingURL}
           onChange={this.handleInputChange}
         />
-        <Stack direction="row" margin="normal" spacing={2}>
-          <Button href="/incoming" variant='outlined'>Cancel</Button>
+        <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
           {this.state.mode === 'edit' && (
-            <Button type="button" variant='outlined' onClick={this.handleDelete}>
-              Delete
-            </Button>
+            <Button
+              type="button" variant="contained" color="error"
+              onClick={this.handleDelete}>Delete</Button>
           )}
-          <Button type="submit" value="submit" variant='contained'>
+          <Button href="/incoming" variant="outlined">Cancel</Button>
+          <Button type="submit" value="submit" variant="contained">
             {this.state.saveLabel}
           </Button>
         </Stack>
