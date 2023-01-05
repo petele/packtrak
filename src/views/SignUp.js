@@ -32,6 +32,8 @@ export default function SignUp(props) {
       lName: data.get('lastName'),
       agreeToS: !!data.get('agreeToS')
     };
+    window.gtag('event', 'sign_up', {method: 'email'});
+
     addUser(userInfo).then((result) => {
       if (result.success) {
         navigate('/incoming');

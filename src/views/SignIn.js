@@ -30,6 +30,8 @@ export default function SignIn() {
     const rememberMe = !!data.get('remember');
     console.log('rememberMe', rememberMe);
 
+    window.gtag('event', 'login', {method: 'email'});
+
     signIn(email, password)
         .then((fbUser) => {
           window.localStorage.setItem('pktk_uid', fbUser.user.uid);
