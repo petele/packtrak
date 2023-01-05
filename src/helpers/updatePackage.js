@@ -19,6 +19,9 @@ import { db } from '../helpers/fbHelper';
  * @return {Promise<null>} Successful update complete
  */
 export default async function updatePackage(userID, kind, id, data, before) {
+  if (!userID || !kind || !id || !data) {
+    throw new Error(`Missing or invalid required param.`);
+  }
 
   data.dtUpdated = Date.now();
 

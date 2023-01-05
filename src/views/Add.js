@@ -17,8 +17,8 @@ export default function Add(props) {
     return;
   }
 
-  const savePackage = async (data) => {
-    return addPackage(props.uid, data);
+  const savePackage = async (uid, data) => {
+    return addPackage(uid, data);
   };
 
   const returnToIncoming = () => {

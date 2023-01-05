@@ -11,7 +11,7 @@ import { db } from '../helpers/fbHelper';
  */
 export default async function deletePackage(userID, kind, id) {
   if (!userID || !kind || !id) {
-    return Promise.reject(new Error(`Missing or invalid required param.`));
+    throw new Error(`Missing or invalid required param.`);
   }
 
   const fromQueryPath = `userData/${userID}/${kind}/${id}`;

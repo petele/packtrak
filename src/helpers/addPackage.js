@@ -17,8 +17,8 @@ import { push, ref } from 'firebase/database';
  */
 export default async function addPackage(userID, data) {
   // TODO: Validate input
-  if (!userID) {
-    return Promise.reject(new Error(`Missing param: 'userID'`));
+  if (!userID || !data) {
+    throw new Error(`Missing or invalid required param.`);
   }
 
   const now = Date.now();

@@ -31,9 +31,9 @@ export default function Edit(props) {
       });
   }, [uid, kind, id, navigate]);
 
-  const saveEdits = async (data) => {
+  const saveEdits = async (userID, data) => {
     const prevValue = {};
-    return updatePackage(uid, kind, id, data, prevValue);
+    return updatePackage(userID, kind, id, data, prevValue);
   };
 
   const returnToIncoming = () => {

@@ -152,7 +152,7 @@ class PackageEditor extends React.Component {
       pkg.trackingURL = this.state.trackingURL.trim();
     }
 
-    return this.savePackage(pkg).then((id) => {
+    return this.savePackage(this.props.uid, pkg).then((id) => {
       this.returnToIncoming();
     }).catch((ex) => {
       alert(`TODO: '${this.state.mode}' ${this.state.id} failed`);
