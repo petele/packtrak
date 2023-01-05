@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
-  signOut as fbSignOut
+  signOut as fbSignOut,
+  updatePassword,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -23,48 +24,116 @@ const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 export const auth = getAuth(app);
 
-let fbUser = null;
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log(`fbAuth: true (${user.uid})`);
-    fbUser = user;
     window.localStorage.setItem('pktk_uid', user.uid);
   } else {
     console.log(`fbAuth: false`);
-    fbUser = null;
     window.localStorage.removeItem('pktk_uid');
   }
 });
 
+/**
+ * Sign in user via email & password.
+ *
+ * @param {string} email
+ * @param {string} password
+ * @returns Firebase User
+ */
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
+/**
+ * Sign out the current user.
+ */
 export function signOut() {
   fbSignOut(auth);
 }
 
-export function getUser() {
-  return fbUser;
-}
-
-export function getUserID() {
-  return fbUser?.uid;
-}
-
+/**
+ * Create a new user.
+ *
+ * @param {string} email
+ * @param {string} password
+ * @returns Firebase User
+ */
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
 
-export function verifyEmail(fbUser) {
-  return sendEmailVerification(fbUser);
+/**
+ * Get the current user.
+ *
+ * @returns Firebase User
+ */
+export function getUser() {
+  return auth?.currentUser
 }
 
+/**
+ * Get the current user ID.
+ *
+ * @returns {string}
+ */
+export function getUserID() {
+  return getUser()?.uid;
+}
+
+/**
+ * Get teh current user email.
+ *
+ * @returns {string}
+ */
+export function getUserEmail() {
+  return getUser()?.email;
+}
+
+/**
+ * Send email verification to the current user.
+ *
+ * @return undefined
+ */
+export function verifyEmail() {
+  const user = getUser();
+  if (user) {
+    sendEmailVerification(user);
+  }
+}
+
+/**
+ * Send password reset email to the specified user.
+ *
+ * @param {string} email
+ */
 export function resetPassword(email) {
-  return sendPasswordResetEmail(auth, email);
+  if (email) {
+    sendPasswordResetEmail(auth, email);
+  }
 }
 
-export function getCurrentUser() {
-  return auth.currentUser;
+/**
+ * Change the password for the current user.
+ *
+ * @param {string} current current password
+ * @param {string} newPassword new password
+ */
+export async function changePassword(current, newPassword) {
+  const email = getUserEmail();
+  if (!email || !current || !newPassword) {
+    throw new Error('Missing params');
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, current);
+  } catch (ex) {
+    throw ex;
+  }
+
+  try {
+    await updatePassword(getUser(), newPassword);
+  } catch (ex) {
+    throw ex;
+  }
 }

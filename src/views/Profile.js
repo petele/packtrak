@@ -4,6 +4,10 @@ import {
   Typography
 } from '@mui/material';
 
+import ProfileDetails from '../components/ProfileDetails';
+import ChangePassword from '../components/ChangePassword';
+import DeleteAccount from '../components/DeleteAccount';
+
 export default function Profile(props) {
   document.title = `Profile - PackTrak`;
 
@@ -20,7 +24,9 @@ export default function Profile(props) {
         <Typography component="h1" variant="h5">
           Profile
         </Typography>
-        <div>{props.uid}</div>
+        <ProfileDetails uid={props.uid} />
+        <ChangePassword uid={props.uid} />
+        <DeleteAccount uid={props.uid} />
       </Box>
     </Container>
   );

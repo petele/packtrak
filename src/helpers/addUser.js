@@ -42,7 +42,7 @@ export default async function addUser(userInfo) {
     const fbRef = ref(db, profilePath);
     await set(fbRef, userProfile);
 
-    await verifyEmail(fbUser.user);
+    await verifyEmail();
 
     return {success: true, fbUser: fbUser.user};
   } catch (ex) {
