@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 
+import ConfirmDialog from './ConfirmDialog';
 import { getUserEmail } from '../helpers/fbHelper';
 import { deleteUserData } from '../helpers/deleteUserData';
 
@@ -16,11 +17,20 @@ export default function DeleteAccount(props) {
   const userEmail = getUserEmail() || '';
   const [currentPW, setCurrentPW] = React.useState('');
   const [cantDelete, setCantDelete] = React.useState(null);
+  const [confirmDialogVisible, setConfirmDialogVisible] = React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setCantDelete(null);
+    setConfirmDialogVisible(true);
+  };
 
+  const handleConfirmDelete = async (confirmed) => {
+    setConfirmDialogVisible(false);
+    setCurrentPW('');
+    if (confirmed !== true) {
+      return;
+    }
     try {
       await deleteUserData(currentPW);
       navigate('/');
@@ -28,7 +38,7 @@ export default function DeleteAccount(props) {
       setCantDelete(true);
       console.log('delete failed', ex);
     }
-  };
+  }
 
   const handleChange = (event) => {
     const target = event.target;
@@ -39,6 +49,12 @@ export default function DeleteAccount(props) {
   return (
     <section>
       <h2>Delete Account</h2>
+      <ConfirmDialog
+        open={confirmDialogVisible}
+        callback={handleConfirmDelete}
+        details="This will permanently delete your account and all data."
+        label="Delete"
+      />
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <input
           type="hidden"

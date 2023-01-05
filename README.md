@@ -5,14 +5,14 @@ A fun experiment with React.
 ## To Do
 
 * [ ] Content for About & Landing pages
-* [ ] Analytics
+* [X] Analytics
 * [ ] Verify mobile experience
 * [ ] Input checking for Add Package
 * [ ] Input checking for Edit Package
-* [ ] Change password
-* [ ] Delete account
+* [X] Change password
+* [X] Delete account
 * [ ] TOS page
-* [ ] Profile page
+* [X] Profile page
 * [X] Mark package as RED if overdue
 * [X] Make delete button RED
 * [ ] Better formatting of Add/Edit page

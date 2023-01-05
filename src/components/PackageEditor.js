@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 
+import ConfirmDialog from './ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getTrackingURL from '../helpers/getTrackingURL';
 import deletePackage from '../helpers/deletePackage';
@@ -35,6 +36,7 @@ class PackageEditor extends React.Component {
       trackingURL: '',
 
       trackingLinkEditDisabled: true,
+      confirmDialogVisible: false,
     };
 
     this.returnToIncoming = props.fnReturn;
@@ -44,6 +46,7 @@ class PackageEditor extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleShipperChange = this.handleShipperChange.bind(this);
+    this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
 
     this.shipperOptions = [
       '', 'CDL', 'DHL', 'FedEx', 'LaserShip', 'TBA', 'UPS', 'USPS',
@@ -119,8 +122,12 @@ class PackageEditor extends React.Component {
 
   handleDelete(event) {
     event.preventDefault();
-    const sure = window.confirm('Are you sure?');
-    if (sure) {
+    this.setState({confirmDialogVisible: true});
+  }
+
+  handleConfirmDelete(confirmed) {
+    this.setState({confirmDialogVisible: false});
+    if (confirmed) {
       deletePackage(this.props.uid, this.props.kind, this.props.id)
         .then(() => {
           this.returnToIncoming();
@@ -160,6 +167,8 @@ class PackageEditor extends React.Component {
     });
   }
 
+
+
   render() {
     if (!this.state.ready) {
       return (
@@ -169,6 +178,12 @@ class PackageEditor extends React.Component {
 
     return (
       <Box component="form" onSubmit={this.handleSubmit}>
+        <ConfirmDialog
+          open={this.state.confirmDialogVisible}
+          callback={this.handleConfirmDelete}
+          details="This will permanently delete this package from your list."
+          label="Delete"
+        />
         <TextField
           margin="normal"
           name="dateExpected"
