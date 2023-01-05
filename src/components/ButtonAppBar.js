@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
+
 import {
   AppBar,
   Box,
@@ -13,20 +15,24 @@ import {
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 
-import { signOut } from '../helpers/fbHelper';
+import './ButtonAppBar.css';
 
+import { signOut } from '../helpers/fbHelper';
 
 export default function ButtonAppBar(props) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const curPath = window.location.pathname;
+  const isIncoming = curPath.startsWith('/incoming') ? 'active' : '';
+  const isDelivered = curPath.startsWith('/delivered') ? 'active' : '';
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const clickSignOut = () => {
-    console.log('click sign out');
     signOut();
     setAnchorEl(null);
     navigate('/');
@@ -57,6 +63,7 @@ export default function ButtonAppBar(props) {
           {props.uid && (
             <Button
               href="/incoming"
+              className={isIncoming}
               sx={{ my: 2, color: 'white', display: 'block' }}>
               Incoming
             </Button>
@@ -64,6 +71,7 @@ export default function ButtonAppBar(props) {
           {props.uid && (
             <Button
               href="/delivered"
+              className={isDelivered}
               sx={{ my: 2, color: 'white', display: 'block' }}>
               Delivered
             </Button>
