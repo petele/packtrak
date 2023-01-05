@@ -1,5 +1,6 @@
 import { update, ref } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
+import { gaEvent } from './gaHelper';
 
 /**
  * Updates the package record in the database.
@@ -22,6 +23,7 @@ export default async function updatePackage(userID, kind, id, data, before) {
   if (!userID || !kind || !id || !data) {
     throw new Error(`Missing or invalid required param.`);
   }
+  gaEvent('package', 'update');
 
   data.dtUpdated = Date.now();
 

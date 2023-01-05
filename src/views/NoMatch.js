@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 
 export default function NoMatch(props) {
+  document.title = `Sad Panda - PackTrak`;
 
   const backURL = props.uid ? '/incoming' : '/';
 

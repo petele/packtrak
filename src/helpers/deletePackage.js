@@ -1,5 +1,6 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
+import { gaEvent } from './gaHelper';
 
 /**
  * Deletes the specified package.
@@ -13,6 +14,7 @@ export default async function deletePackage(userID, kind, id) {
   if (!userID || !kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
+  gaEvent('package', 'delete');
 
   const fromQueryPath = `userData/${userID}/${kind}/${id}`;
 

@@ -15,6 +15,8 @@ import Copyright from '../components/Copyright';
 import { resetPassword } from '../helpers/fbHelper';
 
 export default function Forgot() {
+  document.title = `Forgot Password - PackTrak`;
+
 
   const handleSubmit = (event) => {
     event.preventDefault();

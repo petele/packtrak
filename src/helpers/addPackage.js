@@ -1,5 +1,6 @@
 import { db } from './fbHelper';
 import { push, ref } from 'firebase/database';
+import { gaEvent } from './gaHelper';
 
 /**
  * Add a package to the database
@@ -20,6 +21,8 @@ export default async function addPackage(userID, data) {
   if (!userID || !data) {
     throw new Error(`Missing or invalid required param.`);
   }
+
+  gaEvent('package', 'add');
 
   const now = Date.now();
   data.delivered = false;

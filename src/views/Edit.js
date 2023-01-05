@@ -12,6 +12,8 @@ import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';
 
 export default function Edit(props) {
+  document.title = `Edit Package - PackTrak`;
+
   const uid = props.uid;
   const {kind, id} = useParams();
   const navigate = useNavigate();

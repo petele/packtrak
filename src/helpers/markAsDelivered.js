@@ -1,5 +1,6 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
+import { gaEvent } from './gaHelper';
 
 /**
  * Marks the specified package as delivered.
@@ -11,8 +12,10 @@ import { db } from '../helpers/fbHelper';
  * @return {boolean} Successful update complete
  */
 export default async function markAsDelivered(userID, kind, id, delivered) {
-
-  console.log('markAsDelivered', userID, kind, id, delivered);
+  if (!userID || !kind || !id) {
+    throw new Error(`Missing or invalid required param.`);
+  }
+  gaEvent('package', 'mark_as_delivered', delivered);
 
   const fromQueryPath = `userData/${userID}/${kind}/${id}`;
   const fromRef = ref(db, fromQueryPath);

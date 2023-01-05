@@ -18,6 +18,8 @@ import Copyright from '../components/Copyright';
 import { signIn } from '../helpers/fbHelper';
 
 export default function SignIn() {
+  document.title = `Sign In - PackTrak`;
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {

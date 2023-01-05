@@ -6,6 +6,9 @@ import AddIcon from '@mui/icons-material/Add';
 import PackageTable from '../components/PackageTable';
 
 export default function Incoming(props) {
+  document.title = `Incoming - PackTrak`;
+
+
   return (
     <div>
       <PackageTable kind="incoming" uid={props.uid} />

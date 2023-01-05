@@ -11,6 +11,8 @@ import PackageEditor from '../components/PackageEditor';
 import addPackage from '../helpers/addPackage';
 
 export default function Add(props) {
+  document.title = `Add Package - PackTrak`;
+
   const navigate = useNavigate();
 
   if (!props.uid) {

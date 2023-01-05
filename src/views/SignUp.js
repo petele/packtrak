@@ -18,6 +18,8 @@ import Copyright from '../components/Copyright';
 import addUser from '../helpers/addUser';
 
 export default function SignUp(props) {
+  document.title = `Sign Up - PackTrak`;
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {

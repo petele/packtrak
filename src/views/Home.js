@@ -5,6 +5,8 @@ import {
 } from '@mui/material';
 
 export default function Home() {
+  document.title = 'PackTrak';
+
   return (
     <Container component="main" fixed>
       <Box
