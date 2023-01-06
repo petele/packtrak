@@ -17,7 +17,7 @@ export default async function markAsDelivered(userID, kind, id, delivered) {
   }
   gaEvent('package', 'mark_as_delivered', delivered);
 
-  const fromQueryPath = `userData/${userID}/${kind}/${id}`;
+  const fromQueryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   const fromRef = ref(db, fromQueryPath);
   const fromSnap = await get(fromRef);
 
@@ -27,7 +27,7 @@ export default async function markAsDelivered(userID, kind, id, delivered) {
 
   // Set the new version
   const toKind = kind === 'incoming' ? 'delivered' : 'incoming';
-  const toQueryPath = `userData/${userID}/${toKind}/${id}`;
+  const toQueryPath = `userData/${userID}/data_v1/${toKind}/${id}`;
   const toRef = ref(db, toQueryPath);
   await set(toRef, val);
 

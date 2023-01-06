@@ -18,7 +18,7 @@ export default async function deletePackage(userID, kind, id) {
   }
   gaEvent('package', 'delete');
 
-  const fromQueryPath = `userData/${userID}/${kind}/${id}`;
+  const fromQueryPath = `userData/${userID}/data_v1/${kind}/${id}`;
 
   try {
     const fromRef = ref(db, fromQueryPath);
@@ -30,7 +30,7 @@ export default async function deletePackage(userID, kind, id) {
       val.dtDeleted = Date.now();
 
       // Move version to deleted
-      const toQueryPath = `userData/${userID}/deleted/${id}`;
+      const toQueryPath = `userData/${userID}/data_v1/deleted/${id}`;
       const toRef = ref(db, toQueryPath);
       await set(toRef, val);
     }

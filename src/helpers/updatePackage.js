@@ -2,6 +2,8 @@ import { update, ref } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 
+import validatePackageData from './validatePackageData';
+
 /**
  * Updates the package record in the database.
  *
@@ -23,11 +25,17 @@ export default async function updatePackage(userID, kind, id, data, before) {
   if (!userID || !kind || !id || !data) {
     throw new Error(`Missing or invalid required param.`);
   }
+
+  const isValid = validatePackageData(data);
+  if (!isValid.valid) {
+    throw new Error(isValid.reason);
+  }
+
   gaEvent('package', 'update');
 
   data.dtUpdated = Date.now();
 
-  const queryPath = `userData/${userID}/${kind}/${id}`;
+  const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   console.log('TODO: validate data');
   console.log('updatePackage', queryPath, data);
 

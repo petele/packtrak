@@ -16,7 +16,7 @@ export default async function getPackage(userID, kind, id) {
   }
   gaEvent('package', 'get_package');
 
-  const queryPath = `userData/${userID}/${kind}/${id}`;
+  const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
 
   try {
     const query = ref(db, queryPath);

@@ -2,6 +2,8 @@ import { db } from './fbHelper';
 import { push, ref } from 'firebase/database';
 import { gaEvent } from './gaHelper';
 
+import validatePackageData from './validatePackageData';
+
 /**
  * Add a package to the database
  *
@@ -17,9 +19,13 @@ import { gaEvent } from './gaHelper';
  * @return {Promise<string>} Package ID
  */
 export default async function addPackage(userID, data) {
-  // TODO: Validate input
   if (!userID || !data) {
     throw new Error(`Missing or invalid required param.`);
+  }
+
+  const isValid = validatePackageData(data);
+  if (!isValid.valid) {
+    throw new Error(isValid.reason);
   }
 
   gaEvent('package', 'add');
@@ -29,7 +35,7 @@ export default async function addPackage(userID, data) {
   data.dtAdded = now;
   data.dtUpdated = now;
 
-  const queryPath = `userData/${userID}/incoming`;
+  const queryPath = `userData/${userID}/data_v1/incoming`;
 
   try {
     const fbRef = ref(db, queryPath);

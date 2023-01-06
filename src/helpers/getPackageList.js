@@ -13,7 +13,7 @@ export default function getPackageList(userID, kind, callback) {
   if (!userID || !kind) {
     return;
   }
-  const queryPath = `userData/${userID}/${kind}`;
+  const queryPath = `userData/${userID}/data_v1/${kind}`;
   const query = ref(db, queryPath);
   return onValue(query, (snapshot) => {
     if (callback) {
