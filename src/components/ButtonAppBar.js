@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
-
 import {
   AppBar,
   Box,
@@ -79,13 +77,11 @@ export default function ButtonAppBar(props) {
 
           <Box sx={{ flexGrow: 1 }}></Box>
           {!props.uid && (
-            <IconButton
-              size="large"
-              href="/signin"
-              aria-label="sign in"
-              color="inherit">
-              <AccountCircle />
-            </IconButton>
+            <Button
+            href="/signin"
+            sx={{ my: 2, color: 'white', display: 'block' }}>
+            Sign In
+          </Button>
           )}
           {props.uid && (
             <div>

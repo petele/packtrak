@@ -5,8 +5,8 @@ import {
 export default function TOSLabel() {
   return (
     <div>
-      I agree to the <Link color="inherit" target="_blank" href="/about">
-        Terms of Service
+      I understand this site is <Link color="inherit" target="_blank" href="/about">
+        experimental
       </Link>.
 
     </div>

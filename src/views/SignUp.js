@@ -29,7 +29,7 @@ export default function SignUp(props) {
   function getFailedMessage(reason) {
     console.log('reason', reason);
     if (reason === 'tos-disagree') {
-      return 'You must agree to the terms of service.';
+      return 'You must check the "I understand" checkbox to use this site.';
     } else if (reason === 'auth/invalid-email.') {
       return 'Please use a valid email address.';
     } else if (reason === 'auth/weak-password') {
