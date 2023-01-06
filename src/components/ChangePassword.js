@@ -4,7 +4,9 @@ import {
   Alert,
   Box,
   Button,
-  TextField
+  Stack,
+  TextField,
+  Typography,
 } from '@mui/material';
 
 import { changePassword, getUserEmail } from '../helpers/fbHelper';
@@ -29,6 +31,9 @@ export default function ChangePassword(props) {
     resetErrors();
 
     if (newPW1 !== newPW2) {
+      setCurrentPW('');
+      setNewPW1('');
+      setNewPW2('');
       setPWMisMatch(true);
       return;
     }
@@ -59,67 +64,71 @@ export default function ChangePassword(props) {
   }
 
   return (
-    <section>
-    <h2>Change Password</h2>
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-      <input
-        type="hidden"
-        name="email"
-        id="change-pw-email"
-        autoComplete="email"
-        value={userEmail}
-      />
-      <TextField
-        required
-        fullWidth
-        margin="normal"
-        name="current-password"
-        label="Current Password"
-        type="password"
-        autoComplete="current-password"
-        value={currentPW}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        fullWidth
-        margin="normal"
-        name="password-new1"
-        label="New Password"
-        type="password"
-        autoComplete="new-password"
-        value={newPW1}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        fullWidth
-        margin="normal"
-        name="password-new2"
-        label="Confirm New Password"
-        type="password"
-        autoComplete="new-password"
-        value={newPW2}
-        onChange={handleChange}
-      />
-      {pwMisMatch && (
-        <Alert severity="error">New passwords must match.</Alert>
-      )}
-      {pwChangeFailed && (
-        <Alert severity="error">Unable to change your password.</Alert>
-      )}
-      {pwChanged && (
-        <Alert severity="success">Your password was changed.</Alert>
-      )}
-
-      <Button
-        type="submit"
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-      >
+    <Box component="section" sx={{marginTop: 4}}>
+      <Typography component="h2" variant="h6">
         Change Password
-      </Button>
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit}>
+        <Stack spacing={2}>
+          <input
+            type="hidden"
+            name="email"
+            id="change-pw-email"
+            autoComplete="email"
+            value={userEmail}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            name="current-password"
+            label="Current Password"
+            type="password"
+            autoComplete="current-password"
+            value={currentPW}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            name="password-new1"
+            label="New Password"
+            type="password"
+            autoComplete="new-password"
+            value={newPW1}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            name="password-new2"
+            label="Confirm New Password"
+            type="password"
+            autoComplete="new-password"
+            value={newPW2}
+            onChange={handleChange}
+          />
+          {pwMisMatch && (
+            <Alert severity="error">New passwords must match.</Alert>
+          )}
+          {pwChangeFailed && (
+            <Alert severity="error">Unable to change your password.</Alert>
+          )}
+          {pwChanged && (
+            <Alert severity="success">Your password was changed.</Alert>
+          )}
+          <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-start" spacing={2}>
+            <Button
+              type="submit"
+              variant="contained"
+            >
+              Change Password
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
     </Box>
-  </section>
   );
 }

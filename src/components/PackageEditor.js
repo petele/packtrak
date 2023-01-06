@@ -5,7 +5,6 @@ import {
   Autocomplete,
   Box,
   Button,
-  Container,
   Stack,
   TextField,
 } from '@mui/material';
@@ -184,7 +183,7 @@ class PackageEditor extends React.Component {
     }
 
     return (
-      <Container component="main" sx={{marginTop: 4}}>
+      <Box component="main" sx={{marginTop: 4}}>
         <ConfirmDialog
           open={this.state.confirmDialogVisible}
           callback={this.handleConfirmDelete}
@@ -277,7 +276,7 @@ class PackageEditor extends React.Component {
             </Stack>
           </Stack>
         </Box>
-      </Container>
+      </Box>
     );
   }
 }
