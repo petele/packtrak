@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -20,15 +21,18 @@ import { signIn } from '../helpers/fbHelper';
 export default function SignIn() {
   document.title = `Sign In - PackTrak`;
 
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [signInFailed, setSignInFailed] = React.useState(false);
+
   const navigate = useNavigate();
+
+  const showRememberMe = false;
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    const password = data.get('password');
-    const rememberMe = !!data.get('remember');
-    console.log('rememberMe', rememberMe);
+    // const rememberMe = !!data.get('remember');
+    // console.log('rememberMe', rememberMe);
 
     window.gtag('event', 'login', {method: 'email'});
 
@@ -39,10 +43,23 @@ export default function SignIn() {
           navigate('/incoming');
         })
         .catch((ex) => {
-          alert('sign in failed');
+          setSignInFailed(true);
+          setEmail('');
+          setPassword('');
           console.log('sign in failed', ex);
         });
   };
+
+  const handleChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+    if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+  }
 
   return (
       <Container component="main" maxWidth="xs">
@@ -64,10 +81,13 @@ export default function SignIn() {
               fullWidth
               id="email"
               type="email"
+              inputMode="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={handleChange}
             />
             <TextField
               margin="normal"
@@ -78,11 +98,18 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={handleChange}
             />
-            <FormControlLabel
-              control={<Checkbox name="remember" value="remember" color="primary" />}
-              label="Remember me"
-            />
+            {showRememberMe && (
+              <FormControlLabel
+                control={<Checkbox name="remember" value="remember" color="primary" />}
+                label="Remember me"
+              />
+            )}
+            {signInFailed && (
+              <Alert severity="error">Sorry, sign in failed.</Alert>
+            )}
             <Button
               type="submit"
               fullWidth
