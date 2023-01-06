@@ -10,28 +10,24 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { onValue, ref } from 'firebase/database';
-
 import PackageTableRow from './PackageTableRow';
+import getPackageList from '../helpers/getPackageList';
 
-import { db } from '../helpers/fbHelper';
 import parsePackageList from '../helpers/parsePackageList';
 
 export default function PackageTable(props) {
   const [rows, setRows] = React.useState([]);
 
+  const userID = props.uid;
+  const kind = props.kind;
+
   React.useEffect(() => {
-    if (!props.uid || !props.kind) {
-      return;
-    }
-    const queryPath = `userData/${props.uid}/${props.kind}`;
-    const query = ref(db, queryPath);
-    return onValue(query, (snapshot) => {
+    return getPackageList(userID, kind, (snapshot) => {
       const pkgObj = snapshot.val();
-      const reverse = props.kind === 'delivered';
+      const reverse = kind === 'delivered';
       setRows(parsePackageList(pkgObj, reverse));
     });
-  }, [props.kind, props.uid]);
+  }, [userID, kind]);
 
   return (
     <TableContainer component={Paper}>
@@ -48,7 +44,7 @@ export default function PackageTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <PackageTableRow key={row.id} row={row} uid={props.uid} kind={props.kind} />
+            <PackageTableRow key={row.id} row={row} uid={userID} kind={kind} />
           ))}
         </TableBody>
       </Table>
