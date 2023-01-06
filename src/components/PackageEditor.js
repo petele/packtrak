@@ -217,6 +217,7 @@ class PackageEditor extends React.Component {
         <TextField
           name="orderURL"
           type="url"
+          inputMode="url"
           fullWidth
           margin="normal"
           id="pkg-order-url"
@@ -245,6 +246,7 @@ class PackageEditor extends React.Component {
           fullWidth
           margin="normal"
           type="url"
+          inputMode="url"
           disabled={this.state.trackingLinkEditDisabled}
           id="pkg-tracking-url"
           label="Tracking URL"
