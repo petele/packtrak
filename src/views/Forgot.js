@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -17,13 +18,21 @@ import { resetPassword } from '../helpers/fbHelper';
 export default function Forgot() {
   document.title = `Forgot Password - PackTrak`;
 
+  const [email, setEmail] = React.useState('');
+  const [resetDone, setResetDone] = React.useState(false);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    console.log('forgot password', email);
     resetPassword(email);
+    setEmail('');
+    setResetDone(true);
+  };
+
+  const handleChange = (event) => {
+    const target = event.target;
+    const value = target.value;
+    setEmail(value);
   };
 
   return (
@@ -46,11 +55,17 @@ export default function Forgot() {
               fullWidth
               id="email"
               type="email"
+              inputMode="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={handleChange}
             />
+            {resetDone && (
+              <Alert severity="success">Password reset email sent.</Alert>
+            )}
             <Button
               type="submit"
               fullWidth
