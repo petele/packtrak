@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -31,11 +32,13 @@ class PackageEditor extends React.Component {
       from: '',
       what: '',
       orderURL: '',
-      shipper:  '',
+      shipper:  null,
       trackingNumber: '',
       trackingURL: '',
 
       trackingLinkEditDisabled: true,
+      errorOnSave: false,
+      errorOnDelete: false,
       confirmDialogVisible: false,
     };
 
@@ -49,9 +52,10 @@ class PackageEditor extends React.Component {
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
 
     this.shipperOptions = [
-      '', 'CDL', 'DHL', 'FedEx', 'LaserShip', 'TBA', 'UPS', 'USPS',
-      'Unknown', 'Custom'
+      'CDL', 'DHL', 'FedEx', 'LaserShip', 'TBA', 'UPS',
+      'USPS', 'Custom',
     ];
+
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -62,7 +66,7 @@ class PackageEditor extends React.Component {
         from: pkgData.from || '',
         what: pkgData.what || '',
         orderURL: pkgData.orderURL || '',
-        shipper: pkgData.shipper || '',
+        shipper: pkgData.shipper || null,
         trackingNumber: pkgData.trackingNumber || '',
         trackingLinkEditDisabled: true,
         ready: true,
@@ -94,30 +98,25 @@ class PackageEditor extends React.Component {
   }
 
   handleShipperChange(event, newVal) {
-    const was = this.state.shipper;
-    console.log('shipper changed', was, newVal);
     const state = {
       shipper: newVal,
-      trackingLinkEditDisabled: newVal !== 'Custom',
     };
-    if (was !== 'Custom' && newVal === 'Custom') {
+    if (newVal === 'Custom') {
+      state.trackingLinkEditDisabled = false;
       state.trackingURL = '';
+    } else {
+      state.trackingLinkEditDisabled = true;
     }
     this.setState(state);
     this.updateTrackingURL(newVal, this.state.trackingNumber);
   }
 
   updateTrackingURL(shipper, trackingNumber) {
-    const url = getTrackingURL(shipper, trackingNumber);
-    if (shipper === 'Custom') {
-      this.setState({trackingLinkEditDisabled: false});
+    if (trackingNumber === '' || shipper === 'Custom') {
       return;
     }
-    this.setState({
-      trackingURL: url || '',
-      trackingLinkEditDisabled: true,
-    });
-    // console.log('updateTrackingURL', shipper, trackingNumber, url);
+    const url = getTrackingURL(shipper, trackingNumber);
+    this.setState({trackingURL: url || ''});
   }
 
   handleDelete(event) {
@@ -127,19 +126,22 @@ class PackageEditor extends React.Component {
 
   handleConfirmDelete(confirmed) {
     this.setState({confirmDialogVisible: false});
-    if (confirmed) {
-      deletePackage(this.props.uid, this.props.kind, this.props.id)
-        .then(() => {
-          this.returnToIncoming();
-        })
-        .catch((ex) => {
-          console.log('TODO: unable to delete', ex);
-        });
+    if (confirmed === false) {
+      return;
     }
+    deletePackage(this.props.uid, this.props.kind, this.props.id)
+      .then(() => {
+        this.returnToIncoming();
+      })
+      .catch((ex) => {
+        this.setState({errorOnDelete: true});
+        console.log('Unable to delete', ex);
+      });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({errorOnSave: false});
 
     const pkg = {
       dateExpected: this.state.dateExpected,
@@ -162,12 +164,17 @@ class PackageEditor extends React.Component {
     return this.savePackage(this.props.uid, pkg).then((id) => {
       this.returnToIncoming();
     }).catch((ex) => {
-      alert(`TODO: '${this.state.mode}' ${this.state.id} failed`);
+      this.setState({errorOnSave: true});
       console.log(ex);
     });
   }
 
-
+  preventSubmitOnEnter(event) {
+    if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
+      event.preventDefault();
+      event.defaultMuiPrevented = true;
+    }
+  }
 
   render() {
     if (!this.state.ready) {
@@ -184,7 +191,10 @@ class PackageEditor extends React.Component {
           details="This will permanently delete this package from your list."
           label="Delete"
         />
-        <Box component="form" onSubmit={this.handleSubmit}>
+        <Box component="form"
+          onSubmit={this.handleSubmit}
+          onKeyDown={this.preventSubmitOnEnter}
+        >
           <Stack spacing={2}>
             <TextField
               name="dateExpected"
@@ -213,19 +223,12 @@ class PackageEditor extends React.Component {
               value={this.state.what}
               onChange={this.handleInputChange}
             />
-            <TextField
-              name="orderURL"
-              type="url"
-              inputMode="url"
-              fullWidth
-              label="Order URL"
-              value={this.state.orderURL}
-              onChange={this.handleInputChange}
-            />
             <Autocomplete
               label="Shipper"
+              autoSelect={true}
               value={this.state.shipper}
               options={this.shipperOptions}
+
               renderInput={(params) => <TextField {...params} label="Shipper" />}
               onChange={this.handleShipperChange}
             />
@@ -246,6 +249,21 @@ class PackageEditor extends React.Component {
               value={this.state.trackingURL}
               onChange={this.handleInputChange}
             />
+            <TextField
+              name="orderURL"
+              type="url"
+              inputMode="url"
+              fullWidth
+              label="Order URL"
+              value={this.state.orderURL}
+              onChange={this.handleInputChange}
+            />
+            {this.state.errorOnDelete && (
+              <Alert severity="error">Sorry, something went wrong.</Alert>
+            )}
+            {this.state.errorOnSave && (
+              <Alert severity="error">Sorry, something went wrong.</Alert>
+            )}
             <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
               <Button type="submit" value="submit" variant="contained">
                 {this.state.saveLabel}

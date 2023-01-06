@@ -49,9 +49,14 @@ export function getTodayEnd() {
  * @returns {string} Monday, May 24th, 2023
  */
 export function formatToLongString(dtValue) {
-  const opts = {dateStyle: 'full'};
-  const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
-  return dtFormatter.format(dtValue);
+  try {
+    const opts = {dateStyle: 'full'};
+    const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
+    return dtFormatter.format(dtValue);
+  } catch (ex) {
+    console.log('Error parsing DT value', dtValue, ex);
+    return 'Unknown';
+  }
 }
 
 /**

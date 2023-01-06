@@ -9,6 +9,9 @@ export default function getTrackingURL(shipper, trackingNumber) {
   if (!trackingNumber) {
     return null;
   }
+  if (shipper === 'Custom') {
+    return null;
+  }
   if (shipper === 'CDL') {
     return `https://ship.cdldelivers.com/Xcelerator/Tracking/Tracking?packageitemrefno=${trackingNumber}`;
   }
