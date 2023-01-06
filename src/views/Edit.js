@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-
 import {
-  Box,
   Container
 } from '@mui/material';
 
@@ -43,20 +41,11 @@ export default function Edit(props) {
   };
 
   return (
-    <Container component="main" fixed>
-      <Box
-        sx={{
-          marginTop: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'left',
-        }}
-      >
-        <PackageEditor
-            mode="edit"
-            id={id} kind={kind} uid={uid} pkgData={pkgData}
-            fnReturn={returnToIncoming} fnSave={saveEdits} />
-      </Box>
+    <Container component="main" sx={{marginTop: 2}}>
+      <PackageEditor
+          mode="edit"
+          id={id} kind={kind} uid={uid} pkgData={pkgData}
+          fnReturn={returnToIncoming} fnSave={saveEdits} />
     </Container>
   );
 }

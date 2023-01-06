@@ -4,6 +4,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Container,
   Stack,
   TextField,
 } from '@mui/material';
@@ -12,7 +13,6 @@ import ConfirmDialog from './ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getTrackingURL from '../helpers/getTrackingURL';
 import deletePackage from '../helpers/deletePackage';
-import { formatToISODate } from '../helpers/dtHelpers';
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class PackageEditor extends React.Component {
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
 
       id: props.id,
-      dateExpected: formatToISODate(new Date()),
+      dateExpected: '',
       from: '',
       what: '',
       orderURL: '',
@@ -42,9 +42,9 @@ class PackageEditor extends React.Component {
     this.returnToIncoming = props.fnReturn;
     this.savePackage = props.fnSave;
 
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleShipperChange = this.handleShipperChange.bind(this);
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
 
@@ -177,94 +177,89 @@ class PackageEditor extends React.Component {
     }
 
     return (
-      <Box component="form" onSubmit={this.handleSubmit}>
+      <Container component="main" sx={{marginTop: 4}}>
         <ConfirmDialog
           open={this.state.confirmDialogVisible}
           callback={this.handleConfirmDelete}
           details="This will permanently delete this package from your list."
           label="Delete"
         />
-        <TextField
-          margin="normal"
-          name="dateExpected"
-          required
-          id="date-expected"
-          label="Date Expected"
-          type="date"
-          value={this.state.dateExpected}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          margin="normal"
-          name="from"
-          required
-          fullWidth
-          id="pkg-from"
-          label="From"
-          value={this.state.from}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="what"
-          margin="normal"
-          required
-          fullWidth
-          id="pkg-what"
-          label="What"
-          value={this.state.what}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="orderURL"
-          type="url"
-          inputMode="url"
-          fullWidth
-          margin="normal"
-          id="pkg-order-url"
-          label="Order URL"
-          value={this.state.orderURL}
-          onChange={this.handleInputChange}
-        />
-        <Autocomplete
-          label="Shipper"
-          value={this.state.shipper}
-          options={this.shipperOptions}
-          renderInput={(params) => <TextField {...params} label="Shipper" />}
-          onChange={this.handleShipperChange}
-        />
-        <TextField
-          name="trackingNumber"
-          fullWidth
-          margin="normal"
-          id="pkg-tracking-number"
-          label="Tracking Number"
-          value={this.state.trackingNumber}
-          onChange={this.handleInputChange}
-        />
-        <TextField
-          name="trackingURL"
-          fullWidth
-          margin="normal"
-          type="url"
-          inputMode="url"
-          disabled={this.state.trackingLinkEditDisabled}
-          id="pkg-tracking-url"
-          label="Tracking URL"
-          value={this.state.trackingURL}
-          onChange={this.handleInputChange}
-        />
-        <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
-          {this.state.mode === 'edit' && (
-            <Button
-              type="button" variant="contained" color="error"
-              onClick={this.handleDelete}>Delete</Button>
-          )}
-          <Button href="/incoming" variant="outlined">Cancel</Button>
-          <Button type="submit" value="submit" variant="contained">
-            {this.state.saveLabel}
-          </Button>
-        </Stack>
-      </Box>
+        <Box component="form" onSubmit={this.handleSubmit}>
+          <Stack spacing={2}>
+            <TextField
+              name="dateExpected"
+              required
+              label="Date Expected"
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={this.state.dateExpected}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="from"
+              required
+              fullWidth
+              label="From"
+              value={this.state.from}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="what"
+              required
+              fullWidth
+              label="What"
+              value={this.state.what}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="orderURL"
+              type="url"
+              inputMode="url"
+              fullWidth
+              label="Order URL"
+              value={this.state.orderURL}
+              onChange={this.handleInputChange}
+            />
+            <Autocomplete
+              label="Shipper"
+              value={this.state.shipper}
+              options={this.shipperOptions}
+              renderInput={(params) => <TextField {...params} label="Shipper" />}
+              onChange={this.handleShipperChange}
+            />
+            <TextField
+              name="trackingNumber"
+              fullWidth
+              label="Tracking Number"
+              value={this.state.trackingNumber}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              name="trackingURL"
+              fullWidth
+              type="url"
+              inputMode="url"
+              disabled={this.state.trackingLinkEditDisabled}
+              label="Tracking URL"
+              value={this.state.trackingURL}
+              onChange={this.handleInputChange}
+            />
+            <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
+              <Button type="submit" value="submit" variant="contained">
+                {this.state.saveLabel}
+              </Button>
+              <Button href="/incoming" variant="outlined">Cancel</Button>
+              {this.state.mode === 'edit' && (
+                <Button
+                  type="button" variant="contained" color="error"
+                  onClick={this.handleDelete}>Delete</Button>
+              )}
+            </Stack>
+          </Stack>
+        </Box>
+      </Container>
     );
   }
 }

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
-  Box,
   Container
 } from '@mui/material';
 
@@ -28,20 +27,11 @@ export default function Add(props) {
   };
 
   return (
-    <Container component="main" fixed>
-      <Box
-        sx={{
-          marginTop: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'left',
-        }}
-      >
-        <PackageEditor
-          mode="add"
-          uid={props.uid}
-          fnReturn={returnToIncoming} fnSave={savePackage} />
-      </Box>
+    <Container component="main" sx={{marginTop: 2}}>
+      <PackageEditor
+        mode="add"
+        uid={props.uid}
+        fnReturn={returnToIncoming} fnSave={savePackage} />
     </Container>
   );
 }
