@@ -35,11 +35,11 @@ export default function PackageTable(props) {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="list of packages">
+      <Table size="small" aria-label="list of packages">
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox"></TableCell>
-            <TableCell></TableCell>
+            <TableCell padding="none"></TableCell>
             <TableCell>Date Expected</TableCell>
             <TableCell>From</TableCell>
             <TableCell>What</TableCell>

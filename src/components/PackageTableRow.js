@@ -19,6 +19,7 @@ class PackageTableRow extends React.Component {
   constructor(props) {
     super(props);
     this.onCheckChange = this.onCheckChange.bind(this);
+    this.onRowClick = this.onRowClick.bind(this);
   }
 
   onCheckChange(e) {
@@ -26,6 +27,13 @@ class PackageTableRow extends React.Component {
     const kind = this.props.kind;
     const id = this.props.row.id;
     markAsDelivered(uid, kind, id, e.target.checked);
+  }
+
+  onRowClick(event) {
+    const elemType = event.target.tagName;
+    if (elemType === 'A') {
+      return;
+    }
   }
 
   render() {
@@ -48,6 +56,10 @@ class PackageTableRow extends React.Component {
       myStyles['backgroundColor'] = '#e3f2fd';
     }
 
+    const pointerStyle = {
+      cursor: 'pointer !important',
+    };
+
     return (
       <TableRow
         key={row.id}
@@ -56,21 +68,24 @@ class PackageTableRow extends React.Component {
         <TableCell padding="checkbox">
           <Checkbox
             checked={row.delivered}
-            onChange={this.onCheckChange} />
+            onChange={this.onCheckChange}
+          />
         </TableCell>
-        <TableCell align="center">
+        <TableCell padding="none" align="center">
           <IconButton href={editURL} aria-label="edit" onClick={this.onEditClick}>
             <EditIcon />
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
           {dtExpectedFormatted}
         </TableCell>
-        <TableCell>
+        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
           <OrderFromLink row={row} />
         </TableCell>
-        <TableCell>{row.what}</TableCell>
-        <TableCell>
+        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
+          {row.what}
+        </TableCell>
+        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
           <TrackingLink row={row} />
         </TableCell>
       </TableRow>
