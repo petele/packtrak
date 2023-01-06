@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Checkbox,
@@ -15,82 +16,74 @@ import OrderFromLink from './OrderFromLink';
 import markAsDelivered from '../helpers/markAsDelivered';
 import { formatToLongString, parseDateFromString } from '../helpers/dtHelpers';
 
-class PackageTableRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onCheckChange = this.onCheckChange.bind(this);
-    this.onRowClick = this.onRowClick.bind(this);
-  }
+export default function PackageTableRow(props) {
+  const navigate = useNavigate();
 
-  onCheckChange(e) {
-    const uid = this.props.uid;
-    const kind = this.props.kind;
-    const id = this.props.row.id;
+  const row = props.row;
+
+  const id = row.id;
+  const kind = props.kind;
+  const editURL = `/edit/${kind}/${id}`;
+
+  // Get the formatted date
+  const dtExpected = parseDateFromString(row.dateExpected);
+  const dtExpectedFormatted = formatToLongString(dtExpected);
+
+  function onCheckChange(e) {
+    const uid = props.uid;
     markAsDelivered(uid, kind, id, e.target.checked);
   }
 
-  onRowClick(event) {
+  function onRowClick(event) {
     const elemType = event.target.tagName;
     if (elemType === 'A') {
       return;
     }
+    navigate(editURL);
   }
 
-  render() {
-    const row = this.props.row;
-
-    // Get the formatted date
-    const dtExpected = parseDateFromString(row.dateExpected);
-    const dtExpectedFormatted = formatToLongString(dtExpected);
-
-    const kind = this.props.kind;
-    const editURL = `/edit/${kind}/${row.id}`;
-
-    const myStyles = {
-      '&:last-child td, &:last-child th': { border: 0 },
-    };
-    if (row.isOverdue) {
-      myStyles['backgroundColor'] = '#ffebee';
-    }
-    if (row.isDueToday) {
-      myStyles['backgroundColor'] = '#e3f2fd';
-    }
-
-    const pointerStyle = {
-      cursor: 'pointer !important',
-    };
-
-    return (
-      <TableRow
-        key={row.id}
-        sx={myStyles}
-      >
-        <TableCell padding="checkbox">
-          <Checkbox
-            checked={row.delivered}
-            onChange={this.onCheckChange}
-          />
-        </TableCell>
-        <TableCell padding="none" align="center">
-          <IconButton href={editURL} aria-label="edit" onClick={this.onEditClick}>
-            <EditIcon />
-          </IconButton>
-        </TableCell>
-        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
-          {dtExpectedFormatted}
-        </TableCell>
-        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
-          <OrderFromLink row={row} />
-        </TableCell>
-        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
-          {row.what}
-        </TableCell>
-        <TableCell onClick={this.onRowClick} sx={pointerStyle}>
-          <TrackingLink row={row} />
-        </TableCell>
-      </TableRow>
-    );
+  const myStyles = {
+    '&:last-child td, &:last-child th': { border: 0 },
+  };
+  if (row.isOverdue) {
+    myStyles['backgroundColor'] = '#ffebee';
   }
+  if (row.isDueToday) {
+    myStyles['backgroundColor'] = '#e3f2fd';
+  }
+
+  const pointerStyle = {
+    cursor: 'pointer !important',
+  };
+
+  return (
+    <TableRow
+      key={row.id}
+      sx={myStyles}
+    >
+      <TableCell padding="checkbox">
+        <Checkbox
+          checked={row.delivered}
+          onChange={onCheckChange}
+        />
+      </TableCell>
+      <TableCell padding="none" align="center">
+        <IconButton href={editURL} aria-label="edit">
+          <EditIcon />
+        </IconButton>
+      </TableCell>
+      <TableCell onClick={onRowClick} sx={pointerStyle}>
+        {dtExpectedFormatted}
+      </TableCell>
+      <TableCell onClick={onRowClick} sx={pointerStyle}>
+        <OrderFromLink row={row} />
+      </TableCell>
+      <TableCell onClick={onRowClick} sx={pointerStyle}>
+        {row.what}
+      </TableCell>
+      <TableCell onClick={onRowClick} sx={pointerStyle}>
+        <TrackingLink row={row} />
+      </TableCell>
+    </TableRow>
+  );
 }
-
-export default PackageTableRow;
