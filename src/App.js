@@ -7,6 +7,7 @@ import { CssBaseline } from '@mui/material';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import ButtonAppBar from './components/ButtonAppBar';
+import ExperimentalRibbon from './components/ExperimentalRibbon';
 
 import { auth } from './helpers/fbHelper';
 
@@ -61,6 +62,7 @@ function Layout(props) {
   return (
     <Fragment>
       <CssBaseline />
+      <ExperimentalRibbon />
       <ButtonAppBar uid={props.uid} />
       <Outlet />
     </Fragment>
