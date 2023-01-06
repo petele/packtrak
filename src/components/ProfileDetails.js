@@ -1,8 +1,10 @@
+import {
+  Box
+} from '@mui/material';
 
 export default function ProfileDetails(props) {
   return (
-    <section>
-      <div>{props.uid}</div>
-    </section>
+    <Box>
+    </Box>
   );
 }

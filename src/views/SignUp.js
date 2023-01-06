@@ -8,8 +8,8 @@ import {
   Container,
   Checkbox,
   FormControlLabel,
-  Grid,
   Link,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -63,22 +63,13 @@ export default function SignUp(props) {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{
-        marginTop: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Typography component="h1" variant="h5">
-        Sign Up
+    <Container component="main" maxWidth="xs" sx={{marginTop: 2}}>
+      <Typography component="h1" variant="h5" sx={{textAlign: 'center'}}>
+        Sign up
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+        <Stack spacing={2}>
+          <Stack direction="row" justifyContent="space-between">
             <TextField
               autoComplete="given-name"
               name="firstName"
@@ -87,9 +78,8 @@ export default function SignUp(props) {
               id="firstName"
               label="First Name"
               autoFocus
+              sx={{marginRight: 1}}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
@@ -97,66 +87,57 @@ export default function SignUp(props) {
               label="Last Name"
               name="lastName"
               autoComplete="family-name"
+              sx={{marginLeft: 1}}
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              type="email"
-              inputMode="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              minLength="6"
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox name="agreeToS" value="agreeToS" color="primary" />}
-              label={<TOSLabel />}
-            />
-          </Grid>
-        </Grid>
-        {signUpFailed && (
-          <Alert severity="error">
-            {signUpFailed}
-          </Alert>
-        )}
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Sign Up
-        </Button>
-        <Grid container>
-          <Grid item xs>
-              <Link href="/forgot" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signin" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-        <Copyright sx={{ mt: 4, mb: 4 }} />
-      </Container>
+          </Stack>
+          <TextField
+            required
+            fullWidth
+            id="email"
+            type="email"
+            inputMode="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+          />
+          <TextField
+            required
+            fullWidth
+            minLength="6"
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+          />
+          <FormControlLabel
+            control={<Checkbox name="agreeToS" value="agreeToS" color="primary" />}
+            label={<TOSLabel />}
+          />
+          {signUpFailed && (
+            <Alert severity="error">
+              {signUpFailed}
+            </Alert>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+          <Stack direction="row" justifyContent="space-between" spacing={2}>
+            <Link href="/forgot" variant="body2">
+              Forgot password?
+            </Link>
+            <Link href="/signin" variant="body2">
+              Already have an account? Sign in
+            </Link>
+          </Stack>
+        </Stack>
+      </Box>
+      <Copyright sx={{ mt: 4, mb: 4 }} />
+    </Container>
   );
 }

@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  Container
-} from '@mui/material';
+import { Container } from '@mui/material';
 
 import PackageEditor from '../components/PackageEditor';
-
 import addPackage from '../helpers/addPackage';
 
 export default function Add(props) {

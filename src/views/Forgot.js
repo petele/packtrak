@@ -6,7 +6,7 @@ import {
   Button,
   Container,
   Link,
-  Grid,
+  Stack,
   TextField,
   Typography
 } from '@mui/material';
@@ -36,57 +36,44 @@ export default function Forgot() {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{
-        marginTop: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Typography component="h1" variant="h5">
-        Forgot Password
+    <Container component="main" maxWidth="xs" sx={{marginTop: 2}}>
+      <Typography component="h1" variant="h5" sx={{textAlign: 'center'}}>
+        Forgot password
       </Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          type="email"
-          inputMode="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          value={email}
-          onChange={handleChange}
-        />
-        {resetDone && (
-          <Alert severity="success">Password reset email sent.</Alert>
-        )}
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 2, mb: 2 }}
-        >
-          Reset Password
-        </Button>
-        <Grid container>
-          <Grid item xs>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Stack spacing={2}>
+          <TextField
+            required
+            fullWidth
+            type="email"
+            inputMode="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={handleChange}
+          />
+          {resetDone && (
+            <Alert severity="success">Password reset email sent.</Alert>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Reset Password
+          </Button>
+          <Stack direction="row" justifyContent="space-between" spacing={2}>
             <Link href="/signin" variant="body2">
               Sign In
             </Link>
-          </Grid>
-          <Grid item>
             <Link href="/signup" variant="body2">
               Sign Up
             </Link>
-          </Grid>
-        </Grid>
+          </Stack>
+        </Stack>
       </Box>
       <Copyright sx={{ mt: 4, mb: 4 }} />
     </Container>

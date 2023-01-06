@@ -8,8 +8,8 @@ import {
   Container,
   Checkbox,
   FormControlLabel,
-  Grid,
   Link,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -62,20 +62,12 @@ export default function SignIn() {
   }
 
   return (
-      <Container
-        component="main"
-        maxWidth="xs"
-        sx={{
-          marginTop: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit}>
+    <Container component="main" maxWidth="xs" sx={{marginTop: 2}}>
+      <Typography component="h1" variant="h5" sx={{textAlign: 'center'}}>
+        Sign in
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Stack spacing={2}>
           <TextField
             margin="normal"
             required
@@ -119,20 +111,17 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/forgot" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-        <Copyright sx={{ mt: 4, mb: 4 }} />
-      </Container>
+          <Stack direction="row" sx={{ mt: 2 }} justifyContent="space-between">
+            <Link href="/forgot" variant="body2">
+              Forgot password?
+            </Link>
+            <Link href="/signup" variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
+          </Stack>
+        </Stack>
+      </Box>
+      <Copyright sx={{ mt: 4, mb: 4 }} />
+    </Container>
   );
 }

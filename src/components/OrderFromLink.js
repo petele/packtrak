@@ -1,16 +1,21 @@
 import * as React from 'react';
 
+import {
+  Box,
+  Link
+} from '@mui/material';
+
 class OrderFromLink extends React.Component {
   render() {
     const row = this.props.row;
     if (row.orderURL) {
       return (
-        <a href={row.orderURL} target="_blank" rel="noreferrer">
+        <Link href={row.orderURL} target="_blank" rel="noreferrer">
           {row.from}
-        </a>
+        </Link>
       );
     }
-    return (<span>{row.from}</span>);
+    return (<Box>{row.from}</Box>);
   }
 }
 

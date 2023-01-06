@@ -1,4 +1,5 @@
 import {
+  Box,
   Fab
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,11 +10,11 @@ export default function Delivered(props) {
   document.title = `Delivered - PackTrak`;
 
   return (
-    <div>
+    <Box>
       <PackageTable kind="delivered" uid={props.uid} />
       <Fab href="/add" color="primary" aria-label="add">
         <AddIcon />
       </Fab>
-    </div>
+    </Box>
   );
 }

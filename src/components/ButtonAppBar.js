@@ -84,7 +84,7 @@ export default function ButtonAppBar(props) {
           </Button>
           )}
           {props.uid && (
-            <div>
+            <Box>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -96,24 +96,24 @@ export default function ButtonAppBar(props) {
                 <AccountCircle />
               </IconButton>
               <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem component="a" href="/profile">Profile</MenuItem>
-                    <MenuItem onClick={clickSignOut}>Sign Out</MenuItem>
-                  </Menu>
-                </div>
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem component="a" href="/profile">Profile</MenuItem>
+                <MenuItem onClick={clickSignOut}>Sign Out</MenuItem>
+              </Menu>
+            </Box>
           )}
         </Toolbar>
       </AppBar>

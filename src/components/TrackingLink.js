@@ -1,5 +1,9 @@
 import * as React from 'react';
 
+import {
+  Link,
+} from '@mui/material';
+
 import getTrackingURL from '../helpers/getTrackingURL';
 
 class TrackingLink extends React.Component {
@@ -8,9 +12,6 @@ class TrackingLink extends React.Component {
     if (row.trackingURL) {
       return {link: row.trackingURL, label: 'Track'};
     }
-    // if (!row.trackingNumber) {
-    //   return null;
-    // }
     const url = getTrackingURL(row.shipper, row.trackingNumber);
     if (url) {
       return {
@@ -32,12 +33,12 @@ class TrackingLink extends React.Component {
 
     if (info) {
       return (
-        <a href={info.link} target="_blank" rel="noreferrer">
+        <Link href={info.link} target="_blank" rel="noreferrer">
           {info.label}
-        </a>
+        </Link>
       );
     }
-    return '';
+    return null;
   }
 }
 
