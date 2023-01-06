@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -14,13 +15,31 @@ import {
 } from '@mui/material';
 
 import Copyright from '../components/Copyright';
+import TOSLabel from '../components/TOSLabel';
 
 import addUser from '../helpers/addUser';
 
 export default function SignUp(props) {
   document.title = `Sign Up - PackTrak`;
 
+  const [signUpFailed, setSignUpFailed] = React.useState(false);
+
   const navigate = useNavigate();
+
+  function getFailedMessage(reason) {
+    console.log('reason', reason);
+    if (reason === 'tos-disagree') {
+      return 'You must agree to the terms of service.';
+    } else if (reason === 'auth/invalid-email.') {
+      return 'Please use a valid email address.';
+    } else if (reason === 'auth/weak-password') {
+      return 'Please use a stronger password.';
+    } else if (reason === 'auth/email-already-in-use') {
+      return 'An error occured creating your account.'
+    }
+
+    return 'Sorry, an error occured creating your account.';
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,8 +58,7 @@ export default function SignUp(props) {
         navigate('/incoming');
         return;
       }
-      alert('sign up failed');
-      console.log('sign up failed', result);
+      setSignUpFailed(getFailedMessage(result.reason));
     })
   };
 
@@ -57,7 +75,7 @@ export default function SignUp(props) {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -85,6 +103,8 @@ export default function SignUp(props) {
                   required
                   fullWidth
                   id="email"
+                  type="email"
+                  inputMode="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
@@ -94,6 +114,7 @@ export default function SignUp(props) {
                 <TextField
                   required
                   fullWidth
+                  minLength="6"
                   name="password"
                   label="Password"
                   type="password"
@@ -104,10 +125,15 @@ export default function SignUp(props) {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox name="agreeToS" value="agreeToS" color="primary" />}
-                  label="I agree to the terms of service."
+                  label={<TOSLabel />}
                 />
               </Grid>
             </Grid>
+            {signUpFailed && (
+              <Alert severity="error">
+                {signUpFailed}
+              </Alert>
+            )}
             <Button
               type="submit"
               fullWidth
