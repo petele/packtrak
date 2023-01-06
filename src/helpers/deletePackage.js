@@ -2,6 +2,8 @@ import { set, get, ref, remove } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 
+const _keepBackup = false;
+
 /**
  * Deletes the specified package.
  *
@@ -22,14 +24,16 @@ export default async function deletePackage(userID, kind, id) {
     const fromRef = ref(db, fromQueryPath);
     const fromSnap = await get(fromRef);
 
-    const val = fromSnap.val();
-    val.deleted = true;
-    val.dtDeleted = Date.now();
+    if (_keepBackup) {
+      const val = fromSnap.val();
+      val.deleted = true;
+      val.dtDeleted = Date.now();
 
-    // Move version to deleted
-    const toQueryPath = `userData/${userID}/deleted/${id}`;
-    const toRef = ref(db, toQueryPath);
-    await set(toRef, val);
+      // Move version to deleted
+      const toQueryPath = `userData/${userID}/deleted/${id}`;
+      const toRef = ref(db, toQueryPath);
+      await set(toRef, val);
+    }
 
     // Delete the old version
     await remove(fromRef);
