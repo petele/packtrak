@@ -36,59 +36,59 @@ export default function Forgot() {
   };
 
   return (
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        marginTop: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Typography component="h1" variant="h5">
+        Forgot Password
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          type="email"
+          inputMode="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={handleChange}
+        />
+        {resetDone && (
+          <Alert severity="success">Password reset email sent.</Alert>
+        )}
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2, mb: 2 }}
         >
-          <Typography component="h1" variant="h5">
-            Forgot Password
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              type="email"
-              inputMode="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={handleChange}
-            />
-            {resetDone && (
-              <Alert severity="success">Password reset email sent.</Alert>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Reset Password
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/signin" variant="body2">
-                  Sign In
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  Sign Up
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+          Reset Password
+        </Button>
+        <Grid container>
+          <Grid item xs>
+            <Link href="/signin" variant="body2">
+              Sign In
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link href="/signup" variant="body2">
+              Sign Up
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
+      <Copyright sx={{ mt: 4, mb: 4 }} />
+    </Container>
   );
 }
