@@ -25,6 +25,7 @@ class PackageEditor extends React.Component {
 
       ready: props.mode === 'add' ? true : !!props.pkgData,
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
+      backURL: `/${props.kind}`,
 
       id: props.id,
       dateExpected: '',
@@ -267,7 +268,7 @@ class PackageEditor extends React.Component {
               <Button type="submit" value="submit" variant="contained">
                 {this.state.saveLabel}
               </Button>
-              <Button href="/incoming" variant="outlined">Cancel</Button>
+              <Button href={this.state.backURL} variant="outlined">Cancel</Button>
               {this.state.mode === 'edit' && (
                 <Button
                   type="button" variant="contained" color="error"
