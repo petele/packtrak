@@ -10,6 +10,8 @@ A fun experiment with React.
 * [ ] Input checking for Edit Package
 * [ ] Add dateDelivered field
 * [ ] Routing for logged in/out state
+* [ ] Validation & guessing shipper based on Tracking Number
+* [ ] View when no packages in list
 
 ### Done
 
