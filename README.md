@@ -12,6 +12,7 @@ A fun experiment with React.
 * [ ] Routing for logged in/out state
 * [ ] Validation & guessing shipper based on Tracking Number
 * [ ] View when no packages in list
+* [ ] Switch top nav to tabs
 
 ### Done
 
