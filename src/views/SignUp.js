@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import {
   Alert,
@@ -128,10 +128,10 @@ export default function SignUp(props) {
             Sign Up
           </Button>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Link to="/forgot" variant="body2">
+            <Link component={RouterLink} to="/forgot" variant="body2">
               Forgot password?
             </Link>
-            <Link to="/signin" variant="body2">
+            <Link component={RouterLink} to="/signin" variant="body2">
               Already have an account? Sign in
             </Link>
           </Stack>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   AppBar,
@@ -32,13 +32,17 @@ export default function ButtonAppBar(props) {
 
   const clickSignOut = () => {
     signOut();
-    setAnchorEl(null);
+    closeMenu();
     navigate('/');
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    closeMenu()
   };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -47,8 +51,8 @@ export default function ButtonAppBar(props) {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: {xs: 'none', md: 'flex'},
@@ -60,7 +64,8 @@ export default function ButtonAppBar(props) {
           </Typography>
           {props.uid && (
             <Button
-              href="/incoming"
+              component={Link}
+              to="/incoming"
               className={isIncoming}
               sx={{ my: 2, color: 'white', display: 'block' }}>
               Incoming
@@ -68,7 +73,8 @@ export default function ButtonAppBar(props) {
           )}
           {props.uid && (
             <Button
-              href="/delivered"
+              component={Link}
+              to="/delivered"
               className={isDelivered}
               sx={{ my: 2, color: 'white', display: 'block' }}>
               Delivered
@@ -78,7 +84,8 @@ export default function ButtonAppBar(props) {
           <Box sx={{ flexGrow: 1 }}></Box>
           {!props.uid && (
             <Button
-            href="/signin"
+            component={Link}
+            to="/signin"
             sx={{ my: 2, color: 'white', display: 'block' }}>
             Sign In
           </Button>
@@ -110,7 +117,7 @@ export default function ButtonAppBar(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem component="a" href="/profile">Profile</MenuItem>
+                <MenuItem component={Link} onClick={closeMenu} to="/profile">Profile</MenuItem>
                 <MenuItem onClick={clickSignOut}>Sign Out</MenuItem>
               </Menu>
             </Box>

@@ -33,7 +33,7 @@ class TrackingLink extends React.Component {
 
     if (info) {
       return (
-        <Link to={info.link} target="_blank" rel="noreferrer">
+        <Link href={info.link} target="_blank" rel="noreferrer">
           {info.label}
         </Link>
       );

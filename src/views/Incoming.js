@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import {
   Box,
   Fab
@@ -12,7 +14,7 @@ export default function Incoming(props) {
   return (
     <Box>
       <PackageTable kind="incoming" uid={props.uid} />
-      <Fab href="/add" color="primary" aria-label="add">
+      <Fab component={Link} to="/add" color="primary" aria-label="add">
         <AddIcon />
       </Fab>
     </Box>

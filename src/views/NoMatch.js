@@ -1,3 +1,5 @@
+import { Link as RouterLink } from 'react-router-dom';
+
 import {
   Container,
   Link,
@@ -29,7 +31,7 @@ export default function NoMatch(props) {
         Panda is sad because it can't find what you're looking for. Sorry.
       </Typography>
       <Typography component="p">
-        <Link to={backURL} variant="body1">
+        <Link component={RouterLink} to={backURL} variant="body1">
           Go back
         </Link>
       </Typography>

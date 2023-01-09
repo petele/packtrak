@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import {
   Alert,
@@ -66,10 +67,10 @@ export default function Forgot() {
             Reset Password
           </Button>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Link to="/signin" variant="body2">
+            <Link component={RouterLink} to="/signin" variant="body2">
               Sign In
             </Link>
-            <Link to="/signup" variant="body2">
+            <Link component={RouterLink} to="/signup" variant="body2">
               Sign Up
             </Link>
           </Stack>

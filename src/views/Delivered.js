@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import {
   Box,
   Fab
@@ -12,7 +13,7 @@ export default function Delivered(props) {
   return (
     <Box>
       <PackageTable kind="delivered" uid={props.uid} />
-      <Fab href="/add" color="primary" aria-label="add">
+      <Fab component={Link} to="/add" color="primary" aria-label="add">
         <AddIcon />
       </Fab>
     </Box>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   Checkbox,
@@ -68,7 +68,7 @@ export default function PackageTableRow(props) {
         />
       </TableCell>
       <TableCell padding="none" align="center">
-        <IconButton href={editURL} aria-label="edit">
+        <IconButton component={Link} to={editURL} aria-label="edit">
           <EditIcon />
         </IconButton>
       </TableCell>
