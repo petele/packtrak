@@ -25,7 +25,7 @@ class PackageEditor extends React.Component {
 
       ready: props.mode === 'add' ? true : !!props.pkgData,
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
-      backURL: `/${props.kind}`,
+      backURL: `/${props.kind}` || '/incoming',
 
       id: props.id,
       dateExpected: '',
