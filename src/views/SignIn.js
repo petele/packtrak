@@ -77,7 +77,7 @@ export default function SignIn() {
             inputMode="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            autoComplete="username"
             autoFocus
             value={email}
             onChange={handleChange}

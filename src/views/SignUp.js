@@ -98,7 +98,7 @@ export default function SignUp(props) {
             inputMode="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            autoComplete="username email"
           />
           <TextField
             required

@@ -74,7 +74,7 @@ export default function ChangePassword(props) {
             type="hidden"
             name="email"
             id="change-pw-email"
-            autoComplete="email"
+            autoComplete="username email"
             value={userEmail}
           />
           <TextField

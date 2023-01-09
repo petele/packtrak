@@ -64,7 +64,7 @@ export default function DeleteAccount(props) {
           <input
             type="hidden"
             name="email"
-            autoComplete="email"
+            autoComplete="username email"
             value={userEmail}
           />
           <TextField

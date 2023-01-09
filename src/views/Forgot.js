@@ -49,7 +49,7 @@ export default function Forgot() {
             inputMode="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            autoComplete="username email"
             autoFocus
             value={email}
             onChange={handleChange}
