@@ -4,18 +4,24 @@ A fun experiment with React.
 
 ## To Do
 
-* [ ] Content for About & Landing pages
-* [X] Analytics
+* [ ] Content for Landing page
 * [ ] Verify mobile experience
 * [ ] Input checking for Add Package
 * [ ] Input checking for Edit Package
+* [ ] Add dateDelivered field
+* [ ] Routing for logged in/out state
+
+### Done
+
+* [X] Content for About page
+* [X] Analytics
 * [X] Change password
 * [X] Delete account
-* [ ] TOS page
+* [X] TOS page
 * [X] Profile page
 * [X] Mark package as RED if overdue
 * [X] Make delete button RED
-* [ ] Better formatting of Add/Edit page
+* [X] Better formatting of Add/Edit page
 
 ## Getting Started with Create React App
 
