@@ -29,7 +29,7 @@ export default function NoMatch(props) {
         Panda is sad because it can't find what you're looking for. Sorry.
       </Typography>
       <Typography component="p">
-        <Link href={backURL} variant="body1">
+        <Link to={backURL} variant="body1">
           Go back
         </Link>
       </Typography>

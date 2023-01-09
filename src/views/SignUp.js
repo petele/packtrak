@@ -128,10 +128,10 @@ export default function SignUp(props) {
             Sign Up
           </Button>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Link href="/forgot" variant="body2">
+            <Link to="/forgot" variant="body2">
               Forgot password?
             </Link>
-            <Link href="/signin" variant="body2">
+            <Link to="/signin" variant="body2">
               Already have an account? Sign in
             </Link>
           </Stack>

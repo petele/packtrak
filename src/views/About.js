@@ -21,7 +21,7 @@ export default function About() {
         PackTrak is a tool to help you track your incoming
         packages. I wrote it to experiement with, and learn about React.
         You can find all of the source code
-        on <Link href="https://github.com/petele/packtrak">GitHub</Link>.
+        on <Link to="https://github.com/petele/packtrak">GitHub</Link>.
       </Typography>
 
       <Typography variant="h5" component="h2" sx={{marginTop: 4}}>

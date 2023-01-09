@@ -10,7 +10,7 @@ class OrderFromLink extends React.Component {
     const row = this.props.row;
     if (row.orderURL) {
       return (
-        <Link href={row.orderURL} target="_blank" rel="noreferrer">
+        <Link to={row.orderURL} target="_blank" rel="noreferrer">
           {row.from}
         </Link>
       );

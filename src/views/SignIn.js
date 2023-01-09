@@ -112,10 +112,10 @@ export default function SignIn() {
             Sign In
           </Button>
           <Stack direction="row" sx={{ mt: 2 }} justifyContent="space-between">
-            <Link href="/forgot" variant="body2">
+            <Link to="/forgot" variant="body2">
               Forgot password?
             </Link>
-            <Link href="/signup" variant="body2">
+            <Link to="/signup" variant="body2">
               {"Don't have an account? Sign Up"}
             </Link>
           </Stack>

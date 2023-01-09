@@ -66,10 +66,10 @@ export default function Forgot() {
             Reset Password
           </Button>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Link href="/signin" variant="body2">
+            <Link to="/signin" variant="body2">
               Sign In
             </Link>
-            <Link href="/signup" variant="body2">
+            <Link to="/signup" variant="body2">
               Sign Up
             </Link>
           </Stack>
