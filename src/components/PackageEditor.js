@@ -169,13 +169,18 @@ class PackageEditor extends React.Component {
   }
 
   handleBlurTrackingNumber(event) {
-    // const trackingNumber = this.state.trackingNumber;
-    // const currentShipper = this.state.shipper;
-    // const maybeShipper = guessShipper(trackingNumber);
-    // console.log('blur', currentShipper, maybeShipper);
-    // if (maybeShipper && !currentShipper) {
-    //   this.setState({shipper: maybeShipper});
-    // }
+    const trackingNumber = this.state.trackingNumber;
+    const currentShipper = this.state.shipper;
+    const maybeShipper = guessShipper(trackingNumber);
+    console.log('blur', currentShipper, maybeShipper);
+    if (maybeShipper && !currentShipper) {
+      const val = {shipper: maybeShipper};
+      const url = getTrackingURL(maybeShipper, trackingNumber);
+      if (url) {
+        val.trackingURL = url;
+      }
+      this.setState(val);
+    }
   }
 
   handleBlurShipper(event) {

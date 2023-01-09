@@ -71,9 +71,13 @@ export function guessShipper(trackingNumber) {
     }
     return false;
   });
+  if (result.length === 0) {
+    return null;
+  }
   if (result.length === 1) {
     return result[0].name;
   }
+  console.log('multiple', result);
   return null;
 }
 
