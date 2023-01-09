@@ -12,7 +12,7 @@ import {
 import ConfirmDialog from './ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
 import deletePackage from '../helpers/deletePackage';
-import { getKnownShippers, getTrackingURL } from '../helpers/shipHelper';
+import { getKnownShippers, getTrackingURL, guessShipper } from '../helpers/shipHelper';
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -50,6 +50,9 @@ class PackageEditor extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleShipperChange = this.handleShipperChange.bind(this);
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
+
+    this.handleBlurShipper = this.handleBlurShipper.bind(this);
+    this.handleBlurTrackingNumber = this.handleBlurTrackingNumber.bind(this);
 
     this.shipperOptions = getKnownShippers();
   }
@@ -165,12 +168,18 @@ class PackageEditor extends React.Component {
     });
   }
 
-  handleBlurShipper(event) {
-    console.log('blur', 'shipper', event, this.state.shipper);
+  handleBlurTrackingNumber(event) {
+    // const trackingNumber = this.state.trackingNumber;
+    // const currentShipper = this.state.shipper;
+    // const maybeShipper = guessShipper(trackingNumber);
+    // console.log('blur', currentShipper, maybeShipper);
+    // if (maybeShipper && !currentShipper) {
+    //   this.setState({shipper: maybeShipper});
+    // }
   }
 
-  handleBlurTrackingNumber(event) {
-    console.log('blur', 'tn', event, this.state.trackingNumber);
+  handleBlurShipper(event) {
+    // console.log('blur', 'shipper', event, this.state.shipper);
   }
 
   preventSubmitOnEnter(event) {

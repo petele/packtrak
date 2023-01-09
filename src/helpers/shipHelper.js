@@ -10,6 +10,41 @@ const _knownShippers = [
   'Custom',
 ];
 
+const _trackingURLPatterns = [
+  {
+    name: 'Amazon',
+    pattern: new RegExp(/^TB[A-D][0-9]{12}/),
+  },
+  {
+    name: 'DHL',
+    pattern: new RegExp(/\b(\d{4}[- ]?\d{4}[- ]?\d{2}|\d{3}[- ]?\d{8}|[A-Z]{3}\d{7})\b/i),
+  },
+  {
+    name: 'FedEx',
+    pattern: new RegExp(/\b(((96\d\d|6\d)\d{3} ?\d{4}|96\d{2}|\d{4}) ?\d{4} ?\d{4}( ?\d{3}|\d{15})?)\b/i),
+  },
+  {
+    name: 'OnTrac',
+    pattern: new RegExp(/\b(C\d{14})\b/i),
+  },
+  {
+    name: 'UPS',
+    pattern: new RegExp(/\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|T\d{3} ?\d{4} ?\d{3})\b/i),
+  },
+  {
+    name: 'USPS',
+    pattern: new RegExp(/\b((420 ?\d{5} ?)?(91|92|93|94|95|01|03|04|70|23|13)\d{2} ?\d{4} ?\d{4} ?\d{4} ?\d{4}( ?\d{2,6})?)\b/i),
+  },
+  {
+    name: 'USPS',
+    pattern: new RegExp(/\b((M|P[A-Z]?|D[C-Z]|LK|E[A-C]|V[A-Z]|R[A-Z]|CP|CJ|LC|LJ) ?\d{3} ?\d{3} ?\d{3} ?[A-Z]?[A-Z]?)\b/i),
+  },
+  {
+    name: 'USPS',
+    pattern: new RegExp(/\b(82 ?\d{3} ?\d{3} ?\d{2})\b/i),
+  }
+];
+
 function _removeSpaces(trackingNumber) {
   return trackingNumber.replace(/ /g, '');
 }
@@ -30,6 +65,15 @@ export function getKnownShippers() {
  * @return {?string} Name of shipper (or null)
  */
 export function guessShipper(trackingNumber) {
+  const result = _trackingURLPatterns.filter((shipper) => {
+    if (shipper.pattern.test(trackingNumber)) {
+      return true;
+    }
+    return false;
+  });
+  if (result.length === 1) {
+    return result[0].name;
+  }
   return null;
 }
 
@@ -61,6 +105,9 @@ export function getTrackingURL(shipper, trackingNumber) {
   }
   if (shipper === 'LaserShip') {
     return `https://www.lasership.com/track/${trackingNumber}`;
+  }
+  if (shipper === 'OnTrac') {
+    return `https://www.ontrac.com/trackres.asp?tracking_number=${trackingNumber}`;
   }
   if (shipper === 'UPS') {
     return `https://www.ups.com/track?loc=en_US&tracknum=${trackingNumber}`;
