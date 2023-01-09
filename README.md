@@ -4,27 +4,7 @@ A fun experiment with React.
 
 ## To Do
 
-* [ ] Content for Landing page
-* [ ] Verify mobile experience
-* [ ] Input checking for Add Package
-* [ ] Input checking for Edit Package
-* [ ] Add dateDelivered field
-* [ ] Routing for logged in/out state
-* [ ] Validation & guessing shipper based on Tracking Number
-* [ ] View when no packages in list
-* [ ] Switch top nav to tabs
-
-### Done
-
-* [X] Content for About page
-* [X] Analytics
-* [X] Change password
-* [X] Delete account
-* [X] TOS page
-* [X] Profile page
-* [X] Mark package as RED if overdue
-* [X] Make delete button RED
-* [X] Better formatting of Add/Edit page
+See [GitHub Issues](https://github.com/petele/packtrak/issues)
 
 ## Getting Started with Create React App
 
