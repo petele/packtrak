@@ -11,8 +11,8 @@ import {
 
 import ConfirmDialog from './ConfirmDialog';
 import LoadingSpinner from '../components/LoadingSpinner';
-import getTrackingURL from '../helpers/getTrackingURL';
 import deletePackage from '../helpers/deletePackage';
+import { getKnownShippers, getTrackingURL } from '../helpers/shipHelper';
 
 class PackageEditor extends React.Component {
   constructor(props) {
@@ -51,11 +51,7 @@ class PackageEditor extends React.Component {
     this.handleShipperChange = this.handleShipperChange.bind(this);
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
 
-    this.shipperOptions = [
-      'CDL', 'DHL', 'FedEx', 'LaserShip', 'TBA', 'UPS',
-      'USPS', 'Custom',
-    ];
-
+    this.shipperOptions = getKnownShippers();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -169,6 +165,14 @@ class PackageEditor extends React.Component {
     });
   }
 
+  handleBlurShipper(event) {
+    console.log('blur', 'shipper', event, this.state.shipper);
+  }
+
+  handleBlurTrackingNumber(event) {
+    console.log('blur', 'tn', event, this.state.trackingNumber);
+  }
+
   preventSubmitOnEnter(event) {
     if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
       event.preventDefault();
@@ -223,21 +227,22 @@ class PackageEditor extends React.Component {
               value={this.state.what}
               onChange={this.handleInputChange}
             />
+            <TextField
+              name="trackingNumber"
+              fullWidth
+              label="Tracking Number"
+              onBlur={this.handleBlurTrackingNumber}
+              value={this.state.trackingNumber}
+              onChange={this.handleInputChange}
+            />
             <Autocomplete
               label="Shipper"
               autoSelect={true}
               value={this.state.shipper}
               options={this.shipperOptions}
-
               renderInput={(params) => <TextField {...params} label="Shipper" />}
+              onBlur={this.handleBlurShipper}
               onChange={this.handleShipperChange}
-            />
-            <TextField
-              name="trackingNumber"
-              fullWidth
-              label="Tracking Number"
-              value={this.state.trackingNumber}
-              onChange={this.handleInputChange}
             />
             <TextField
               name="trackingURL"
