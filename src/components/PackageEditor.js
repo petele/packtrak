@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 
 import ConfirmDialog from './ConfirmDialog';
-import LoadingSpinner from '../components/LoadingSpinner';
 import deletePackage from '../helpers/deletePackage';
 import { getKnownShippers, getTrackingURL, guessShipper } from '../helpers/shipHelper';
 
@@ -19,30 +18,41 @@ class PackageEditor extends React.Component {
   constructor(props) {
     super(props);
 
+    const pkgData = props.pkgData;
+
     this.state = {
+      uid: props.uid,
       mode: props.mode,
       kind: props.kind,
-      uid: props.uid,
 
-      ready: props.mode === 'add' ? true : !!props.pkgData,
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
-      backURL: '/incoming',
 
       id: props.id,
-      dateExpected: '',
-      from: '',
-      what: '',
-      orderURL: '',
-      shipper:  null,
-      trackingNumber: '',
-      trackingURL: '',
+      dateExpected: pkgData?.dateExpected || '',
+      from: pkgData?.from || '',
+      what: pkgData?.what || '',
+      orderURL: pkgData?.orderURL || '',
+      shipper:  pkgData?.shipper || null,
+      trackingNumber: pkgData?.trackingNumber || '',
 
-      trackingLinkEditDisabled: true,
+      trackingLinkEditDisabled: pkgData?.shipper !== 'Custom',
       errorOnSave: false,
       errorOnDelete: false,
       confirmDialogVisible: false,
     };
 
+    if (props.pkgData?.trackingURL) {
+      this.state.trackingURL = pkgData?.trackingURL;
+    } else {
+      const url = getTrackingURL(pkgData?.shipper, pkgData?.trackingNumber);
+      this.state.trackingURL = url || '';
+    }
+
+    if (props.mode === 'edit') {
+      this.state.backURL = `/${props.kind}`;
+    } else {
+      this.state.backURL = '/incoming';
+    }
 
     this.returnToIncoming = props.fnReturn;
     this.savePackage = props.fnSave;
@@ -57,32 +67,6 @@ class PackageEditor extends React.Component {
     this.handleBlurTrackingNumber = this.handleBlurTrackingNumber.bind(this);
 
     this.shipperOptions = getKnownShippers();
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.pkgData === null && this.props.pkgData) {
-      const pkgData = this.props.pkgData;
-      const newState = {
-        dateExpected: pkgData.dateExpected || '',
-        from: pkgData.from || '',
-        what: pkgData.what || '',
-        orderURL: pkgData.orderURL || '',
-        shipper: pkgData.shipper || null,
-        trackingNumber: pkgData.trackingNumber || '',
-        trackingLinkEditDisabled: true,
-        ready: true,
-      };
-      if (pkgData.trackingURL) {
-        newState.trackingURL = pkgData.trackingURL;
-        newState.trackingLinkEditDisabled = false;
-      } else if (pkgData.shipper === 'Custom') {
-        newState.trackingLinkEditDisabled = false;
-      } else {
-        const url = getTrackingURL(pkgData.shipper, pkgData.trackingNumber);
-        newState.trackingURL = url || '';
-      }
-      this.setState(newState);
-    }
   }
 
   handleInputChange(event) {
@@ -197,13 +181,6 @@ class PackageEditor extends React.Component {
   }
 
   render() {
-    // TODO: Change render here and in PackageEditor
-    if (!this.state.ready) {
-      return (
-        <LoadingSpinner />
-      );
-    }
-
     return (
       <Box component="main" sx={{marginTop: 4}}>
         <ConfirmDialog
