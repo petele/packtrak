@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Toolbar } from '@mui/material';
 
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -68,6 +68,7 @@ function Layout(props) {
       <CssBaseline />
       <ExperimentalRibbon />
       <ButtonAppBar uid={props.uid} />
+      <Toolbar />
       <Outlet />
     </Fragment>
   );
