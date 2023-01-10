@@ -13,18 +13,12 @@ import {
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 
-import './ButtonAppBar.css';
-
 import { signOut } from '../helpers/fbHelper';
 
 export default function ButtonAppBar(props) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const curPath = window.location.pathname;
-  const isIncoming = curPath.startsWith('/incoming') ? 'active' : '';
-  const isDelivered = curPath.startsWith('/delivered') ? 'active' : '';
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,6 +36,28 @@ export default function ButtonAppBar(props) {
 
   const closeMenu = () => {
     setAnchorEl(null);
+  }
+
+  const baseTabStyle = {
+    color: 'white',
+    display: 'block',
+    borderRadius: 0,
+    paddingTop: '20px',
+    marginBottom: 0,
+    paddingBottom: '16px',
+    borderBottomWidth: '2px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'transparent',
+  };
+
+  const curPath = window.location.pathname;
+  const incomingStyle = Object.assign({}, baseTabStyle);
+  if (curPath.startsWith('/incoming')) {
+    incomingStyle.borderBottomColor = 'white';
+  }
+  const deliveredStyle = Object.assign({}, baseTabStyle);
+  if (curPath.startsWith('/delivered')) {
+    deliveredStyle.borderBottomColor = 'white';
   }
 
   return (
@@ -66,8 +82,7 @@ export default function ButtonAppBar(props) {
             <Button
               component={Link}
               to="/incoming"
-              className={isIncoming}
-              sx={{ my: 2, color: 'white', display: 'block' }}>
+              sx={incomingStyle}>
               Incoming
             </Button>
           )}
@@ -75,8 +90,7 @@ export default function ButtonAppBar(props) {
             <Button
               component={Link}
               to="/delivered"
-              className={isDelivered}
-              sx={{ my: 2, color: 'white', display: 'block' }}>
+              sx={deliveredStyle}>
               Delivered
             </Button>
           )}
@@ -86,7 +100,7 @@ export default function ButtonAppBar(props) {
             <Button
             component={Link}
             to="/signin"
-            sx={{ my: 2, color: 'white', display: 'block' }}>
+            sx={{ color: 'white', display: 'block' }}>
             Sign In
           </Button>
           )}
