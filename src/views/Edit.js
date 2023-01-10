@@ -5,7 +5,7 @@ import {
   Container
 } from '@mui/material';
 
-import LoadingSpinner from '../components/LoadingSpinner';
+// import LoadingSpinner from '../components/LoadingSpinner';
 import PackageEditor from '../components/PackageEditor';
 import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';

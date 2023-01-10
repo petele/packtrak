@@ -26,8 +26,9 @@ export default function PackageTableRow(props) {
   const editURL = `/edit/${kind}/${id}`;
 
   // Get the formatted date
-  const dtExpected = parseDateFromString(row.dateExpected);
-  const dtExpectedFormatted = formatToLongString(dtExpected);
+  const dtString = kind === 'incoming' ? row.dateExpected : row.dateDelivered;
+  const dtValObj = parseDateFromString(dtString);
+  const dtValFormatted = formatToLongString(dtValObj);
 
   function onCheckChange(e) {
     const uid = props.uid;
@@ -73,7 +74,7 @@ export default function PackageTableRow(props) {
         </IconButton>
       </TableCell>
       <TableCell onClick={onRowClick} sx={pointerStyle}>
-        {dtExpectedFormatted}
+        {dtValFormatted}
       </TableCell>
       <TableCell onClick={onRowClick} sx={pointerStyle}>
         <OrderFromLink row={row} />

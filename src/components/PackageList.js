@@ -18,8 +18,7 @@ export default function PackageTable(props) {
   React.useEffect(() => {
     return getPackageList(userID, kind, (snapshot) => {
       const pkgObj = snapshot.val();
-      const reverse = kind === 'delivered';
-      setRows(parsePackageList(pkgObj, reverse));
+      setRows(parsePackageList(pkgObj, kind));
     });
   }, [userID, kind]);
 

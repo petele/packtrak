@@ -1,6 +1,7 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
+import { formatToISODate } from './dtHelpers';
 
 /**
  * Marks the specified package as delivered.
@@ -24,6 +25,7 @@ export default async function markAsDelivered(userID, kind, id, delivered) {
   const val = fromSnap.val();
   val.delivered = delivered;
   val.dtUpdated = Date.now();
+  val.dateDelivered = delivered ? formatToISODate(new Date()) : null;
 
   // Set the new version
   const toKind = kind === 'incoming' ? 'delivered' : 'incoming';
@@ -34,5 +36,5 @@ export default async function markAsDelivered(userID, kind, id, delivered) {
   // Delete the old version
   await remove(fromRef);
 
-  return Promise.resolve();
+  return true;
 }

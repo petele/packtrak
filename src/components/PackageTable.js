@@ -24,10 +24,11 @@ export default function PackageTable(props) {
   React.useEffect(() => {
     return getPackageList(userID, kind, (snapshot) => {
       const pkgObj = snapshot.val();
-      const reverse = kind === 'delivered';
-      setRows(parsePackageList(pkgObj, reverse));
+      setRows(parsePackageList(pkgObj, kind));
     });
   }, [userID, kind]);
+
+  const dateLabel = kind === 'incoming' ? 'Date Expected' : 'Date Delivered';
 
   return (
     <TableContainer component={Paper}>
@@ -36,7 +37,7 @@ export default function PackageTable(props) {
           <TableRow>
             <TableCell padding="checkbox"></TableCell>
             <TableCell padding="none"></TableCell>
-            <TableCell>Date Expected</TableCell>
+            <TableCell>{dateLabel}</TableCell>
             <TableCell>From</TableCell>
             <TableCell>What</TableCell>
             <TableCell>Tracking</TableCell>

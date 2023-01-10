@@ -1,16 +1,24 @@
 import { getTodayStart, getTodayEnd, parseDateFromString } from './dtHelpers';
 
-function compareDates(pkgA, pkgB) {
+function sortByExpected(pkgA, pkgB) {
   return Date.parse(pkgA.dateExpected) - Date.parse(pkgB.dateExpected);
+}
+
+function sortByDelivered(pkgA, pkgB) {
+  return Date.parse(pkgA.dateDelivered) - Date.parse(pkgB.dateDelivered);
 }
 
 /**
  *
  * @param {object} pkgList Raw package list from server
- * @param {boolean} reverse Reverse list sort
+ * @param {string} kind Incoming or Delivered
  * @returns
  */
-export default function parsePackageList(pkgList, reverse) {
+export default function parsePackageList(pkgList, kind) {
+  if (!['incoming', 'delivered'].includes(kind)) {
+    console.warn('parsePackageList: invalid kind:', kind);
+    kind = 'incoming';
+  }
   if (!pkgList) {
     return [];
   }
@@ -24,14 +32,19 @@ export default function parsePackageList(pkgList, reverse) {
   const result = Object.keys(pkgList).map((key) => {
     const pkg = pkgList[key];
     pkg.id = key;
-    const status = _deliveryStatus(pkg.delivered, pkg.dateExpected, todayStart, todayEnd);
-    pkg.isOverdue = status.isOverdue;
-    pkg.isDueToday = status.isDueToday;
+    if (kind === 'incoming') {
+      const status = _deliveryStatus(pkg.delivered, pkg.dateExpected, todayStart, todayEnd);
+      pkg.isOverdue = status.isOverdue;
+      pkg.isDueToday = status.isDueToday;
+    }
+    if (kind === 'delivered' && !pkg.dateDelivered) {
+      pkg.dateDelivered = pkg.dateExpected;
+    }
     return pkg;
   });
 
-  result.sort(compareDates);
-  if (reverse) {
+  result.sort(kind === 'incoming' ? sortByExpected : sortByDelivered);
+  if (kind === 'delivered') {
     result.reverse();
   }
 
