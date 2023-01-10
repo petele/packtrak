@@ -5,6 +5,7 @@ import {
   Container
 } from '@mui/material';
 
+import LoadingSpinner from '../components/LoadingSpinner';
 import PackageEditor from '../components/PackageEditor';
 import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';
@@ -39,6 +40,15 @@ export default function Edit(props) {
   const returnToIncoming = () => {
     navigate('/incoming');
   };
+
+  // TODO: Change render here and in PackageEditor
+  // if (!pkgData) {
+  //   return (
+  //     <Container component="main" sx={{marginTop: 2}}>
+  //       <LoadingSpinner />
+  //     </Container>
+  //   )
+  // }
 
   return (
     <Container component="main" sx={{marginTop: 2}}>

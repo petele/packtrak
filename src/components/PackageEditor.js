@@ -197,6 +197,7 @@ class PackageEditor extends React.Component {
   }
 
   render() {
+    // TODO: Change render here and in PackageEditor
     if (!this.state.ready) {
       return (
         <LoadingSpinner />

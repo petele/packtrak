@@ -118,6 +118,7 @@ export default function ButtonAppBar(props) {
                 onClose={handleClose}
               >
                 <MenuItem component={Link} onClick={closeMenu} to="/profile">Profile</MenuItem>
+                <MenuItem component={Link} onClick={closeMenu} to="/about">About PackTrak</MenuItem>
                 <MenuItem onClick={clickSignOut}>Sign Out</MenuItem>
               </Menu>
             </Box>
