@@ -5,7 +5,12 @@ import {
 
 export default function LoadingSpinner(props) {
   return (
-    <Box sx={{width: 300}}>
+    <Box sx={{
+      marginTop: 8,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
       <CircularProgress />
     </Box>
   );
