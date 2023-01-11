@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import {
-  Box,
+  Container,
   Fab
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,11 +12,11 @@ export default function Incoming(props) {
   document.title = `Incoming - PackTrak`;
 
   return (
-    <Box>
+    <Container component="main" sx={{marginTop: 1}}>
       <PackageTable kind="incoming" uid={props.uid} />
       <Fab component={Link} to="/add" color="primary" aria-label="add">
         <AddIcon />
       </Fab>
-    </Box>
+    </Container>
   );
 }
