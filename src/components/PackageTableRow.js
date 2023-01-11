@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Checkbox,
-  IconButton,
   TableCell,
   TableRow,
+  Typography,
 } from '@mui/material';
 
-import EditIcon from '@mui/icons-material/Edit';
-
-import TrackingLink from './TrackingLink';
-import OrderFromLink from './OrderFromLink';
+import OrderLinkButton from './OrderLinkButton';
+import TrackingLinkButton from './TrackingLinkButton';
 
 import markAsDelivered from '../helpers/markAsDelivered';
 import { formatToLongString, parseDateFromString } from '../helpers/dtHelpers';
@@ -36,10 +34,6 @@ export default function PackageTableRow(props) {
   }
 
   function onRowClick(event) {
-    const elemType = event.target.tagName;
-    if (elemType === 'A') {
-      return;
-    }
     navigate(editURL);
   }
 
@@ -68,22 +62,16 @@ export default function PackageTableRow(props) {
           onChange={onCheckChange}
         />
       </TableCell>
-      <TableCell padding="none" align="center">
-        <IconButton component={Link} to={editURL} aria-label="edit">
-          <EditIcon />
-        </IconButton>
-      </TableCell>
       <TableCell onClick={onRowClick} sx={pointerStyle}>
         {dtValFormatted}
       </TableCell>
       <TableCell onClick={onRowClick} sx={pointerStyle}>
-        <OrderFromLink row={row} />
+        {row.from}
+        <Typography variant="caption" component="div">{row.what}</Typography>
       </TableCell>
-      <TableCell onClick={onRowClick} sx={pointerStyle}>
-        {row.what}
-      </TableCell>
-      <TableCell onClick={onRowClick} sx={pointerStyle}>
-        <TrackingLink row={row} />
+      <TableCell>
+        <OrderLinkButton row={row} />
+        <TrackingLinkButton row={row} />
       </TableCell>
     </TableRow>
   );

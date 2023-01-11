@@ -28,18 +28,16 @@ export default function PackageTable(props) {
     });
   }, [userID, kind]);
 
-  const dateLabel = kind === 'incoming' ? 'Date Expected' : 'Date Delivered';
+  const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{mb: 12}}>
       <Table size="small" aria-label="list of packages">
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox"></TableCell>
-            <TableCell padding="none"></TableCell>
             <TableCell>{dateLabel}</TableCell>
             <TableCell>From</TableCell>
-            <TableCell>What</TableCell>
             <TableCell>Tracking</TableCell>
           </TableRow>
         </TableHead>
