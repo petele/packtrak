@@ -130,28 +130,21 @@ class PackageEditor extends React.Component {
 
     const pkg = {
       dateExpected: this.state.dateExpected,
-      from: this.state.from.trim(),
-      what: this.state.what.trim(),
+      from: this.state.from,
+      what: this.state.what,
+      trackingNumber: this.state.trackingNumber,
+      shipper: this.state.shipper,
+      trackingURL: this.state.trackingURL,
+      orderURL: this.state.orderURL,
     };
-    if (this.state.shipper) {
-      pkg.shipper = this.state.shipper;
-    }
-    if (this.state.orderURL) {
-      pkg.orderURL = this.state.orderURL.trim();
-    }
-    if (this.state.trackingNumber) {
-      pkg.trackingNumber = this.state.trackingNumber.trim();
-    }
-    if (this.state.shipper === 'Custom' && this.state.trackingURL) {
-      pkg.trackingURL = this.state.trackingURL.trim();
-    }
 
-    return this.savePackage(this.props.uid, pkg).then((id) => {
-      this.returnToIncoming();
-    }).catch((ex) => {
-      this.setState({errorOnSave: true});
-      console.log(ex);
-    });
+    return this.savePackage(this.props.uid, pkg)
+      .then((id) => {
+        this.returnToIncoming();
+      }).catch((ex) => {
+        this.setState({errorOnSave: true});
+        console.log(ex);
+      });
   }
 
   handleBlurTrackingNumber(event) {

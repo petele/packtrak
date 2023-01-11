@@ -33,8 +33,7 @@ export default function Edit(props) {
   }, [uid, kind, id, navigate]);
 
   const saveEdits = async (userID, data) => {
-    const prevValue = {};
-    return updatePackage(userID, kind, id, data, prevValue);
+    return updatePackage(userID, kind, id, data, pkgData);
   };
 
   const returnToIncoming = () => {

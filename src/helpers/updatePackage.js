@@ -26,19 +26,38 @@ export default async function updatePackage(userID, kind, id, data, before) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  const isValid = validatePackageData(data);
+  const updateObj = {
+    dtUpdated: Date.now(),
+    dateExpected: _cleanEntry(data.dateExpected),
+    from: _cleanEntry(data.from),
+    what: _cleanEntry(data.what),
+    trackingNumber: _cleanEntry(data.trackingNumber),
+    shipper: _cleanEntry(data.shipper),
+    trackingURL: null,
+    orderURL: _cleanEntry(data.orderURL),
+  };
+
+  if (updateObj.shipper === 'Custom') {
+    updateObj.trackingURL = _cleanEntry(data.trackingURL);
+  }
+
+  const isValid = validatePackageData(updateObj);
   if (!isValid.valid) {
     throw new Error(isValid.reason);
   }
 
   gaEvent('package', 'update');
-
-  data.dtUpdated = Date.now();
-
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
-  console.log('TODO: validate data');
-  console.log('updatePackage', queryPath, data);
-
   const fbRef = ref(db, queryPath);
-  return await update(fbRef, data);
+  return await update(fbRef, updateObj);
+}
+
+function _cleanEntry(val) {
+  if (typeof val === 'string') {
+    const result = val.trim();
+    if (result.length > 0) {
+      return result;
+    }
+  }
+  return null;
 }
