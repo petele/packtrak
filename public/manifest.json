@@ -1,6 +1,7 @@
 {
   "short_name": "PackTrak",
   "name": "PackTrak",
+  "description": "Track incoming packages with PackTrak",
   "icons": [
     {
       "src": "/img/box-192.png",
