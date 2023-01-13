@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 
 import OrderLinkButton from './OrderLinkButton';
+import TrackingLink from './TrackingLink';
 import TrackingLinkButton from './TrackingLinkButton';
 
 import markAsDelivered from '../helpers/markAsDelivered';
@@ -71,7 +72,12 @@ export default function PackageTableRow(props) {
       </TableCell>
       <TableCell>
         <OrderLinkButton row={row} />
-        <TrackingLinkButton row={row} />
+        {props.wide && (
+          <TrackingLink row={row} />
+        )}
+        {!props.wide && (
+          <TrackingLinkButton row={row} />
+        )}
       </TableCell>
     </TableRow>
   );

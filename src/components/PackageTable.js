@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { useTheme } from '@mui/material/styles';
+
 import {
   Paper,
   Table,
@@ -8,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useMediaQuery,
 } from '@mui/material';
 
 import PackageTableRow from './PackageTableRow';
@@ -29,6 +32,8 @@ export default function PackageTable(props) {
   }, [userID, kind]);
 
   const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
+  const theme = useTheme();
+  const isWide = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <TableContainer component={Paper} sx={{mb: 12}}>
@@ -43,7 +48,7 @@ export default function PackageTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <PackageTableRow key={row.id} row={row} uid={userID} kind={kind} />
+            <PackageTableRow key={row.id} row={row} uid={userID} kind={kind} wide={isWide} />
           ))}
         </TableBody>
       </Table>

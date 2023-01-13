@@ -8,33 +8,28 @@ import getTrackingURL from '../helpers/getTrackingURL';
 
 class TrackingLink extends React.Component {
 
-  getTrackingURL(row) {
-    if (row.trackingURL) {
-      return {link: row.trackingURL, label: 'Track'};
+  getLabel(trackingNumber) {
+    if (typeof trackingNumber !== 'string') {
+      return null;
     }
-    const url = getTrackingURL(row.shipper, row.trackingNumber);
-    if (url) {
-      return {
-        label: row.trackingNumber,
-        link: url,
-      };
+    if (trackingNumber.length < 16) {
+      return trackingNumber;
     }
-    if (row.orderURL) {
-      return {
-        label: 'Track',
-        link: row.orderURL,
-      };
-    }
-    return null;
+    const start = trackingNumber.substr(0, 4);
+    const end = trackingNumber.substr(-6);
+    return `${start}...${end}`;
   }
 
   render() {
-    const info = this.getTrackingURL(this.props.row);
+    const shipper = this.props.row.shipper;
+    const trackingNumber = this.props.row.trackingNumber;
+    const url = getTrackingURL(shipper, trackingNumber);
+    const label = this.getLabel(trackingNumber);
 
-    if (info) {
+    if (url && label) {
       return (
-        <Link href={info.link} target="_blank" rel="noreferrer">
-          {info.label}
+        <Link href={url} target="_blank" rel="noreferrer">
+          {label}
         </Link>
       );
     }
