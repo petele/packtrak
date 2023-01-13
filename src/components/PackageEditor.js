@@ -28,6 +28,7 @@ class PackageEditor extends React.Component {
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
 
       id: props.id,
+      delivered: pkgData?.delivered || false,
       dateExpected: pkgData?.dateExpected || '',
       from: pkgData?.from || '',
       what: pkgData?.what || '',
@@ -129,6 +130,7 @@ class PackageEditor extends React.Component {
     this.setState({errorOnSave: false});
 
     const pkg = {
+      delivered: this.state.delivered,
       dateExpected: this.state.dateExpected,
       from: this.state.from,
       what: this.state.what,

@@ -2,7 +2,8 @@ import { db } from './fbHelper';
 import { push, ref } from 'firebase/database';
 import { gaEvent } from './gaHelper';
 
-import validatePackageData from './validatePackageData';
+// import validatePackageData from './validatePackageData';
+import { cleanPackageObject, validatePackage } from './validatePackageData';
 
 /**
  * Add a package to the database
@@ -23,15 +24,17 @@ export default async function addPackage(userID, data) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  const isValid = validatePackageData(data);
-  if (!isValid.valid) {
-    throw new Error(isValid.reason);
+  cleanPackageObject(data);
+  const {valid, errors} = validatePackage(data);
+
+  if (!valid) {
+    console.error('Validation failed', data, errors);
+    throw new Error('Validation failed');
   }
 
   gaEvent('package', 'add');
 
   const now = Date.now();
-  data.delivered = false;
   data.dtAdded = now;
   data.dtUpdated = now;
 

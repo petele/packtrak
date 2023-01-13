@@ -2,7 +2,7 @@ import { update, ref } from 'firebase/database';
 import { db } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 
-import validatePackageData from './validatePackageData';
+import { cleanPackageObject, validatePackage } from './validatePackageData';
 
 /**
  * Updates the package record in the database.
@@ -26,38 +26,18 @@ export default async function updatePackage(userID, kind, id, data, before) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  const updateObj = {
-    dtUpdated: Date.now(),
-    dateExpected: _cleanEntry(data.dateExpected),
-    from: _cleanEntry(data.from),
-    what: _cleanEntry(data.what),
-    trackingNumber: _cleanEntry(data.trackingNumber),
-    shipper: _cleanEntry(data.shipper),
-    trackingURL: null,
-    orderURL: _cleanEntry(data.orderURL),
-  };
+  cleanPackageObject(data);
+  const {valid, errors} = validatePackage(data);
 
-  if (updateObj.shipper === 'Custom') {
-    updateObj.trackingURL = _cleanEntry(data.trackingURL);
+  if (!valid) {
+    console.error('Validation failed', data, errors);
+    throw new Error('Validation failed');
   }
 
-  const isValid = validatePackageData(updateObj);
-  if (!isValid.valid) {
-    throw new Error(isValid.reason);
-  }
+  data.dtUpdated = Date.now();
 
   gaEvent('package', 'update');
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   const fbRef = ref(db, queryPath);
-  return await update(fbRef, updateObj);
-}
-
-function _cleanEntry(val) {
-  if (typeof val === 'string') {
-    const result = val.trim();
-    if (result.length > 0) {
-      return result;
-    }
-  }
-  return null;
+  return await update(fbRef, data);
 }
