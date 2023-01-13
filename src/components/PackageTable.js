@@ -1,21 +1,17 @@
 import * as React from 'react';
 
-import { useTheme } from '@mui/material/styles';
-
 import {
   Paper,
   Table,
-  TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  useMediaQuery,
 } from '@mui/material';
 
 import NoPackages from './NoPackages';
-import LoadingSpinner from './LoadingSpinner';
-import PackageTableRow from './PackageTableRow';
+
+import PackageTableBody from './PackageTableBody';
 import getPackageList from '../helpers/getPackageList';
 import parsePackageList from '../helpers/parsePackageList';
 
@@ -33,14 +29,8 @@ export default function PackageTable(props) {
   }, [userID, kind]);
 
   const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
-  const theme = useTheme();
-  const isWide = useMediaQuery(theme.breakpoints.up('sm'));
 
-  if (rows === null) {
-    return (<LoadingSpinner />);
-  }
-
-  if (rows.length === 0) {
+  if (rows && rows.length === 0) {
     return (<NoPackages />);
   }
 
@@ -55,11 +45,7 @@ export default function PackageTable(props) {
             <TableCell>Tracking</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <PackageTableRow key={row.id} row={row} uid={userID} kind={kind} wide={isWide} />
-          ))}
-        </TableBody>
+        <PackageTableBody rows={rows} uid={props.uid} kind={kind} />
       </Table>
     </TableContainer>
   );
