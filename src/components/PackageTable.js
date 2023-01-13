@@ -13,13 +13,14 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
+import NoPackages from './NoPackages';
+import LoadingSpinner from './LoadingSpinner';
 import PackageTableRow from './PackageTableRow';
 import getPackageList from '../helpers/getPackageList';
-
 import parsePackageList from '../helpers/parsePackageList';
 
 export default function PackageTable(props) {
-  const [rows, setRows] = React.useState([]);
+  const [rows, setRows] = React.useState(null);
 
   const userID = props.uid;
   const kind = props.kind;
@@ -34,6 +35,14 @@ export default function PackageTable(props) {
   const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
   const theme = useTheme();
   const isWide = useMediaQuery(theme.breakpoints.up('sm'));
+
+  if (rows === null) {
+    return (<LoadingSpinner />);
+  }
+
+  if (rows.length === 0) {
+    return (<NoPackages />);
+  }
 
   return (
     <TableContainer component={Paper} sx={{mb: 12}}>
