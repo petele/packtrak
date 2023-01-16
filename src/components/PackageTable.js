@@ -22,22 +22,33 @@ function _getWidth() {
   const theme = useTheme();
   const isNarrow = useMediaQuery(theme.breakpoints.down('sm'));
   const isWide = useMediaQuery(theme.breakpoints.up('md'));
+
+  // Narrow, and not wide
   if (isNarrow && !isWide) {
     return 'sm';
   }
+
+  // Not narrow and not wide
   if (!isNarrow && !isWide) {
     return 'md';
   }
+
+  // Not narrow, and wide
   if (!isNarrow && isWide) {
     return 'lg';
   }
 }
+
 
 export default function PackageTable(props) {
   const [rows, setRows] = React.useState(null);
 
   const userID = props.uid;
   const kind = props.kind;
+
+  const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
+
+  const width = _getWidth();
 
   React.useEffect(() => {
     return getPackageList(userID, kind, (snapshot) => {
@@ -50,9 +61,6 @@ export default function PackageTable(props) {
     return (<NoPackages />);
   }
 
-  const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
-
-  const width = _getWidth();
   const sxDate = {};
   const sxFrom = {};
   const sxTracking = {};
