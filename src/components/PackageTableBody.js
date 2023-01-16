@@ -1,10 +1,7 @@
 
 import {
   TableBody,
-  useMediaQuery,
 } from '@mui/material';
-
-import { useTheme } from '@mui/material/styles';
 
 import PackageTableRow from './PackageTableRow';
 import PackageTableRowSkeleton from './PackageTableRowSkeleton';
@@ -13,9 +10,7 @@ export default function PackageTableBody(props) {
   const rows = props.rows;
   const uid = props.uid;
   const kind = props.kind;
-
-  const theme = useTheme();
-  const isWide = useMediaQuery(theme.breakpoints.up('sm'));
+  const width = props.width;
 
   if (rows === null) {
     return (
@@ -30,7 +25,7 @@ export default function PackageTableBody(props) {
   return (
     <TableBody>
       {rows.map((row) => (
-        <PackageTableRow key={row.id} row={row} uid={uid} kind={kind} wide={isWide} />
+        <PackageTableRow key={row.id} row={row} uid={uid} kind={kind} width={width} />
       ))}
     </TableBody>
   );

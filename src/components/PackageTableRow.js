@@ -13,7 +13,7 @@ import TrackingLink from './TrackingLink';
 import TrackingLinkButton from './TrackingLinkButton';
 
 import markAsDelivered from '../helpers/markAsDelivered';
-import { formatToLongString, parseDateFromString } from '../helpers/dtHelpers';
+import { formatToString,  parseDateFromString } from '../helpers/dtHelpers';
 
 export default function PackageTableRow(props) {
   const navigate = useNavigate();
@@ -22,12 +22,13 @@ export default function PackageTableRow(props) {
 
   const id = row.id;
   const kind = props.kind;
+  const width = props.width;
   const editURL = `/edit/${kind}/${id}`;
 
   // Get the formatted date
   const dtString = kind === 'incoming' ? row.dateExpected : row.dateDelivered;
   const dtValObj = parseDateFromString(dtString);
-  const dtValFormatted = formatToLongString(dtValObj);
+  const dtValFormatted = formatToString(dtValObj, width === 'sm');
 
   function onCheckChange(e) {
     const uid = props.uid;
@@ -72,10 +73,10 @@ export default function PackageTableRow(props) {
       </TableCell>
       <TableCell>
         <OrderLinkButton row={row} />
-        {props.wide && (
-          <TrackingLink row={row} />
+        {width !== 'sm' && (
+          <TrackingLink row={row} width={width} />
         )}
-        {!props.wide && (
+        {width === 'sm' && (
           <TrackingLinkButton row={row} />
         )}
       </TableCell>

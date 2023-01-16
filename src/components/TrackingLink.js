@@ -12,11 +12,15 @@ class TrackingLink extends React.Component {
     if (typeof trackingNumber !== 'string') {
       return null;
     }
-    if (trackingNumber.length < 16) {
+    if (this.props.width === 'lg') {
       return trackingNumber;
     }
-    const start = trackingNumber.substr(0, 4);
-    const end = trackingNumber.substr(-6);
+    if (trackingNumber.length < 17) {
+      return trackingNumber;
+    }
+    const len = trackingNumber.length;
+    const start = trackingNumber.substring(0, 2);
+    const end = trackingNumber.substring(len - 6);
     return `${start}...${end}`;
   }
 

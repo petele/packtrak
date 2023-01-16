@@ -60,6 +60,42 @@ export function formatToLongString(dtValue) {
 }
 
 /**
+ * Formats a DateTime object to a long string.
+ *
+ * @param {DateTime} dtValue DateTime object to format
+ * @returns {string} Mon, Jan 24, 2023
+ */
+export function formatToShortString(dtValue) {
+  try {
+    const opts = {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    };
+    const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
+    return dtFormatter.format(dtValue);
+  } catch (ex) {
+    console.log('Error parsing DT value', dtValue, ex);
+    return 'Unknown';
+  }
+}
+
+/**
+ * Returns a DateTime object formatted as a string.
+ *
+ * @param {DateTime} dtValue DateTime object to format
+ * @param {boolean} short Return short version
+ * @return {string}
+ */
+export function formatToString(dtValue, short) {
+  if (short) {
+    return formatToShortString(dtValue);
+  }
+  return formatToLongString(dtValue);
+}
+
+/**
  * Formats a DateTime object to YYYY-MM-DD
  *
  * @param {DateTime} dtValue DateTime object to format
