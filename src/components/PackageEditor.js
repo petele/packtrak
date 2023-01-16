@@ -29,6 +29,7 @@ class PackageEditor extends React.Component {
       id: props.id,
       delivered: pkgData?.delivered || false,
       dateExpected: pkgData?.dateExpected || '',
+      dateDelivered: pkgData?.dateDelivered || '',
       from: pkgData?.from || '',
       what: pkgData?.what || '',
       orderURL: pkgData?.orderURL || '',
@@ -125,13 +126,16 @@ class PackageEditor extends React.Component {
     const pkg = {
       delivered: this.state.delivered,
       dateExpected: this.state.dateExpected,
+      dateDelivered: this.state.delivered ? this.state.dateDelivered : null,
       from: this.state.from,
       what: this.state.what,
       trackingNumber: this.state.trackingNumber,
       shipper: this.state.shipper,
-      trackingURL: this.state.trackingURL,
       orderURL: this.state.orderURL,
     };
+    if (this.state.shipper === 'Custom') {
+      pkg.trackingURL = this.state.trackingURL;
+    }
 
     return this.savePackage(this.props.uid, pkg)
       .then((id) => {
@@ -182,18 +186,35 @@ class PackageEditor extends React.Component {
           onKeyDown={this.preventSubmitOnEnter}
         >
           <Stack spacing={2}>
-            <TextField
-              autoFocus={this.state.mode === 'add'}
-              name="dateExpected"
-              required
-              label="Date Expected"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={this.state.dateExpected}
-              onChange={this.handleInputChange}
-            />
+            <Stack direction="row" spacing={2}>
+              <TextField
+                autoFocus={this.state.mode === 'add'}
+                name="dateExpected"
+                required
+                label="Date Expected"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={this.state.dateExpected}
+                onChange={this.handleInputChange}
+                fullWidth={true}
+              />
+              {this.state.kind === 'delivered' && (
+                <TextField
+                  name="dateDelivered"
+                  required
+                  label="Date Delivered"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={this.state.dateDelivered}
+                  onChange={this.handleInputChange}
+                  fullWidth={true}
+                />
+              )}
+            </Stack>
             <TextField
               name="from"
               required

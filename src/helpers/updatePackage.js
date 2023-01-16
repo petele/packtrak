@@ -26,18 +26,21 @@ export default async function updatePackage(userID, kind, id, data, before) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  cleanPackageObject(data);
-  const {valid, errors} = validatePackage(data);
+  const pkg = cleanPackageObject(data);
+  const {valid, errors} = validatePackage(pkg);
 
   if (!valid) {
-    console.error('Validation failed', data, errors);
+    console.error('Validation failed', pkg, errors);
     throw new Error('Validation failed');
   }
 
-  data.dtUpdated = Date.now();
+  pkg.dtUpdated = Date.now();
+
+  const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
 
   gaEvent('package', 'update');
-  const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
+  console.log('updatePackage', queryPath, pkg);
+
   const fbRef = ref(db, queryPath);
-  return await update(fbRef, data);
+  return await update(fbRef, pkg);
 }

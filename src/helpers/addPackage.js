@@ -24,28 +24,24 @@ export default async function addPackage(userID, data) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  cleanPackageObject(data);
-  const {valid, errors} = validatePackage(data);
+  const pkg = cleanPackageObject(data);
+  const {valid, errors} = validatePackage(pkg);
 
   if (!valid) {
-    console.error('Validation failed', data, errors);
+    console.error('Validation failed', pkg, errors);
     throw new Error('Validation failed');
   }
 
-  gaEvent('package', 'add');
-
   const now = Date.now();
-  data.dtAdded = now;
-  data.dtUpdated = now;
+  pkg.dtAdded = now;
+  pkg.dtUpdated = now;
 
   const queryPath = `userData/${userID}/data_v1/incoming`;
 
-  try {
-    const fbRef = ref(db, queryPath);
-    const newRef = await push(fbRef, data);
-    return newRef.key;
-  } catch (ex) {
-    console.error('Unable to add new package', queryPath, ex);
-    throw ex;
-  }
+  gaEvent('package', 'add');
+  console.log('addPackage', queryPath, pkg);
+
+  const fbRef = ref(db, queryPath);
+  const newRef = await push(fbRef, pkg);
+  return newRef.key;
 }
