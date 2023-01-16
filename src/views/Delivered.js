@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 import {
   Container,
   Fab
@@ -9,6 +11,22 @@ import PackageTable from '../components/PackageTable';
 
 export default function Delivered(props) {
   document.title = `Delivered - PackTrak`;
+
+  const navigate = useNavigate();
+
+  const handleKeyPress = useCallback((event) => {
+    if (event.key === '+') {
+      navigate('/add');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   return (
     <Container component="main" sx={{marginTop: 1}}>
