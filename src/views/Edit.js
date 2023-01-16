@@ -37,7 +37,7 @@ export default function Edit(props) {
   };
 
   const returnToIncoming = () => {
-    navigate('/incoming');
+    navigate(`/${kind}`);
   };
 
   if (!pkgData) {

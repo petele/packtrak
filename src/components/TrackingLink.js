@@ -30,7 +30,7 @@ export default function TrackingLink({row, width}) {
 
   if (url && label) {
     return (
-      <Link href={url} target="_blank" rel="noreferrer">
+      <Link href={url} target="_blank" rel="noreferrer" underline="hover">
         {label}
       </Link>
     );

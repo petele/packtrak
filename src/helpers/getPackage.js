@@ -14,6 +14,9 @@ export default async function getPackage(userID, kind, id) {
   if (!userID || !kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
+  if (!['incoming', 'delivered'].includes(kind)) {
+    throw new Error('not-found');
+  }
   gaEvent('package', 'get_package');
 
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;

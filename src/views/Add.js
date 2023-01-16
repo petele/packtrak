@@ -20,7 +20,7 @@ export default function Add(props) {
   };
 
   const returnToIncoming = () => {
-    navigate('/incoming');
+    navigate(-1);
   };
 
   return (

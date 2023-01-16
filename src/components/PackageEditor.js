@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import {
   Alert,
@@ -47,12 +46,6 @@ class PackageEditor extends React.Component {
     } else {
       const url = getTrackingURL(pkgData?.shipper, pkgData?.trackingNumber);
       this.state.trackingURL = url || '';
-    }
-
-    if (props.mode === 'edit') {
-      this.state.backURL = `/${props.kind}`;
-    } else {
-      this.state.backURL = '/incoming';
     }
 
     this.returnToIncoming = props.fnReturn;
@@ -190,6 +183,7 @@ class PackageEditor extends React.Component {
         >
           <Stack spacing={2}>
             <TextField
+              autoFocus={this.state.mode === 'add'}
               name="dateExpected"
               required
               label="Date Expected"
@@ -262,7 +256,9 @@ class PackageEditor extends React.Component {
               <Button type="submit" value="submit" variant="contained">
                 {this.state.saveLabel}
               </Button>
-              <Button component={Link} to={this.state.backURL} variant="outlined">Cancel</Button>
+              <Button
+                type="button" variant="outlined"
+                onClick={this.returnToIncoming}>Cancel</Button>
               {this.state.mode === 'edit' && (
                 <Button
                   type="button" variant="contained" color="error"

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import {
   Checkbox,
+  Link,
   TableCell,
   TableRow,
   Typography,
@@ -68,16 +69,20 @@ export default function PackageTableRow(props) {
         {dtValFormatted}
       </TableCell>
       <TableCell onClick={onRowClick} sx={pointerStyle}>
-        {row.from}
-        <Typography variant="caption" component="div">{row.what}</Typography>
+        <Link variant="body2" color="inherit" component={RouterLink} to={editURL} underline="hover">
+          {row.from}
+        </Link>
+        <Typography variant="caption" component="div">
+          {row.what}
+        </Typography>
       </TableCell>
       <TableCell>
         <OrderLinkButton row={row} />
-        {width !== 'sm' && (
-          <TrackingLink row={row} width={width} />
-        )}
         {width === 'sm' && (
           <TrackingLinkButton row={row} />
+        )}
+        {width !== 'sm' && (
+          <TrackingLink row={row} width={width} />
         )}
       </TableCell>
     </TableRow>
