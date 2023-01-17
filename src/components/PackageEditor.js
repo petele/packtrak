@@ -52,13 +52,13 @@ class PackageEditor extends React.Component {
     this.returnToIncoming = props.fnReturn;
     this.savePackage = props.fnSave;
 
+    this.trimOnBlur = this.trimOnBlur.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleShipperChange = this.handleShipperChange.bind(this);
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
 
-    this.handleBlurShipper = this.handleBlurShipper.bind(this);
     this.handleBlurTrackingNumber = this.handleBlurTrackingNumber.bind(this);
 
     this.shipperOptions = getKnownShippers();
@@ -148,10 +148,10 @@ class PackageEditor extends React.Component {
   }
 
   handleBlurTrackingNumber(event) {
-    const trackingNumber = this.state.trackingNumber;
+    this.trimOnBlur(event);
+    const trackingNumber = this.state.trackingNumber.trim();
     const currentShipper = this.state.shipper;
     const maybeShipper = guessShipper(trackingNumber);
-    console.log('blur', currentShipper, maybeShipper);
     if (maybeShipper && !currentShipper) {
       const val = {shipper: maybeShipper};
       const url = getTrackingURL(maybeShipper, trackingNumber);
@@ -162,8 +162,20 @@ class PackageEditor extends React.Component {
     }
   }
 
-  handleBlurShipper(event) {
-    // console.log('blur', 'shipper', event, this.state.shipper);
+  trimOnBlur(event) {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+    if (typeof value !== 'string') {
+      return;
+    }
+    const trimmed = value.trim();
+    if (value === trimmed) {
+      return;
+    }
+    this.setState({
+      [name]: trimmed,
+    });
   }
 
   preventSubmitOnEnter(event) {
@@ -223,6 +235,7 @@ class PackageEditor extends React.Component {
               label="From"
               value={this.state.from}
               onChange={this.handleInputChange}
+              onBlur={this.trimOnBlur}
             />
             <TextField
               name="what"
@@ -231,6 +244,7 @@ class PackageEditor extends React.Component {
               label="What"
               value={this.state.what}
               onChange={this.handleInputChange}
+              onBlur={this.trimOnBlur}
             />
             <TextField
               name="trackingNumber"
@@ -246,7 +260,6 @@ class PackageEditor extends React.Component {
               value={this.state.shipper}
               options={this.shipperOptions}
               renderInput={(params) => <TextField {...params} label="Shipper" />}
-              onBlur={this.handleBlurShipper}
               onChange={this.handleShipperChange}
             />
             <TextField
@@ -258,6 +271,7 @@ class PackageEditor extends React.Component {
               label="Tracking URL"
               value={this.state.trackingURL}
               onChange={this.handleInputChange}
+              onBlur={this.trimOnBlur}
             />
             <TextField
               name="orderURL"
@@ -267,6 +281,7 @@ class PackageEditor extends React.Component {
               label="Order URL"
               value={this.state.orderURL}
               onChange={this.handleInputChange}
+              onBlur={this.trimOnBlur}
             />
             {this.state.errorOnDelete && (
               <Alert severity="error">Sorry, something went wrong.</Alert>
