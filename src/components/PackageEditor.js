@@ -5,9 +5,13 @@ import {
   Autocomplete,
   Box,
   Button,
+  IconButton,
+  Link,
   Stack,
   TextField,
 } from '@mui/material';
+
+import OpenInNew from '@mui/icons-material/OpenInNew';
 
 import ConfirmDialog from './ConfirmDialog';
 import deletePackage from '../helpers/deletePackage';
@@ -262,27 +266,37 @@ class PackageEditor extends React.Component {
               renderInput={(params) => <TextField {...params} label="Shipper" />}
               onChange={this.handleShipperChange}
             />
-            <TextField
-              name="trackingURL"
-              fullWidth
-              type="url"
-              inputMode="url"
-              disabled={this.state.trackingLinkEditDisabled}
-              label="Tracking URL"
-              value={this.state.trackingURL}
-              onChange={this.handleInputChange}
-              onBlur={this.trimOnBlur}
-            />
-            <TextField
-              name="orderURL"
-              type="url"
-              inputMode="url"
-              fullWidth
-              label="Order URL"
-              value={this.state.orderURL}
-              onChange={this.handleInputChange}
-              onBlur={this.trimOnBlur}
-            />
+            <Stack direction="row" spacing={2}>
+              <TextField
+                name="trackingURL"
+                fullWidth
+                type="url"
+                inputMode="url"
+                disabled={this.state.trackingLinkEditDisabled}
+                label="Tracking URL"
+                value={this.state.trackingURL}
+                onChange={this.handleInputChange}
+                onBlur={this.trimOnBlur}
+              />
+              <IconButton component={Link} href={this.state.trackingURL} disabled={this.state.trackingURL === ''}  target="_blank" rel="noreferrer" aria-label="open tracking link in new window">
+                <OpenInNew />
+              </IconButton>
+            </Stack>
+            <Stack direction="row" spacing={2}>
+              <TextField
+                name="orderURL"
+                type="url"
+                inputMode="url"
+                fullWidth
+                label="Order URL"
+                value={this.state.orderURL}
+                onChange={this.handleInputChange}
+                onBlur={this.trimOnBlur}
+              />
+              <IconButton component={Link} href={this.state.orderURL} disabled={this.state.orderURL === ''} target="_blank" rel="noreferrer" aria-label="open order link in new window">
+                <OpenInNew />
+              </IconButton>
+            </Stack>
             {this.state.errorOnDelete && (
               <Alert severity="error">Sorry, something went wrong.</Alert>
             )}
