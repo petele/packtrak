@@ -6,6 +6,7 @@ import {
 import ProfileDetails from '../components/ProfileDetails';
 import ChangePassword from '../components/ChangePassword';
 import DeleteAccount from '../components/DeleteAccount';
+import VerifyEmail from '../components/VerifyEmail';
 
 export default function Profile(props) {
   document.title = `Profile - PackTrak`;
@@ -15,6 +16,7 @@ export default function Profile(props) {
       <Typography component="h1" variant="h5">
         Profile
       </Typography>
+      <VerifyEmail uid={props.uid} />
       <ProfileDetails uid={props.uid} />
       <ChangePassword uid={props.uid} />
       <DeleteAccount uid={props.uid} />
