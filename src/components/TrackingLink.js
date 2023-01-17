@@ -35,5 +35,11 @@ export default function TrackingLink({row, width}) {
       </Link>
     );
   }
+  if (label) {
+    return (
+      <Link disabled color="text.secondary" underline="none">
+        {label}
+      </Link>);
+  }
   return null;
 }

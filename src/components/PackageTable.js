@@ -84,7 +84,7 @@ export default function PackageTable(props) {
             <TableCell padding="checkbox"></TableCell>
             <TableCell sx={sxDate}>{dateLabel}</TableCell>
             <TableCell sx={sxFrom}>From</TableCell>
-            <TableCell sx={sxTracking}>Tracking</TableCell>
+            <TableCell sx={sxTracking}>Links</TableCell>
           </TableRow>
         </TableHead>
         <PackageTableBody rows={rows} uid={props.uid} kind={kind} width={width} />
