@@ -18,6 +18,7 @@ import { signOut } from '../helpers/fbHelper';
 export default function ButtonAppBar(props) {
   const navigate = useNavigate();
 
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
@@ -39,7 +40,7 @@ export default function ButtonAppBar(props) {
   }
 
   const baseTabStyle = {
-    color: 'white',
+    color: 'inherit',
     display: 'block',
     borderRadius: 0,
     paddingTop: '20px',
@@ -53,11 +54,11 @@ export default function ButtonAppBar(props) {
   const curPath = window.location.pathname;
   const incomingStyle = Object.assign({}, baseTabStyle);
   if (curPath.startsWith('/incoming')) {
-    incomingStyle.borderBottomColor = 'white';
+    incomingStyle.borderBottomColor = 'inherit';
   }
   const deliveredStyle = Object.assign({}, baseTabStyle);
   if (curPath.startsWith('/delivered')) {
-    deliveredStyle.borderBottomColor = 'white';
+    deliveredStyle.borderBottomColor = 'inherit';
   }
 
   return (
@@ -100,7 +101,7 @@ export default function ButtonAppBar(props) {
             <Button
             component={Link}
             to="/signin"
-            sx={{ color: 'white', display: 'block' }}>
+            sx={{ color: 'inherit', display: 'block' }}>
             Sign In
           </Button>
           )}

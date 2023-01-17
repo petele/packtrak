@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 
-import { CssBaseline, Toolbar } from '@mui/material';
+import { blue, red } from '@mui/material/colors';
+import { CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -30,7 +32,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 export default function App() {
-
   const [uid, setUID] = React.useState(null);
 
   React.useEffect(() => {
@@ -62,14 +63,30 @@ export default function App() {
   );
 }
 
+
+
 function Layout(props) {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // const prefersDarkMode = true;
+
+  const theme = React.useMemo(() =>
+    createTheme({
+      palette: {
+        mode: prefersDarkMode ? 'dark' : 'light',
+        rowOverdue: prefersDarkMode ? '#ffebee25' : red[50],
+        rowToday: prefersDarkMode ? '#e3f2fd25' : blue[50],
+     },
+    }), [prefersDarkMode]);
+
   return (
     <Fragment>
-      <CssBaseline />
-      <ExperimentalRibbon />
-      <ButtonAppBar uid={props.uid} />
-      <Toolbar />
-      <Outlet />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ExperimentalRibbon />
+        <ButtonAppBar uid={props.uid} />
+        <Toolbar />
+        <Outlet />
+      </ThemeProvider>
     </Fragment>
   );
 }

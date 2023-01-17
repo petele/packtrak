@@ -44,10 +44,10 @@ export default function PackageTableRow(props) {
     '&:last-child td, &:last-child th': { border: 0 },
   };
   if (row.isOverdue) {
-    myStyles['backgroundColor'] = '#ffebee';
+    myStyles['backgroundColor'] = 'rowOverdue';
   }
   if (row.isDueToday) {
-    myStyles['backgroundColor'] = '#e3f2fd';
+    myStyles['backgroundColor'] = 'rowToday'
   }
 
   const pointerStyle = {
