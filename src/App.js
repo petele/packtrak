@@ -73,8 +73,8 @@ function Layout(props) {
     createTheme({
       palette: {
         mode: prefersDarkMode ? 'dark' : 'light',
-        rowOverdue: prefersDarkMode ? '#ffebee25' : red[50],
-        rowToday: prefersDarkMode ? '#e3f2fd25' : blue[50],
+        rowOverdue: prefersDarkMode ? 'rgb(22, 11, 11)' : red[50],
+        rowToday: prefersDarkMode ? 'rgb(7, 19, 24)' : blue[50],
      },
     }), [prefersDarkMode]);
 
