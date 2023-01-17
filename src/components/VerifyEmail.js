@@ -14,9 +14,11 @@ export default function VerifyEmail(props) {
   const [emailSent, setEmailSent] = React.useState(false);
 
   const user = getUser();
-  const emailVerified = user.emailVerified;
+  if (user === null) {
+    return null;
+  }
 
-  if (emailVerified) {
+  if (user.emailVerified) {
     return (
       <Box component="section" sx={{marginTop: 2}}>
         Your email address has been verified.
