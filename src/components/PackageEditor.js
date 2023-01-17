@@ -66,10 +66,11 @@ class PackageEditor extends React.Component {
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.value;
     const name = target.name;
+    const value = target.value;
+
     this.setState({
-      [name]: value
+      [name]: typeof value === 'string' ? value.trim() : value,
     });
 
     if (name === 'trackingNumber') {
