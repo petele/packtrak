@@ -5,7 +5,7 @@ import {
   Link,
 } from '@mui/material';
 
-import getTrackingURL from '../helpers/getTrackingURL';
+import getTrackingURL from '../../helpers/getTrackingURL';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 export default function TrackingLinkButton({row}) {

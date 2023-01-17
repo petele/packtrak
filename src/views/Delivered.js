@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import PackageTable from '../components/PackageTable';
+import PackageTable from '../components/PackageTable/PackageTable';
 
 export default function Delivered(props) {
   document.title = `Delivered - PackTrak`;

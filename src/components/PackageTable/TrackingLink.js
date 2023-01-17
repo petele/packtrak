@@ -4,7 +4,7 @@ import {
   Link,
 } from '@mui/material';
 
-import getTrackingURL from '../helpers/getTrackingURL';
+import getTrackingURL from '../../helpers/getTrackingURL';
 
 function _getLabel(trackingNumber, width) {
   if (typeof trackingNumber !== 'string') {

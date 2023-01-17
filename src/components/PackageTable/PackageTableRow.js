@@ -13,8 +13,8 @@ import OrderLinkButton from './OrderLinkButton';
 import TrackingLink from './TrackingLink';
 import TrackingLinkButton from './TrackingLinkButton';
 
-import markAsDelivered from '../helpers/markAsDelivered';
-import { formatToString,  parseDateFromString } from '../helpers/dtHelpers';
+import markAsDelivered from '../../helpers/markAsDelivered';
+import { formatToString,  parseDateFromString } from '../../helpers/dtHelpers';
 
 export default function PackageTableRow(props) {
   const navigate = useNavigate();

@@ -12,11 +12,11 @@ import {
 
 import { useTheme } from '@mui/material/styles';
 
-import NoPackages from './NoPackages';
+import NoPackages from '../NoPackages';
 
 import PackageTableBody from './PackageTableBody';
-import getPackageList from '../helpers/getPackageList';
-import parsePackageList from '../helpers/parsePackageList';
+import getPackageList from '../../helpers/getPackageList';
+import parsePackageList from '../../helpers/parsePackageList';
 
 function _getWidth() {
   const theme = useTheme();
