@@ -70,7 +70,7 @@ class PackageEditor extends React.Component {
     const value = target.value;
 
     this.setState({
-      [name]: typeof value === 'string' ? value.trim() : value,
+      [name]: value,
     });
 
     if (name === 'trackingNumber') {
