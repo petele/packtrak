@@ -13,12 +13,12 @@ function _getLabel(trackingNumber, width) {
   if (width === 'lg') {
     return trackingNumber;
   }
-  if (trackingNumber.length < 17) {
+  if (trackingNumber.length < 15) {
     return trackingNumber;
   }
   const len = trackingNumber.length;
-  const start = trackingNumber.substring(0, 2);
-  const end = trackingNumber.substring(len - 6);
+  const start = trackingNumber.substring(0, 3);
+  const end = trackingNumber.substring(len - 5);
   return `${start}...${end}`;
 }
 
