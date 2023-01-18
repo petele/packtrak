@@ -43,7 +43,7 @@ export default function VerifyEmail() {
           Send Email Verification
         </Button>
         {emailSent && (
-          <Alert severity="success">Verification email was sent.</Alert>
+          <Alert severity="success" sx={{flexGrow: 1}}>Verification email was sent.</Alert>
         )}
       </Stack>
     </Box>

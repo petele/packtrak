@@ -40,7 +40,8 @@ export default function Profile() {
           <Typography sx={{ width: '33%', flexShrink: 0 }}>Verify Email</Typography>
           <Typography sx={{ color: 'text.secondary' }}>
             {emailAddress}
-            {user?.emailVerified && (<span>&nbsp;(verified)</span>)}
+            {isVerified && (<span>&nbsp;(verified)</span>)}
+            {!isVerified && (<span>&nbsp;(unverified)</span>)}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>

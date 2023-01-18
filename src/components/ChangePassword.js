@@ -105,22 +105,22 @@ export default function ChangePassword() {
           value={newPW2}
           onChange={handleChange}
         />
-        {pwMisMatch && (
-          <Alert severity="error">New passwords must match.</Alert>
-        )}
-        {pwChangeFailed && (
-          <Alert severity="error">Unable to change your password.</Alert>
-        )}
-        {pwChanged && (
-          <Alert severity="success">Your password was changed.</Alert>
-        )}
-        <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-start" spacing={2}>
+        <Stack direction="row" sx={{ mt: 2 }} spacing={2}>
           <Button
             type="submit"
             variant="contained"
           >
             Change Password
           </Button>
+          {pwMisMatch && (
+            <Alert severity="error" sx={{flexGrow: 1}}>New passwords must match.</Alert>
+          )}
+          {pwChangeFailed && (
+            <Alert severity="error" sx={{flexGrow: 1}}>Unable to change your password.</Alert>
+          )}
+          {pwChanged && (
+            <Alert severity="success" sx={{flexGrow: 1}}>Your password was changed.</Alert>
+          )}
         </Stack>
       </Stack>
     </Box>

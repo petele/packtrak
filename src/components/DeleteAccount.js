@@ -74,13 +74,7 @@ export default function DeleteAccount() {
             value={currentPW}
             onChange={handleChange}
           />
-          {cantDelete && (
-            <Alert severity="error">
-              Oops, couldn't delete your account. Please check your password
-              and try again.
-            </Alert>
-          )}
-          <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-start" spacing={2}>
+          <Stack direction="row" sx={{ mt: 2 }} spacing={2}>
             <Button
               type="submit"
               variant="contained"
@@ -88,6 +82,12 @@ export default function DeleteAccount() {
             >
               Delete Account
             </Button>
+            {cantDelete && (
+              <Alert severity="error" sx={{flexGrow: 1}}>
+                Oops, couldn't delete your account. Please check your password
+                and try again.
+              </Alert>
+            )}
           </Stack>
         </Stack>
       </Box>
