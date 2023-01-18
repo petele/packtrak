@@ -6,12 +6,11 @@ import {
   Button,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 
 import { changePassword, getUserEmail } from '../helpers/fbHelper';
 
-export default function ChangePassword(props) {
+export default function ChangePassword() {
   const userEmail = getUserEmail() || '';
   const [currentPW, setCurrentPW] = React.useState('');
   const [newPW1, setNewPW1] = React.useState('');
@@ -64,71 +63,66 @@ export default function ChangePassword(props) {
   }
 
   return (
-    <Box component="section" sx={{marginTop: 4}}>
-      <Typography component="h2" variant="h6">
-        Change Password
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          <input
-            type="hidden"
-            name="email"
-            id="change-pw-email"
-            autoComplete="username email"
-            value={userEmail}
-          />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            name="current-password"
-            label="Current Password"
-            type="password"
-            autoComplete="current-password"
-            value={currentPW}
-            onChange={handleChange}
-          />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            name="password-new1"
-            label="New Password"
-            type="password"
-            autoComplete="new-password"
-            value={newPW1}
-            onChange={handleChange}
-          />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            name="password-new2"
-            label="Confirm New Password"
-            type="password"
-            autoComplete="new-password"
-            value={newPW2}
-            onChange={handleChange}
-          />
-          {pwMisMatch && (
-            <Alert severity="error">New passwords must match.</Alert>
-          )}
-          {pwChangeFailed && (
-            <Alert severity="error">Unable to change your password.</Alert>
-          )}
-          {pwChanged && (
-            <Alert severity="success">Your password was changed.</Alert>
-          )}
-          <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-start" spacing={2}>
-            <Button
-              type="submit"
-              variant="contained"
-            >
-              Change Password
-            </Button>
-          </Stack>
+    <Box component="form" onSubmit={handleSubmit}>
+      <Stack spacing={2}>
+        <input
+          type="hidden"
+          name="email"
+          id="change-pw-email"
+          autoComplete="username email"
+          value={userEmail}
+        />
+        <TextField
+          required
+          fullWidth
+          margin="normal"
+          name="current-password"
+          label="Current Password"
+          type="password"
+          autoComplete="current-password"
+          value={currentPW}
+          onChange={handleChange}
+        />
+        <TextField
+          required
+          fullWidth
+          margin="normal"
+          name="password-new1"
+          label="New Password"
+          type="password"
+          autoComplete="new-password"
+          value={newPW1}
+          onChange={handleChange}
+        />
+        <TextField
+          required
+          fullWidth
+          margin="normal"
+          name="password-new2"
+          label="Confirm New Password"
+          type="password"
+          autoComplete="new-password"
+          value={newPW2}
+          onChange={handleChange}
+        />
+        {pwMisMatch && (
+          <Alert severity="error">New passwords must match.</Alert>
+        )}
+        {pwChangeFailed && (
+          <Alert severity="error">Unable to change your password.</Alert>
+        )}
+        {pwChanged && (
+          <Alert severity="success">Your password was changed.</Alert>
+        )}
+        <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-start" spacing={2}>
+          <Button
+            type="submit"
+            variant="contained"
+          >
+            Change Password
+          </Button>
         </Stack>
-      </Box>
+      </Stack>
     </Box>
   );
 }

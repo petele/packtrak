@@ -10,7 +10,7 @@ import {
 
 import { getUser, verifyEmail } from '../helpers/fbHelper';
 
-export default function VerifyEmail(props) {
+export default function VerifyEmail() {
   const [emailSent, setEmailSent] = React.useState(false);
 
   const user = getUser();
@@ -32,11 +32,7 @@ export default function VerifyEmail(props) {
   }
 
   return (
-    <Box component="section" sx={{marginTop: 4}}>
-      <Typography component="h2" variant="h6">
-        Verify Email
-      </Typography>
-
+    <Box component="section">
       <Typography component="section" variant="body2" sx={{my: 1}}>
         Help us to protect PackTrak and keep your account safe.
         Please confirm your email address.

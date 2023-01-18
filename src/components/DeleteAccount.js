@@ -7,14 +7,13 @@ import {
   Button,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 
 import ConfirmDialog from './ConfirmDialog';
 import { getUserEmail } from '../helpers/fbHelper';
 import { deleteUserData } from '../helpers/deleteUserData';
 
-export default function DeleteAccount(props) {
+export default function DeleteAccount() {
   const navigate = useNavigate();
   const userEmail = getUserEmail() || '';
   const [currentPW, setCurrentPW] = React.useState('');
@@ -49,10 +48,7 @@ export default function DeleteAccount(props) {
   }
 
   return (
-    <Box component="section" sx={{marginTop: 4}}>
-      <Typography component="h2" variant="h6">
-        Delete Account
-      </Typography>
+    <Box component="section">
       <ConfirmDialog
         open={confirmDialogVisible}
         callback={handleConfirmDelete}

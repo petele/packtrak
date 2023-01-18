@@ -2,13 +2,11 @@ import * as React from 'react';
 
 import {
   Box,
-  Typography,
 } from '@mui/material';
 
 import { getUser } from '../helpers/fbHelper';
 
-export default function ProfileDetails(props) {
-
+export default function ProfileDetails() {
   const user = getUser();
   if (user === null) {
     return null;
@@ -21,30 +19,21 @@ export default function ProfileDetails(props) {
   const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
 
   const uid = user.uid;
-  const email = user.email;
   const accountCreatedDT = new Date(parseInt(user.metadata.createdAt, 10));
   const accountCreated = dtFormatter.format(accountCreatedDT);
   const lastLoginDT = new Date(parseInt(user.metadata.lastLoginAt, 10));
   const lastLogin = dtFormatter.format(lastLoginDT);
 
-  console.log('user', user);
-
   return (
-    <Box component="section" sx={{marginTop: 4}}>
-      <Typography component="h2" variant="h6">
-        Profile Info
-      </Typography>
+    <Box component="section">
       <div>
-        <b>User ID:</b> {uid}
+        <b>User ID:</b> <span>{uid}</span>
       </div>
       <div>
-        <b>Email Address:</b> {email}
+        <b>Account Created On:</b> <span>{accountCreated}</span>
       </div>
       <div>
-        <b>Account Created On:</b> {accountCreated.toString()}
-      </div>
-      <div>
-        <b>Last Login:</b> {lastLogin.toString()}
+        <b>Last Login:</b> <span>{lastLogin}</span>
       </div>
     </Box>
   );
