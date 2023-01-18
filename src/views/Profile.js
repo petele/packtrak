@@ -16,8 +16,8 @@ export default function Profile(props) {
       <Typography component="h1" variant="h5">
         Profile
       </Typography>
-      <VerifyEmail uid={props.uid} />
       <ProfileDetails uid={props.uid} />
+      <VerifyEmail uid={props.uid} />
       <ChangePassword uid={props.uid} />
       <DeleteAccount uid={props.uid} />
     </Container>
