@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import PackageTable from '../components/PackageTable/PackageTable';
 
-export default function Delivered(props) {
+export default function Delivered({uid}) {
   document.title = `Delivered - PackTrak`;
 
   const navigate = useNavigate();
@@ -28,9 +28,19 @@ export default function Delivered(props) {
     };
   }, [handleKeyPress]);
 
+  useEffect(() => {
+    if (uid === null) {
+      return navigate('/signin');
+    }
+  }, [uid, navigate]);
+
+  if (uid === null || uid === -1) {
+    return null;
+  }
+
   return (
     <Container component="main" sx={{marginTop: 1}}>
-      <PackageTable kind="delivered" uid={props.uid} />
+      <PackageTable kind="delivered" />
       <Fab component={Link} to="/add" color="primary" aria-label="add">
         <AddIcon />
       </Fab>

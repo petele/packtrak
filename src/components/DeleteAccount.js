@@ -60,7 +60,7 @@ export default function DeleteAccount() {
           <input
             type="hidden"
             name="email"
-            autoComplete="username email"
+            autoComplete="username"
             value={userEmail}
           />
           <TextField

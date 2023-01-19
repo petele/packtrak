@@ -15,24 +15,29 @@ import { AccountCircle } from '@mui/icons-material';
 
 import { signOut } from '../helpers/fbHelper';
 
-export default function ButtonAppBar(props) {
+export default function ButtonAppBar({uid}) {
   const navigate = useNavigate();
 
-
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const isSignedIn = uid !== null & uid !== -1;
+  const signInOutLabel = isSignedIn ? 'Sign Out' : 'Sign In';
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const clickSignOut = () => {
-    signOut();
+  function clickSignInOut() {
     closeMenu();
-    navigate('/');
-  };
+    if (isSignedIn) {
+      signOut();
+      navigate('/');
+    }
+    navigate('/signin');
+  }
 
   const handleClose = () => {
-    closeMenu()
+    closeMenu();
   };
 
   const closeMenu = () => {
@@ -79,65 +84,50 @@ export default function ButtonAppBar(props) {
           >
             PackTrak
           </Typography>
-          {props.uid && (
-            <Button
-              component={Link}
-              to="/incoming"
-              sx={incomingStyle}>
-              Incoming
-            </Button>
-          )}
-          {props.uid && (
-            <Button
-              component={Link}
-              to="/delivered"
-              sx={deliveredStyle}>
-              Delivered
-            </Button>
-          )}
-
-          <Box sx={{ flexGrow: 1 }}></Box>
-          {!props.uid && (
-            <Button
+          <Button
             component={Link}
-            to="/signin"
-            sx={{ color: 'inherit', display: 'block' }}>
-            Sign In
+            to="/incoming"
+            sx={incomingStyle}>
+            Incoming
           </Button>
-          )}
-          {props.uid && (
-            <Box>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem component={Link} onClick={closeMenu} to="/profile">Profile</MenuItem>
-                <MenuItem component={Link} onClick={closeMenu} to="/about">About PackTrak</MenuItem>
-                <MenuItem onClick={clickSignOut}>Sign Out</MenuItem>
-              </Menu>
-            </Box>
-          )}
+          <Button
+            component={Link}
+            to="/delivered"
+            sx={deliveredStyle}>
+            Delivered
+          </Button>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <Box>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem component={Link} onClick={closeMenu} to="/profile">Profile</MenuItem>
+              <MenuItem component={Link} onClick={closeMenu} to="/about">About PackTrak</MenuItem>
+              <MenuItem onClick={clickSignInOut}>{signInOutLabel}</MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

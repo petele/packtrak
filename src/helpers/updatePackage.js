@@ -1,5 +1,5 @@
 import { update, ref } from 'firebase/database';
-import { db } from '../helpers/fbHelper';
+import { db, getUserID } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 
 import { cleanPackageObject, validatePackage } from './validatePackageData';
@@ -7,7 +7,6 @@ import { cleanPackageObject, validatePackage } from './validatePackageData';
 /**
  * Updates the package record in the database.
  *
- * @param {string} userID User ID
  * @param {string} kind incoming or delivered
  * @param {string} id Package ID
  * @param {object} data Package details
@@ -21,8 +20,12 @@ import { cleanPackageObject, validatePackage } from './validatePackageData';
  * @param {?object} before - Same as data, but pre-edit version
  * @return {Promise<null>} Successful update complete
  */
-export default async function updatePackage(userID, kind, id, data, before) {
-  if (!userID || !kind || !id || !data) {
+export default async function updatePackage(kind, id, data, before) {
+  const userID = getUserID();
+  if (!userID) {
+    throw new Error('Not Authenticated');
+  }
+  if (!kind || !id || !data) {
     throw new Error(`Missing or invalid required param.`);
   }
 

@@ -16,14 +16,10 @@ import TrackingLinkButton from './TrackingLinkButton';
 import markAsDelivered from '../../helpers/markAsDelivered';
 import { formatToString,  parseDateFromString } from '../../helpers/dtHelpers';
 
-export default function PackageTableRow(props) {
+export default function PackageTableRow({row, kind, width}) {
   const navigate = useNavigate();
 
-  const row = props.row;
-
   const id = row.id;
-  const kind = props.kind;
-  const width = props.width;
   const editURL = `/edit/${kind}/${id}`;
 
   // Get the formatted date
@@ -32,8 +28,7 @@ export default function PackageTableRow(props) {
   const dtValFormatted = formatToString(dtValObj, width === 'sm');
 
   function onCheckChange(e) {
-    const uid = props.uid;
-    markAsDelivered(uid, kind, id, e.target.checked);
+    markAsDelivered(kind, id, e.target.checked);
   }
 
   function onRowClick(event) {

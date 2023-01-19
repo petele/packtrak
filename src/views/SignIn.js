@@ -15,10 +15,11 @@ import {
 } from '@mui/material';
 
 import Copyright from '../components/Copyright';
+import SignInStatusAlert from '../components/SignInStatusAlert';
 
 import { signIn } from '../helpers/fbHelper';
 
-export default function SignIn() {
+export default function SignIn({uid}) {
   document.title = `Sign In - PackTrak`;
 
   const [email, setEmail] = React.useState('');
@@ -68,6 +69,7 @@ export default function SignIn() {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
         <Stack spacing={2}>
+          <SignInStatusAlert uid={uid} />
           <TextField
             margin="normal"
             required

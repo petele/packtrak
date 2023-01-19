@@ -15,11 +15,12 @@ import {
 } from '@mui/material';
 
 import Copyright from '../components/Copyright';
+import SignInStatusAlert from '../components/SignInStatusAlert';
 import TOSLabel from '../components/TOSLabel';
 
 import addUser from '../helpers/addUser';
 
-export default function SignUp(props) {
+export default function SignUp({uid}) {
   document.title = `Sign Up - PackTrak`;
 
   const [signUpFailed, setSignUpFailed] = React.useState(false);
@@ -69,6 +70,7 @@ export default function SignUp(props) {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
         <Stack spacing={2}>
+          <SignInStatusAlert uid={uid} />
           <Stack direction="row" justifyContent="space-between">
             <TextField
               autoComplete="given-name"

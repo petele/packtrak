@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
   Accordion,
   AccordionDetails,
@@ -15,8 +18,20 @@ import VerifyEmail from '../components/VerifyEmail';
 
 import { getUser } from '../helpers/fbHelper';
 
-export default function Profile() {
+export default function Profile({uid}) {
   document.title = `Profile - PackTrak`;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (uid === null) {
+      return navigate('/signin');
+    }
+  }, [uid, navigate]);
+
+  if (uid === null || uid === -1) {
+    return null;
+  }
 
   const user = getUser();
   const isVerified = user?.emailVerified === true;
@@ -64,8 +79,6 @@ export default function Profile() {
           <DeleteAccount />
         </AccordionDetails>
       </Accordion>
-
-
     </Container>
   );
 }

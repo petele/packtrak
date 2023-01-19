@@ -8,10 +8,10 @@ import {
 
 import Copyright from '../components/Copyright';
 
-export default function NoMatch(props) {
+export default function NoMatch({uid}) {
   document.title = `Sad Panda - PackTrak`;
 
-  const backURL = props.uid ? '/incoming' : '/';
+  const backURL = uid !== null && uid !== -1 ? '/incoming' : '/';
 
   return (
     <Container

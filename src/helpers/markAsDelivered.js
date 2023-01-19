@@ -1,19 +1,22 @@
 import { set, get, ref, remove } from 'firebase/database';
-import { db } from '../helpers/fbHelper';
+import { db, getUserID } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 import { formatToISODate } from './dtHelpers';
 
 /**
  * Marks the specified package as delivered.
  *
- * @param {string} userID User ID
  * @param {string} kind incoming or delivered
  * @param {string} id Package ID
  * @param {boolean} delivered Has the package been delivered.
  * @return {boolean} Successful update complete
  */
-export default async function markAsDelivered(userID, kind, id, delivered) {
-  if (!userID || !kind || !id) {
+export default async function markAsDelivered(kind, id, delivered) {
+  const userID = getUserID();
+  if (!userID) {
+    throw new Error('Not Authenticated');
+  }
+  if (!kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
   gaEvent('package', 'mark_as_delivered', delivered);

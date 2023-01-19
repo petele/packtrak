@@ -32,7 +32,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 export default function App() {
-  const [uid, setUID] = React.useState(null);
+  const [uid, setUID] = React.useState(-1);
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -55,7 +55,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignIn uid={uid} />} />
         <Route path="/signup" element={<SignUp uid={uid} />} />
-        <Route path="/forgot" element={<Forgot uid={uid} />} />
+        <Route path="/forgot" element={<Forgot />} />
         <Route path="/profile" element={<Profile uid={uid} />} />
         <Route path="*" element={<NoMatch uid={uid} />} />
       </Route>
@@ -67,7 +67,6 @@ export default function App() {
 
 function Layout(props) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  // const prefersDarkMode = true;
 
   const theme = React.useMemo(() =>
     createTheme({

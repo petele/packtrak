@@ -1,4 +1,4 @@
-import { db } from './fbHelper';
+import { db, getUserID } from './fbHelper';
 import { onValue, orderByChild, query, ref, endAt, startAt } from 'firebase/database';
 import { formatToISODate, getTodayEnd } from './dtHelpers';
 
@@ -29,13 +29,16 @@ function _getQuery(userID, kind) {
 /**
  * Gets data from Firebase.
  *
- * @param {string} userID
  * @param {string} kind
  * @param {Function} callback
  * @return FirebaseValue
  */
-export default function getPackageList(userID, kind, callback) {
-  if (!userID || !kind) {
+export default function getPackageList(kind, callback) {
+  const userID = getUserID();
+  if (!userID) {
+    throw new Error('Not Authenticated');
+  }
+  if (!kind) {
     return;
   }
 

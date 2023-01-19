@@ -1,5 +1,5 @@
 import { set, get, ref, remove } from 'firebase/database';
-import { db } from '../helpers/fbHelper';
+import { db, getUserID } from '../helpers/fbHelper';
 import { gaEvent } from './gaHelper';
 
 const _keepBackup = false;
@@ -7,13 +7,16 @@ const _keepBackup = false;
 /**
  * Deletes the specified package.
  *
- * @param {string} userID User ID
  * @param {string} kind incoming or delivered
  * @param {string} id Package ID
  * @return {boolean} Successful update complete
  */
-export default async function deletePackage(userID, kind, id) {
-  if (!userID || !kind || !id) {
+export default async function deletePackage(kind, id) {
+  const userID = getUserID();
+  if (!userID) {
+    throw new Error('Not Authenticated');
+  }
+  if (!kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
   gaEvent('package', 'delete');

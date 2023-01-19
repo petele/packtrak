@@ -4,7 +4,7 @@ import {
   Typography
 } from '@mui/material';
 
-export default function NoPackages(props) {
+export default function NoPackages() {
   return (
     <Box
       sx={{

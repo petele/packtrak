@@ -6,7 +6,7 @@ import {
 
 import './ExperimentalRibbon.css';
 
-export default function ExperimentalRibbon(props) {
+export default function ExperimentalRibbon() {
   return (
     <Link component={RouterLink} className="github-fork-ribbon left-top" to="/about" data-ribbon="Experimental" title="Experimental">P</Link>
   );

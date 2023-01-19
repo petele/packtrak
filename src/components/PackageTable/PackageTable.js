@@ -40,22 +40,19 @@ function _getWidth() {
 }
 
 
-export default function PackageTable(props) {
+export default function PackageTable({kind}) {
   const [rows, setRows] = React.useState(null);
-
-  const userID = props.uid;
-  const kind = props.kind;
 
   const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
 
   const width = _getWidth();
 
   React.useEffect(() => {
-    return getPackageList(userID, kind, (snapshot) => {
+    return getPackageList(kind, (snapshot) => {
       const pkgObj = snapshot.val();
       setRows(parsePackageList(pkgObj, kind));
     });
-  }, [userID, kind]);
+  }, [kind]);
 
   if (rows && rows.length === 0) {
     return (<NoPackages />);
@@ -87,7 +84,7 @@ export default function PackageTable(props) {
             <TableCell sx={sxTracking}>Links</TableCell>
           </TableRow>
         </TableHead>
-        <PackageTableBody rows={rows} uid={props.uid} kind={kind} width={width} />
+        <PackageTableBody rows={rows} kind={kind} width={width} />
       </Table>
     </TableContainer>
   );

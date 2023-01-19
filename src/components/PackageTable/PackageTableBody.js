@@ -6,11 +6,7 @@ import {
 import PackageTableRow from './PackageTableRow';
 import PackageTableRowSkeleton from './PackageTableRowSkeleton';
 
-export default function PackageTableBody(props) {
-  const rows = props.rows;
-  const uid = props.uid;
-  const kind = props.kind;
-  const width = props.width;
+export default function PackageTableBody({rows, kind, width}) {
 
   if (rows === null) {
     return (
@@ -25,7 +21,7 @@ export default function PackageTableBody(props) {
   return (
     <TableBody>
       {rows.map((row) => (
-        <PackageTableRow key={row.id} row={row} uid={uid} kind={kind} width={width} />
+        <PackageTableRow key={row.id} row={row} kind={kind} width={width} />
       ))}
     </TableBody>
   );

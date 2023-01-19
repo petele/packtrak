@@ -6,17 +6,23 @@ import { Container } from '@mui/material';
 import PackageEditor from '../components/PackageEditor';
 import addPackage from '../helpers/addPackage';
 
-export default function Add(props) {
+export default function Add({uid}) {
   document.title = `Add Package - PackTrak`;
 
   const navigate = useNavigate();
 
-  if (!props.uid) {
-    return;
+  React.useEffect(() => {
+    if (uid === null) {
+      return navigate('/signin');
+    }
+  }, [uid, navigate]);
+
+  if (uid === -1 || uid === null) {
+    return null;
   }
 
-  const savePackage = async (uid, data) => {
-    return addPackage(uid, data);
+  const savePackage = async (data) => {
+    return addPackage(data);
   };
 
   const returnToIncoming = () => {
@@ -25,9 +31,7 @@ export default function Add(props) {
 
   return (
     <Container component="main" sx={{marginTop: 2}}>
-      <PackageEditor
-        mode="add"
-        uid={props.uid}
+      <PackageEditor mode="add"
         fnReturn={returnToIncoming} fnSave={savePackage} />
     </Container>
   );

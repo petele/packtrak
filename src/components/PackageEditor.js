@@ -24,13 +24,12 @@ class PackageEditor extends React.Component {
     const pkgData = props.pkgData;
 
     this.state = {
-      uid: props.uid,
+      id: props.id,
       mode: props.mode,
       kind: props.kind,
 
       saveLabel: props.mode === 'add' ? 'Add' : 'Save',
 
-      id: props.id,
       delivered: pkgData?.delivered || false,
       dateExpected: pkgData?.dateExpected || '',
       dateDelivered: pkgData?.dateDelivered || '',
@@ -114,7 +113,7 @@ class PackageEditor extends React.Component {
     if (confirmed === false) {
       return;
     }
-    deletePackage(this.props.uid, this.props.kind, this.props.id)
+    deletePackage(this.props.kind, this.props.id)
       .then(() => {
         this.returnToIncoming();
       })
@@ -142,7 +141,7 @@ class PackageEditor extends React.Component {
       pkg.trackingURL = this.state.trackingURL;
     }
 
-    return this.savePackage(this.props.uid, pkg)
+    return this.savePackage(pkg)
       .then((id) => {
         this.returnToIncoming();
       }).catch((ex) => {

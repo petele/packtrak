@@ -10,20 +10,22 @@ import PackageEditor from '../components/PackageEditor';
 import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';
 
-export default function Edit(props) {
+export default function Edit({uid}) {
   document.title = `Edit Package - PackTrak`;
 
-  const uid = props.uid;
   const {kind, id} = useParams();
   const navigate = useNavigate();
 
   const [pkgData, setPkgData] = React.useState(null);
 
   React.useEffect(() => {
-    if (!uid || !kind || !id) {
+    if (uid === null) {
+      return navigate('/signin');
+    }
+    if (uid === -1 || !kind || !id) {
       return;
     }
-    getPackage(uid, kind, id)
+    getPackage(kind, id)
       .then((pkgData) => {
         setPkgData(pkgData);
       })
@@ -32,8 +34,12 @@ export default function Edit(props) {
       });
   }, [uid, kind, id, navigate]);
 
-  const saveEdits = async (userID, data) => {
-    return updatePackage(userID, kind, id, data, pkgData);
+  if (uid === null || uid === -1) {
+    return null;
+  }
+
+  const saveEdits = async (data) => {
+    return updatePackage(kind, id, data, pkgData);
   };
 
   const returnToIncoming = () => {
@@ -52,7 +58,7 @@ export default function Edit(props) {
     <Container component="main" sx={{marginTop: 2}}>
       <PackageEditor
           mode="edit"
-          id={id} kind={kind} uid={uid} pkgData={pkgData}
+          id={id} kind={kind} pkgData={pkgData}
           fnReturn={returnToIncoming} fnSave={saveEdits} />
     </Container>
   );

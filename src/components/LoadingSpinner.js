@@ -3,7 +3,7 @@ import {
   CircularProgress
 } from '@mui/material';
 
-export default function LoadingSpinner(props) {
+export default function LoadingSpinner() {
   return (
     <Box sx={{
       marginTop: 8,

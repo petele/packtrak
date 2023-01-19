@@ -4,6 +4,9 @@ import { db, getUser, getUserEmail, getUserID, signIn } from './fbHelper';
 
 export async function deleteUserData(password) {
   const userID = getUserID();
+  if (!userID) {
+    throw new Error('Not Authenticated');
+  }
   const email = getUserEmail();
   if (!email) {
     throw new Error('Unable to determine user email');
