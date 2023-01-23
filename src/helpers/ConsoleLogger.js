@@ -8,8 +8,11 @@ class ConsoleLogger {
       this.error = this._noop;
       return;
     }
+    // eslint-disable-next-line no-console
     this.log = console.log.bind(console);
+    // eslint-disable-next-line no-console
     this.warn = console.warn.bind(console);
+    // eslint-disable-next-line no-console
     this.error = console.error.bind(console);
   }
 
