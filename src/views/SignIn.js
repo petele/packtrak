@@ -24,23 +24,18 @@ export default function SignIn({uid}) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [rememberMe, setRememberMe] = React.useState(true);
   const [signInFailed, setSignInFailed] = React.useState(false);
 
   const navigate = useNavigate();
 
-  const showRememberMe = false;
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const rememberMe = !!data.get('remember');
-    // console.log('rememberMe', rememberMe);
 
     window.gtag('event', 'login', {method: 'email'});
 
-    signIn(email, password)
+    signIn(email, password, rememberMe)
         .then((fbUser) => {
-          window.localStorage.setItem('pktk_uid', fbUser.user.uid);
-          console.log('sign in success', fbUser.user);
           navigate('/incoming');
         })
         .catch((ex) => {
@@ -59,6 +54,8 @@ export default function SignIn({uid}) {
       setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
+    } else if (name === 'remember') {
+      setRememberMe(target.checked);
     }
   }
 
@@ -96,12 +93,10 @@ export default function SignIn({uid}) {
             value={password}
             onChange={handleChange}
           />
-          {showRememberMe && (
-            <FormControlLabel
-              control={<Checkbox name="remember" value="remember" color="primary" />}
-              label="Remember me"
-            />
-          )}
+          <FormControlLabel
+            control={<Checkbox name="remember" checked={rememberMe} onChange={handleChange} color="primary" />}
+            label="Remember me"
+          />
           {signInFailed && (
             <Alert severity="error">Sorry, sign in failed.</Alert>
           )}

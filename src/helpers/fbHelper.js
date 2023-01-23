@@ -7,8 +7,11 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
+  setPersistence,
   signOut as fbSignOut,
   updatePassword,
+  browserLocalPersistence,
+  browserSessionPersistence,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -41,9 +44,13 @@ onAuthStateChanged(auth, (user) => {
  * @param {string} password
  * @returns Firebase User
  */
-export function signIn(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
+export function signIn(email, password, remember) {
+  const persistence = remember === true ? browserLocalPersistence : browserSessionPersistence;
+  return setPersistence(auth, persistence).then(() => {
+    return signInWithEmailAndPassword(auth, email, password);
+  });
 }
+
 
 /**
  * Sign out the current user.
