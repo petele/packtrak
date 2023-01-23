@@ -12,6 +12,7 @@ import {
 import ConfirmDialog from './ConfirmDialog';
 import { getUserEmail } from '../helpers/fbHelper';
 import { deleteUserData } from '../helpers/deleteUserData';
+import { logger } from '../helpers/ConsoleLogger';
 
 export default function DeleteAccount() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function DeleteAccount() {
       navigate('/');
     } catch (ex) {
       setCantDelete(true);
-      console.log('delete failed', ex);
+      logger.error('Unable to delete user account.', ex);
     }
   }
 

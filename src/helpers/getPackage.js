@@ -1,5 +1,6 @@
 import { get, ref } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
+import { logger } from './ConsoleLogger';
 import { gaEvent } from './gaHelper';
 
 /**
@@ -33,7 +34,7 @@ export default async function getPackage(kind, id) {
     const pkgObj = snapshot.val();
     return pkgObj;
   } catch (ex) {
-    console.error('Unable to get package', queryPath, ex);
+    logger.error('getPackage failed.', queryPath, ex);
     throw ex;
   }
 }

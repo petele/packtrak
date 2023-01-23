@@ -1,3 +1,4 @@
+import { logger } from './ConsoleLogger';
 import { getTodayStart, getTodayEnd, parseDateFromString } from './dtHelpers';
 
 function sortByExpected(pkgA, pkgB) {
@@ -16,7 +17,7 @@ function sortByDelivered(pkgA, pkgB) {
  */
 export default function parsePackageList(pkgList, kind) {
   if (!['incoming', 'delivered'].includes(kind)) {
-    console.warn('parsePackageList: invalid kind:', kind);
+    logger.warn('parsePackageList: invalid kind:', kind);
     kind = 'incoming';
   }
   if (!pkgList) {

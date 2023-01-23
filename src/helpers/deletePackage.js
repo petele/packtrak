@@ -1,5 +1,6 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
+import { logger } from './ConsoleLogger';
 import { gaEvent } from './gaHelper';
 
 const _keepBackup = false;
@@ -42,7 +43,7 @@ export default async function deletePackage(kind, id) {
     await remove(fromRef);
     return true;
   } catch (ex) {
-    console.error('Unable to delete package', fromQueryPath, ex);
+    logger.error('Unable to delete package.', fromQueryPath, ex);
     throw ex;
   }
 }

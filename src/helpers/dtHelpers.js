@@ -1,3 +1,4 @@
+import { logger } from "./ConsoleLogger";
 
 /**
  * Parses a date string and returns it as a DateTime object.
@@ -54,7 +55,7 @@ export function formatToLongString(dtValue) {
     const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
     return dtFormatter.format(dtValue);
   } catch (ex) {
-    console.log('Error parsing DT value', dtValue, ex);
+    logger.error('Error parsing DT value', dtValue, ex);
     return 'Unknown';
   }
 }
@@ -76,7 +77,7 @@ export function formatToShortString(dtValue) {
     const dtFormatter = new Intl.DateTimeFormat('lookup', opts);
     return dtFormatter.format(dtValue);
   } catch (ex) {
-    console.log('Error parsing DT value', dtValue, ex);
+    logger.error('Error parsing DT value', dtValue, ex);
     return 'Unknown';
   }
 }

@@ -1,5 +1,6 @@
 import { update, ref } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
+import { logger } from './ConsoleLogger';
 import { gaEvent } from './gaHelper';
 
 import { cleanPackageObject, validatePackage } from './validatePackageData';
@@ -33,7 +34,7 @@ export default async function updatePackage(kind, id, data, before) {
   const {valid, errors} = validatePackage(pkg);
 
   if (!valid) {
-    console.error('Validation failed', pkg, errors);
+    logger.error('Validation failed', pkg, errors);
     throw new Error('Validation failed');
   }
 
@@ -42,7 +43,7 @@ export default async function updatePackage(kind, id, data, before) {
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
 
   gaEvent('package', 'update');
-  console.log('updatePackage', queryPath, pkg);
+  logger.log('updatePackage', queryPath, pkg);
 
   const fbRef = ref(db, queryPath);
   return await update(fbRef, pkg);

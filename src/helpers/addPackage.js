@@ -4,6 +4,7 @@ import { gaEvent } from './gaHelper';
 
 // import validatePackageData from './validatePackageData';
 import { cleanPackageObject, validatePackage } from './validatePackageData';
+import { logger } from './ConsoleLogger';
 
 /**
  * Add a package to the database
@@ -31,7 +32,7 @@ export default async function addPackage(data) {
   const {valid, errors} = validatePackage(pkg);
 
   if (!valid) {
-    console.error('Validation failed', pkg, errors);
+    logger.error('Validation failed.', pkg, errors);
     throw new Error('Validation failed');
   }
 
@@ -42,7 +43,7 @@ export default async function addPackage(data) {
   const queryPath = `userData/${userID}/data_v1/incoming`;
 
   gaEvent('package', 'add');
-  console.log('addPackage', queryPath, pkg);
+  logger.log('addPackage', queryPath, pkg);
 
   const fbRef = ref(db, queryPath);
   const newRef = await push(fbRef, pkg);

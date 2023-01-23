@@ -1,3 +1,5 @@
+import { logger } from "./ConsoleLogger";
+
 /**
  * Logs an event to Google Analytics.
  * @param {string} category - The object that was interacted with.
@@ -7,7 +9,7 @@
  * @param {boolean} [nonInteraction=false] - Indicates a non-interaction event.
  */
 export function gaEvent(category, action, label, value, nonInteraction) {
-  console.log('🔔', category, action, label, value);
+  logger.log('🔔', category, action, label, value);
   if (window.location.hostname === 'localhost') {
     // return;
   }
@@ -34,7 +36,7 @@ export function gaEvent(category, action, label, value, nonInteraction) {
  */
 export function gaTiming(category, variable, value, label) {
   value = parseInt(value, 10);
-  console.log('⏱️', category, variable, value, label);
+  logger.log('⏱️', category, variable, value, label);
   if (window.location.hostname === 'localhost') {
     return;
   }

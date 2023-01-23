@@ -18,6 +18,7 @@ import Copyright from '../components/Copyright';
 import SignInStatusAlert from '../components/SignInStatusAlert';
 
 import { signIn } from '../helpers/fbHelper';
+import { logger } from '../helpers/ConsoleLogger';
 
 export default function SignIn({uid}) {
   document.title = `Sign In - PackTrak`;
@@ -42,7 +43,7 @@ export default function SignIn({uid}) {
           setSignInFailed(true);
           setEmail('');
           setPassword('');
-          console.log('sign in failed', ex);
+          logger.error('Sign in failed.', ex);
         });
   };
 

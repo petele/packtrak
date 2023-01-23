@@ -1,3 +1,4 @@
+import { logger } from "./ConsoleLogger";
 
 const _knownShippers = [
   'Amazon',
@@ -77,7 +78,7 @@ export function guessShipper(trackingNumber) {
   if (result.length === 1) {
     return result[0].name;
   }
-  console.log('multiple', result);
+  logger.warn('shipHelper - multiple shippers', result);
   return null;
 }
 

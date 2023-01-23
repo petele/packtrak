@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 
 import { changePassword, getUserEmail } from '../helpers/fbHelper';
+import { logger } from '../helpers/ConsoleLogger';
 
 export default function ChangePassword() {
   const userEmail = getUserEmail() || '';
@@ -45,7 +46,7 @@ export default function ChangePassword() {
       setPWChanged(true);
     } catch (ex) {
       setPWChangeFailed(true);
-      console.log('password change failed', ex);
+      logger.error('Unable to change password.', ex);
     }
   };
 

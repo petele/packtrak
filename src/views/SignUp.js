@@ -19,6 +19,7 @@ import SignInStatusAlert from '../components/SignInStatusAlert';
 import TOSLabel from '../components/TOSLabel';
 
 import addUser from '../helpers/addUser';
+import { logger } from '../helpers/ConsoleLogger';
 
 export default function SignUp({uid}) {
   document.title = `Sign Up - PackTrak`;
@@ -28,7 +29,6 @@ export default function SignUp({uid}) {
   const navigate = useNavigate();
 
   function getFailedMessage(reason) {
-    console.log('reason', reason);
     if (reason === 'tos-disagree') {
       return 'You must check the "I understand" checkbox to use this site.';
     } else if (reason === 'auth/invalid-email.') {
@@ -59,6 +59,7 @@ export default function SignUp({uid}) {
         navigate('/incoming');
         return;
       }
+      logger.error('Sign up failed', result);
       setSignUpFailed(getFailedMessage(result.reason));
     })
   };

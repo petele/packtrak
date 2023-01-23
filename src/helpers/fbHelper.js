@@ -14,6 +14,8 @@ import {
   browserSessionPersistence,
 } from 'firebase/auth';
 
+import { logger } from './ConsoleLogger';
+
 const firebaseConfig = {
   apiKey: "AIzaSyDRUxI1aaoNiOw-Pz0Qp1srsahwfmgKvNg",
   authDomain: "petele-packtrak.firebaseapp.com",
@@ -29,11 +31,9 @@ export const auth = getAuth(app);
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log(`fbAuth: true (${user.uid})`);
-    window.localStorage.setItem('pktk_uid', user.uid);
+    logger.log(`fbAuth:`, user.uid);
   } else {
-    console.log(`fbAuth: false`);
-    window.localStorage.removeItem('pktk_uid');
+    logger.log(`fbAuth:`, null);
   }
 });
 

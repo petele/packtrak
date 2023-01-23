@@ -1,5 +1,6 @@
 import { set, ref } from 'firebase/database';
 import { signUp, db, verifyEmail } from '../helpers/fbHelper';
+import { logger } from './ConsoleLogger';
 
 /**
  * Create and validate the info for a new user.
@@ -46,7 +47,7 @@ export default async function addUser(userInfo) {
 
     return {success: true, fbUser: fbUser.user};
   } catch (ex) {
-    console.log('ex', ex);
+    logger.error('addUser failed.', ex);
     return {success: false, reason: ex.code};
   }
 }
