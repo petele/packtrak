@@ -9,7 +9,7 @@ import getTrackingURL from '../../helpers/getTrackingURL';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 export default function TrackingLinkButton({row}) {
-  const url = getTrackingURL(row.shipper, row.trackingNumber);
+  const url = row.trackingURL || getTrackingURL(row.shipper, row.trackingNumber);
   const disabled = !url;
 
   return (

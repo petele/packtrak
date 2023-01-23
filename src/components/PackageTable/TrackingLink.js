@@ -25,7 +25,7 @@ function _getLabel(trackingNumber, width) {
 export default function TrackingLink({row, width}) {
   const shipper = row.shipper;
   const trackingNumber = row.trackingNumber;
-  const url = getTrackingURL(shipper, trackingNumber);
+  const url = row.trackingURL || getTrackingURL(shipper, trackingNumber);
   const label = _getLabel(trackingNumber, width);
 
   if (url && label) {
