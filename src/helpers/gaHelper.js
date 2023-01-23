@@ -11,7 +11,7 @@ import { logger } from "./ConsoleLogger";
 export function gaEvent(category, action, label, value, nonInteraction) {
   logger.log('🔔', category, action, label, value);
   if (window.location.hostname === 'localhost') {
-    // return;
+    return;
   }
   const details = {action};
   if (label) {
@@ -34,12 +34,16 @@ export function gaEvent(category, action, label, value, nonInteraction) {
  * @param {integer} value - A numeric value associated with the event.
  * @param {string} [label] - Useful for categorizing events.
  */
-export function gaTiming(category, variable, value, label) {
-  value = parseInt(value, 10);
-  logger.log('⏱️', category, variable, value, label);
+export function gaTiming({name, delta, value, id}) {
+  const details = {
+    value: delta,
+    metric_id: id,
+    metric_value: value,
+    metric_delta: delta,
+  }
+  logger.log('⏱️', name, value);
   if (window.location.hostname === 'localhost') {
     return;
   }
-  // eslint-disable-next-line no-undef
-  // ga('send', 'timing', category, variable, value, label);
+  window.gtag('event', name, details);
 }
