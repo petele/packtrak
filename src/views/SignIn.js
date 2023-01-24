@@ -37,7 +37,7 @@ export default function SignIn({uid}) {
 
     signIn(email, password, rememberMe)
         .then((fbUser) => {
-          navigate('/incoming');
+          navigate('/incoming', {replace: true});
         })
         .catch((ex) => {
           setSignInFailed(true);

@@ -31,9 +31,9 @@ export default function ButtonAppBar({uid}) {
     closeMenu();
     if (isSignedIn) {
       signOut();
-      navigate('/');
+      navigate('/', {replace: true});
     }
-    navigate('/signin');
+    navigate('/signin', {replace: true});
   }
 
   const handleClose = () => {

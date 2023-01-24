@@ -56,7 +56,7 @@ export default function SignUp({uid}) {
 
     addUser(userInfo).then((result) => {
       if (result.success) {
-        navigate('/incoming');
+        navigate('/incoming', {replace: true});
         return;
       }
       logger.error('Sign up failed', result);
