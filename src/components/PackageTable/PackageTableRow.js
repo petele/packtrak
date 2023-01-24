@@ -32,6 +32,10 @@ export default function PackageTableRow({row, kind, width}) {
   }
 
   function onRowClick(event) {
+    event.preventDefault();
+    if (event.target.tagName === 'A') {
+      return;
+    }
     navigate(editURL);
   }
 

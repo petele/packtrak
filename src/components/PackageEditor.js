@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Alert,
@@ -16,310 +17,311 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import ConfirmDialog from './ConfirmDialog';
 import deletePackage from '../helpers/deletePackage';
 import { getKnownShippers, getTrackingURL, guessShipper } from '../helpers/shipHelper';
+import { logger } from '../helpers/ConsoleLogger';
 
-class PackageEditor extends React.Component {
-  constructor(props) {
-    super(props);
+export default function PackageEditor(props) {
+  const navigate = useNavigate();
 
-    const pkgData = props.pkgData;
+  const id = props.id;
+  const kind = props.kind;
+  const pkgData = props.pkgData;
+  const mode = pkgData ? 'edit' : 'add';
+  const savePackage = props.fnSave;
 
-    this.state = {
-      id: props.id,
-      mode: props.mode,
-      kind: props.kind,
+  const [dateExpected, setDateExpected] = React.useState(pkgData?.dateExpected || '');
+  const [dateDelivered, setDateDelivered] = React.useState(pkgData?.dateDelivered || '');
+  const [pkgFrom, setPkgFrom] = React.useState(pkgData?.from || '');
+  const [pkgWhat, setPkgWhat] = React.useState(pkgData?.what || '');
+  const [orderURL, setOrderURL] = React.useState(pkgData?.orderURL || '');
+  const [pkgShipper, setPkgShipper] = React.useState(pkgData?.shipper || null);
+  const [trackingNumber, setTrackingNumber] = React.useState(pkgData?.trackingNumber || '');
 
-      saveLabel: props.mode === 'add' ? 'Add' : 'Save',
+  const trackingURLTemp =
+    pkgData?.trackingURL ||
+    getTrackingURL(pkgData?.shipper, pkgData?.trackingNumber) ||
+    '';
+  const [trackingURL, setTrackingURL] = React.useState(trackingURLTemp);
 
-      delivered: pkgData?.delivered || false,
-      dateExpected: pkgData?.dateExpected || '',
-      dateDelivered: pkgData?.dateDelivered || '',
-      from: pkgData?.from || '',
-      what: pkgData?.what || '',
-      orderURL: pkgData?.orderURL || '',
-      shipper:  pkgData?.shipper || null,
-      trackingNumber: pkgData?.trackingNumber || '',
+  const [errorMessage, setErrorMessage] = React.useState(null);
+  const [confirmDialogVisible, setConfirmDialogVisible] = React.useState(false);
 
-      trackingLinkEditDisabled: pkgData?.shipper !== 'Custom',
-      errorOnSave: false,
-      errorOnDelete: false,
-      confirmDialogVisible: false,
-    };
+  // const [saveDisabled, setSaveDisabled] = React.useState(false);
+  const saveDisabled = false;
 
-    if (props.pkgData?.trackingURL) {
-      this.state.trackingURL = pkgData?.trackingURL;
-    } else {
-      const url = getTrackingURL(pkgData?.shipper, pkgData?.trackingNumber);
-      this.state.trackingURL = url || '';
-    }
+  const saveButtonLabel = mode === 'edit' ? 'Save' : 'Add';
+  const shipperOptions = getKnownShippers();
 
-    this.returnToIncoming = props.fnReturn;
-    this.savePackage = props.fnSave;
-
-    this.trimOnBlur = this.trimOnBlur.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleShipperChange = this.handleShipperChange.bind(this);
-    this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
-
-    this.handleBlurTrackingNumber = this.handleBlurTrackingNumber.bind(this);
-
-    this.shipperOptions = getKnownShippers();
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-
-    this.setState({
-      [name]: value,
-    });
-
-    if (name === 'trackingNumber') {
-      this.updateTrackingURL(this.state.shipper, value);
-    }
-  }
-
-  handleShipperChange(event, newVal) {
-    const state = {
-      shipper: newVal,
-    };
-    if (newVal === 'Custom') {
-      state.trackingLinkEditDisabled = false;
-      state.trackingURL = '';
-    } else {
-      state.trackingLinkEditDisabled = true;
-    }
-    this.setState(state);
-    this.updateTrackingURL(newVal, this.state.trackingNumber);
-  }
-
-  updateTrackingURL(shipper, trackingNumber) {
-    if (trackingNumber === '' || shipper === 'Custom') {
-      return;
-    }
-    const url = getTrackingURL(shipper, trackingNumber);
-    this.setState({trackingURL: url || ''});
-  }
-
-  handleDelete(event) {
+  function handleSubmit(event) {
     event.preventDefault();
-    this.setState({confirmDialogVisible: true});
-  }
-
-  handleConfirmDelete(confirmed) {
-    this.setState({confirmDialogVisible: false});
-    if (confirmed === false) {
-      return;
-    }
-    deletePackage(this.props.kind, this.props.id)
-      .then(() => {
-        this.returnToIncoming();
-      })
-      .catch((ex) => {
-        this.setState({errorOnDelete: true});
-        console.log('Unable to delete', ex);
-      });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    this.setState({errorOnSave: false});
+    setErrorMessage(null);
 
     const pkg = {
-      delivered: this.state.delivered,
-      dateExpected: this.state.dateExpected,
-      dateDelivered: this.state.delivered ? this.state.dateDelivered : null,
-      from: this.state.from,
-      what: this.state.what,
-      trackingNumber: this.state.trackingNumber,
-      shipper: this.state.shipper,
-      orderURL: this.state.orderURL,
+      dateExpected: dateExpected,
+      from: pkgFrom,
+      what: pkgWhat,
     };
-    if (this.state.shipper === 'Custom') {
-      pkg.trackingURL = this.state.trackingURL;
+
+    if (dateDelivered) {
+      pkg.dateDelivered = dateDelivered;
+    }
+    if (trackingNumber) {
+      pkg.trackingNumber = trackingNumber;
+    }
+    if (pkgShipper) {
+      pkg.shipper = pkgShipper;
+    }
+    if (pkgShipper === 'Custom' && trackingURL) {
+      pkg.trackingURL = trackingURL;
+    }
+    if (orderURL) {
+      pkg.orderURL = orderURL;
     }
 
-    return this.savePackage(pkg)
+    return savePackage(pkg)
       .then((id) => {
-        this.returnToIncoming();
-      }).catch((ex) => {
-        this.setState({errorOnSave: true});
-        console.log(ex);
+        return navigateBack();
+      })
+      .catch((ex) => {
+        const msg = `Unable to save package.`;
+        logger.error(msg, ex);
+        setErrorMessage(msg);
       });
   }
 
-  handleBlurTrackingNumber(event) {
-    this.trimOnBlur(event);
-    const trackingNumber = this.state.trackingNumber.trim();
-    const currentShipper = this.state.shipper;
-    const maybeShipper = guessShipper(trackingNumber);
-    if (maybeShipper && !currentShipper) {
-      const val = {shipper: maybeShipper};
-      const url = getTrackingURL(maybeShipper, trackingNumber);
-      if (url) {
-        val.trackingURL = url;
-      }
-      this.setState(val);
-    }
-  }
-
-  trimOnBlur(event) {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-    if (typeof value !== 'string') {
-      return;
-    }
-    const trimmed = value.trim();
-    if (value === trimmed) {
-      return;
-    }
-    this.setState({
-      [name]: trimmed,
-    });
-  }
-
-  preventSubmitOnEnter(event) {
+  function preventSubmitOnEnter(event) {
     if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
       event.preventDefault();
       event.defaultMuiPrevented = true;
     }
   }
 
-  render() {
-    return (
-      <Box component="main" sx={{marginTop: 4}}>
-        <ConfirmDialog
-          open={this.state.confirmDialogVisible}
-          callback={this.handleConfirmDelete}
-          details="This will permanently delete this package from your list."
-          label="Delete"
-        />
-        <Box component="form"
-          onSubmit={this.handleSubmit}
-          onKeyDown={this.preventSubmitOnEnter}
-        >
-          <Stack spacing={2}>
-            <Stack direction="row" spacing={2}>
+  function navigateBack() {
+    const backURL = mode === 'edit' ? `/${kind}` : -1;
+    return navigate(backURL);
+  }
+
+  function handleDelete(event) {
+    event.preventDefault();
+    setConfirmDialogVisible(true);
+  }
+
+  function handleConfirmDelete(confirmed) {
+    setConfirmDialogVisible(false);
+    if (confirmed === false) {
+      return;
+    }
+    deletePackage(kind, id)
+      .then(() => {
+        return navigateBack();
+      })
+      .catch((ex) => {
+        const msg = 'An error occured while trying to delete the package.';
+        logger.error(msg, ex);
+        setErrorMessage(msg);
+      });
+  }
+
+  function recalcTrackingURL(ship, tNum) {
+    if (ship === 'Custom') {
+      return;
+    }
+    const url = getTrackingURL(ship, tNum) || '';
+    setTrackingURL(url);
+  }
+
+  function dateExpectedChange(event) {
+    const value = event.target.value;
+    setDateExpected(value);
+  }
+
+  function dateDeliveredChange(event) {
+    const value = event.target.value;
+    setDateDelivered(value);
+  }
+
+  function pkgFromChange(event) {
+    const value = event.target.value;
+    setPkgFrom(value);
+  }
+
+  function pkgFromBlur(event) {
+    const trimmed = event.target.value.trim();
+    if (trimmed !== pkgFrom) {
+      setPkgFrom(trimmed);
+    }
+  }
+
+  function pkgWhatChange(event) {
+    const value = event.target.value;
+    setPkgWhat(value);
+  }
+
+  function pkgWhatBlur(event) {
+    const trimmed = event.target.value.trim();
+    if (trimmed !== pkgWhat) {
+      setPkgWhat(trimmed);
+    }
+  }
+
+  function orderURLChange(event) {
+    const value = event.target.value.trim();
+    setOrderURL(value);
+  }
+
+  function pkgShipperChange(event, value) {
+    setPkgShipper(value);
+    recalcTrackingURL(value, trackingNumber);
+  }
+
+
+  function trackingNumberChange(event) {
+    const value = event.target.value.trim();
+    setTrackingNumber(value);
+  }
+
+  function trackingNumberBlur() {
+    const maybeShipper = guessShipper(trackingNumber);
+    if (maybeShipper && !pkgShipper) {
+      setPkgShipper(maybeShipper);
+    }
+    const shipper = maybeShipper || pkgShipper;
+    recalcTrackingURL(shipper, trackingNumber);
+  }
+
+  function trackingURLChange(event) {
+    const value = event.target.value.trim();
+    setTrackingURL(value);
+  }
+
+  return (
+    <Box component="main" sx={{marginTop: 4}}>
+      <ConfirmDialog
+        open={confirmDialogVisible}
+        callback={handleConfirmDelete}
+        details="This will permanently delete this package from your list."
+        label="Delete"
+      />
+      <Box component="form"
+        onSubmit={handleSubmit}
+        onKeyDown={preventSubmitOnEnter}
+      >
+        <Stack spacing={2}>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              autoFocus={mode === 'add'}
+              name="dateExpected"
+              required
+              label="Date Expected"
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={dateExpected}
+              onChange={dateExpectedChange}
+              fullWidth
+            />
+            {kind === 'delivered' && (
               <TextField
-                autoFocus={this.state.mode === 'add'}
-                name="dateExpected"
+                name="dateDelivered"
                 required
-                label="Date Expected"
+                label="Date Delivered"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={this.state.dateExpected}
-                onChange={this.handleInputChange}
-                fullWidth={true}
-              />
-              {this.state.kind === 'delivered' && (
-                <TextField
-                  name="dateDelivered"
-                  required
-                  label="Date Delivered"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={this.state.dateDelivered}
-                  onChange={this.handleInputChange}
-                  fullWidth={true}
-                />
-              )}
-            </Stack>
-            <TextField
-              name="from"
-              required
-              fullWidth
-              label="From"
-              value={this.state.from}
-              onChange={this.handleInputChange}
-              onBlur={this.trimOnBlur}
-            />
-            <TextField
-              name="what"
-              required
-              fullWidth
-              label="What"
-              value={this.state.what}
-              onChange={this.handleInputChange}
-              onBlur={this.trimOnBlur}
-            />
-            <TextField
-              name="trackingNumber"
-              fullWidth
-              label="Tracking Number"
-              onBlur={this.handleBlurTrackingNumber}
-              value={this.state.trackingNumber}
-              onChange={this.handleInputChange}
-            />
-            <Autocomplete
-              label="Shipper"
-              autoSelect={true}
-              value={this.state.shipper}
-              options={this.shipperOptions}
-              renderInput={(params) => <TextField {...params} label="Shipper" />}
-              onChange={this.handleShipperChange}
-            />
-            <Stack direction="row" spacing={2}>
-              <TextField
-                name="trackingURL"
+                value={dateDelivered}
+                onChange={dateDeliveredChange}
                 fullWidth
-                type="url"
-                inputMode="url"
-                disabled={this.state.trackingLinkEditDisabled}
-                label="Tracking URL"
-                value={this.state.trackingURL}
-                onChange={this.handleInputChange}
-                onBlur={this.trimOnBlur}
               />
-              <IconButton component={Link} href={this.state.trackingURL} disabled={this.state.trackingURL === ''}  target="_blank" rel="noreferrer" aria-label="open tracking link in new window">
-                <OpenInNew />
-              </IconButton>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <TextField
-                name="orderURL"
-                type="url"
-                inputMode="url"
-                fullWidth
-                label="Order URL"
-                value={this.state.orderURL}
-                onChange={this.handleInputChange}
-                onBlur={this.trimOnBlur}
-              />
-              <IconButton component={Link} href={this.state.orderURL} disabled={this.state.orderURL === ''} target="_blank" rel="noreferrer" aria-label="open order link in new window">
-                <OpenInNew />
-              </IconButton>
-            </Stack>
-            {this.state.errorOnDelete && (
-              <Alert severity="error">Sorry, something went wrong.</Alert>
             )}
-            {this.state.errorOnSave && (
-              <Alert severity="error">Sorry, something went wrong.</Alert>
-            )}
-            <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
-              <Button type="submit" value="submit" variant="contained">
-                {this.state.saveLabel}
-              </Button>
-              <Button
-                type="button" variant="outlined"
-                onClick={this.returnToIncoming}>Cancel</Button>
-              {this.state.mode === 'edit' && (
-                <Button
-                  type="button" variant="contained" color="error"
-                  onClick={this.handleDelete}>Delete</Button>
-              )}
-            </Stack>
           </Stack>
-        </Box>
+          <TextField
+            name="from"
+            required
+            fullWidth
+            label="From"
+            value={pkgFrom}
+            onBlur={pkgFromBlur}
+            onChange={pkgFromChange}
+          />
+          <TextField
+            name="what"
+            required
+            fullWidth
+            label="What"
+            value={pkgWhat}
+            onBlur={pkgWhatBlur}
+            onChange={pkgWhatChange}
+          />
+          <TextField
+            name="trackingNumber"
+            fullWidth
+            label="Tracking Number"
+            value={trackingNumber}
+            onBlur={trackingNumberBlur}
+            onChange={trackingNumberChange}
+          />
+          <Autocomplete
+            label="Shipper"
+            autoSelect
+            options={shipperOptions}
+            renderInput={(params) => <TextField {...params} label="Shipper" />}
+            value={pkgShipper}
+            onChange={pkgShipperChange}
+          />
+          <Stack direction="row" spacing={2}>
+            <TextField
+              name="trackingURL"
+              fullWidth
+              type="url"
+              inputMode="url"
+              disabled={pkgShipper !== 'Custom'}
+              label="Tracking URL"
+              value={trackingURL}
+              onChange={trackingURLChange}
+            />
+            <IconButton component={Link} href={trackingURL} disabled={trackingURL === ''}  target="_blank" rel="noreferrer" aria-label="open tracking link in new window">
+              <OpenInNew />
+            </IconButton>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              name="orderURL"
+              type="url"
+              inputMode="url"
+              fullWidth
+              label="Order URL"
+              value={orderURL}
+              onChange={orderURLChange}
+            />
+            <IconButton component={Link} href={orderURL} disabled={orderURL === ''} target="_blank" rel="noreferrer" aria-label="open order link in new window">
+              <OpenInNew />
+            </IconButton>
+          </Stack>
+          {errorMessage && (
+            <Alert severity="error">
+              {errorMessage}
+            </Alert>
+          )}
+          <Stack direction="row" sx={{ mt: 2 }} justifyContent="flex-end" spacing={2}>
+            <Button type="submit" value="submit" variant="contained" disabled={saveDisabled}>
+              {saveButtonLabel}
+            </Button>
+            <Button
+              type="button" variant="outlined"
+              onClick={navigateBack}>
+                Cancel
+            </Button>
+            {mode === 'edit' && (
+              <Button
+                type="button" variant="contained" color="error"
+                onClick={handleDelete}>
+                  Delete
+              </Button>
+            )}
+          </Stack>
+        </Stack>
       </Box>
-    );
-  }
+    </Box>
+  );
 }
-
-export default PackageEditor;

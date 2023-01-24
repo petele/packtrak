@@ -25,14 +25,9 @@ export default function Add({uid}) {
     return addPackage(data);
   };
 
-  const returnToIncoming = () => {
-    navigate(-1);
-  };
-
   return (
     <Container component="main" sx={{marginTop: 2}}>
-      <PackageEditor mode="add"
-        fnReturn={returnToIncoming} fnSave={savePackage} />
+      <PackageEditor fnSave={savePackage} />
     </Container>
   );
 }

@@ -42,10 +42,6 @@ export default function Edit({uid}) {
     return updatePackage(kind, id, data, pkgData);
   };
 
-  const returnToIncoming = () => {
-    navigate(`/${kind}`);
-  };
-
   if (!pkgData) {
     return (
       <Container component="main" sx={{marginTop: 2}}>
@@ -57,9 +53,7 @@ export default function Edit({uid}) {
   return (
     <Container component="main" sx={{marginTop: 2}}>
       <PackageEditor
-          mode="edit"
-          id={id} kind={kind} pkgData={pkgData}
-          fnReturn={returnToIncoming} fnSave={saveEdits} />
+          id={id} kind={kind} pkgData={pkgData} fnSave={saveEdits} />
     </Container>
   );
 }
