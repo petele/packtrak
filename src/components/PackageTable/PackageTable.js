@@ -18,6 +18,10 @@ import PackageTableBody from './PackageTableBody';
 import getPackageList from '../../helpers/getPackageList';
 import parsePackageList from '../../helpers/parsePackageList';
 
+import { logger } from '../../helpers/ConsoleLogger';
+import { gaError } from '../../helpers/gaHelper';
+import SadPanda from '../SadPanda';
+
 function _getWidth() {
   const theme = useTheme();
   const isNarrow = useMediaQuery(theme.breakpoints.down('sm'));
@@ -42,16 +46,22 @@ function _getWidth() {
 
 export default function PackageTable({kind}) {
   const [rows, setRows] = React.useState(null);
+  const [error, setError] = React.useState(null);
 
   const dateLabel = kind === 'incoming' ? 'Expected' : 'Delivered';
 
   const width = _getWidth();
 
   React.useEffect(() => {
-    return getPackageList(kind, (snapshot) => {
-      const pkgObj = snapshot.val();
-      setRows(parsePackageList(pkgObj, kind));
-    });
+    try {
+      getPackageList(kind, (snapshot) => {
+        const pkgObj = snapshot.val();
+        setRows(parsePackageList(pkgObj, kind));
+      });
+    } catch (ex) {
+      gaError('get_package_list_failed', true, ex);
+      setError(ex);
+    }
   }, [kind]);
 
   if (rows && rows.length === 0) {
@@ -71,6 +81,10 @@ export default function PackageTable({kind}) {
   } else {
     sxDate.width = '20%';
     sxTracking.width = '115px';
+  }
+
+  if (error) {
+    return (<SadPanda reason="an error occured" />)
   }
 
   return (

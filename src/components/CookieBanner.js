@@ -8,7 +8,8 @@ import {
   Button,
   Link,
 } from '@mui/material';
-import { logger } from '../helpers/ConsoleLogger';
+
+import { gaEvent } from '../helpers/gaHelper';
 
 export default function CookieBanner() {
   const lsKey = 'pt_cookie_agree';
@@ -16,7 +17,6 @@ export default function CookieBanner() {
 
   React.useEffect(() => {
     const hasAccepted = !!window.localStorage.getItem(lsKey);
-    logger.log('cookieBanner', hasAccepted);
     if (!hasAccepted) {
       setBannerVisible(true);
     }
@@ -24,6 +24,7 @@ export default function CookieBanner() {
 
   function clickOK() {
     window.localStorage.setItem(lsKey, 'true');
+    gaEvent('cookie_banner_accept');
     setBannerVisible(false);
   }
 

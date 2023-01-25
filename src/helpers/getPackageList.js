@@ -35,6 +35,7 @@ function _getQuery(userID, kind) {
  * @return FirebaseValue
  */
 export default function getPackageList(kind, callback) {
+
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
