@@ -20,4 +20,5 @@ export async function deleteUserData(password) {
 
   const user = getUser();
   await deleteUser(user);
+  window.localStorage.clear();
 }

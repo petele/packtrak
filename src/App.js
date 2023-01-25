@@ -31,6 +31,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import CookieBanner from './components/CookieBanner';
 
 export default function App() {
   const [uid, setUID] = React.useState(-1);
@@ -88,6 +89,7 @@ function Layout(props) {
         <ButtonAppBar uid={props.uid} />
         <Toolbar />
         <Outlet />
+        <CookieBanner />
       </ThemeProvider>
     </Fragment>
   );

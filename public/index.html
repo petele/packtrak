@@ -24,7 +24,10 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', window.packtrackGTAGid);
+      gtag('config', window.packtrackGTAGid,{
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      });
     </script>
     <script type="application/ld+json">
       {
