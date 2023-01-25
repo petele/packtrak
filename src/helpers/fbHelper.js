@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import {
   getAuth,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -13,8 +12,6 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
 } from 'firebase/auth';
-
-import { logger } from './ConsoleLogger';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDRUxI1aaoNiOw-Pz0Qp1srsahwfmgKvNg",
@@ -29,19 +26,13 @@ const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 export const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    logger.log(`fbAuth:`, user.uid);
-  } else {
-    logger.log(`fbAuth:`, null);
-  }
-});
 
 /**
  * Sign in user via email & password.
  *
  * @param {string} email
  * @param {string} password
+ * @param {boolean} remember
  * @returns Firebase User
  */
 export function signIn(email, password, remember) {

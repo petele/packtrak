@@ -1,6 +1,18 @@
 import { logger } from "./ConsoleLogger";
 
 /**
+ * Sets the user ID for analytics.
+ * @param {string} userID User ID
+ */
+export function gaSetUserID(userID) {
+  logger.log('👤', userID);
+  if (window.location.hostname === 'localhost' || !window.packtrackGTAGid) {
+    return;
+  }
+  window.gtag('config', window.packtrackGTAGid, {user_id: userID});
+}
+
+/**
  * Logs an event to Google Analytics.
  * @param {string} category - The object that was interacted with.
  * @param {object} opts - Analytics options.

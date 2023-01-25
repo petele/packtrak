@@ -19,11 +19,12 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZVB724S5E"></script>
     <script>
+      window.packtrackGTAGid = 'G-5ZVB724S5E';
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-5ZVB724S5E');
+      gtag('config', window.packtrackGTAGid);
     </script>
     <script type="application/ld+json">
       {
@@ -35,10 +36,12 @@
         "applicationCategory": "Utility",
         "genre": "package tracking",
         "browserRequirements": "Requires JavaScript. Requires HTML5.",
-        "softwareVersion": "0.1.0",
+        "softwareVersion": "%REACT_APP_VERSION%",
         "operatingSystem": "All"
       }
     </script>
+    <meta name="build_date" content="%REACT_APP_BUILD_DATE%" />
+    <meta name="build_version" content="%REACT_APP_VERSION%" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

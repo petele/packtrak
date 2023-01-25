@@ -12,6 +12,7 @@ import ButtonAppBar from './components/ButtonAppBar';
 import ExperimentalRibbon from './components/ExperimentalRibbon';
 
 import { auth } from './helpers/fbHelper';
+import { gaSetUserID } from './helpers/gaHelper';
 
 import Home from './views/Home';
 import About from './views/About';
@@ -38,8 +39,10 @@ export default function App() {
     return onAuthStateChanged(auth, (user) => {
       if (user) {
         setUID(user.uid);
+        gaSetUserID(user.uid);
       } else {
         setUID(null);
+        gaSetUserID('signed_out');
       }
     });
   }, []);
