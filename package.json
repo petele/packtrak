@@ -31,8 +31,11 @@
       "react-app",
       "react-app/jest"
     ],
+    "plugins": ["react-hooks"],
     "rules": {
-      "no-console": "error"
+      "no-console": "error",
+      "react-hooks/rules-of-hooks": "warn",
+      "react-hooks/exhaustive-deps": "warn"
     }
   },
   "browserslist": {
@@ -48,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.30.0"
+    "eslint": "^8.30.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
