@@ -19,7 +19,7 @@ import SignInStatusAlert from '../components/SignInStatusAlert';
 import TOSLabel from '../components/TOSLabel';
 
 import addUser from '../helpers/addUser';
-import { logger } from '../helpers/ConsoleLogger';
+import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function SignUp({uid}) {
   document.title = `Sign Up - PackTrak`;
@@ -29,7 +29,7 @@ export default function SignUp({uid}) {
   const navigate = useNavigate();
 
   function getFailedMessage(reason) {
-    if (reason === 'tos-disagree') {
+    if (reason === 'tos/must-agree') {
       return 'You must check the "I understand" checkbox to use this site.';
     } else if (reason === 'auth/invalid-email.') {
       return 'Please use a valid email address.';
@@ -38,31 +38,27 @@ export default function SignUp({uid}) {
     } else if (reason === 'auth/email-already-in-use') {
       return 'An error occured creating your account.'
     }
-
     return 'Sorry, an error occured creating your account.';
   }
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const userInfo = {
       email: data.get('email'),
       password: data.get('password'),
-      fName: data.get('firstName'),
-      lName: data.get('lastName'),
       agreeToS: !!data.get('agreeToS')
     };
-    window.gtag('event', 'sign_up', {method: 'email'});
-
-    addUser(userInfo).then((result) => {
-      if (result.success) {
-        navigate('/incoming', {replace: true});
-        return;
-      }
-      logger.error('Sign up failed', result);
-      setSignUpFailed(getFailedMessage(result.reason));
-    })
-  };
+    try {
+      await addUser(userInfo);
+      gaEvent('sign_up', {method: 'email'});
+      navigate('/incoming', {replace: true});
+    } catch (ex) {
+      gaError('sign_up_failed', false, ex);
+      const msg = getFailedMessage(ex.code);
+      setSignUpFailed(msg);
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs" sx={{marginTop: 2}}>
@@ -72,27 +68,6 @@ export default function SignUp({uid}) {
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
         <Stack spacing={2}>
           <SignInStatusAlert uid={uid} />
-          <Stack direction="row" justifyContent="space-between">
-            <TextField
-              autoComplete="given-name"
-              name="firstName"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              autoFocus
-              sx={{marginRight: 1}}
-            />
-            <TextField
-              required
-              fullWidth
-              id="lastName"
-              label="Last Name"
-              name="lastName"
-              autoComplete="family-name"
-              sx={{marginLeft: 1}}
-            />
-          </Stack>
           <TextField
             required
             fullWidth

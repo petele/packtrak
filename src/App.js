@@ -35,7 +35,7 @@ export default function App() {
   const [uid, setUID] = React.useState(-1);
 
   React.useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    return onAuthStateChanged(auth, (user) => {
       if (user) {
         setUID(user.uid);
       } else {

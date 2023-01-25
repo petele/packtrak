@@ -1,6 +1,5 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
-import { gaEvent } from './gaHelper';
 import { formatToISODate } from './dtHelpers';
 
 /**
@@ -19,7 +18,6 @@ export default async function markAsDelivered(kind, id, delivered) {
   if (!kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
-  gaEvent('package', 'mark_as_delivered', delivered);
 
   const fromQueryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   const fromRef = ref(db, fromQueryPath);

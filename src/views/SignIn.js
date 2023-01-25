@@ -18,7 +18,7 @@ import Copyright from '../components/Copyright';
 import SignInStatusAlert from '../components/SignInStatusAlert';
 
 import { signIn } from '../helpers/fbHelper';
-import { logger } from '../helpers/ConsoleLogger';
+import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function SignIn({uid}) {
   document.title = `Sign In - PackTrak`;
@@ -30,24 +30,22 @@ export default function SignIn({uid}) {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    window.gtag('event', 'login', {method: 'email'});
+    try {
+      await signIn(email, password, rememberMe);
+      gaEvent('login', {method: 'email'});
+      navigate('/incoming', {replace: true});
+    } catch (ex) {
+      gaError('login_failed', false, ex);
+      setSignInFailed(true);
+      setEmail('');
+      setPassword('');
+    }
+  }
 
-    signIn(email, password, rememberMe)
-        .then((fbUser) => {
-          navigate('/incoming', {replace: true});
-        })
-        .catch((ex) => {
-          setSignInFailed(true);
-          setEmail('');
-          setPassword('');
-          logger.error('Sign in failed.', ex);
-        });
-  };
-
-  const handleChange = (event) => {
+  function handleChange(event) {
     const target = event.target;
     const name = target.name;
     const value = target.value;

@@ -7,11 +7,15 @@ import {
 } from '@mui/material';
 
 import Copyright from '../components/Copyright';
+import { gaEvent } from '../helpers/gaHelper';
 
 export default function NoMatch({uid}) {
   document.title = `Sad Panda - PackTrak`;
 
   const backURL = uid !== null && uid !== -1 ? '/incoming' : '/';
+
+  const url = window.location.pathname;
+  gaEvent('404_page', {path: url});
 
   return (
     <Container

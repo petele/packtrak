@@ -1,6 +1,7 @@
 import { db, getUserID } from './fbHelper';
 import { onValue, orderByChild, query, ref, endAt, startAt } from 'firebase/database';
 import { formatToISODate, getTodayEnd } from './dtHelpers';
+import { logger } from './ConsoleLogger';
 
 function _getQuery(userID, kind) {
   const queryPath = `userData/${userID}/data_v1/${kind}`;
@@ -43,6 +44,7 @@ export default function getPackageList(kind, callback) {
   }
 
   const fbQuery = _getQuery(userID, kind);
+  logger.log('getPackageList', kind, userID);
   return onValue(fbQuery, (snapshot) => {
     if (callback) {
       callback(snapshot);

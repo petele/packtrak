@@ -3,28 +3,30 @@ import { logger } from "./ConsoleLogger";
 /**
  * Logs an event to Google Analytics.
  * @param {string} category - The object that was interacted with.
- * @param {string} action - The type of interaction.
- * @param {string} [label] - Useful for categorizing events.
- * @param {number} [value] - A numeric value associated with the event.
- * @param {boolean} [nonInteraction=false] - Indicates a non-interaction event.
- */
-export function gaEvent(category, action, label, value, nonInteraction) {
-  logger.log('🔔', category, action, label, value);
+ * @param {object} opts - Analytics options.
+*/
+export function gaEvent(category, opts) {
+  logger.log('🔔', category, opts);
   if (window.location.hostname === 'localhost') {
     return;
   }
-  const details = {action};
-  if (label) {
-    details.label = label;
-  }
-  if (value) {
-    details.value = value;
-  }
-  if (nonInteraction) {
-    details.nonInteraction = true;
-  }
+  window.gtag('event', category, opts);
+}
 
-  window.gtag('event', category, details);
+/**
+ * Logs an exception/error to Google Analytics.
+ *
+ * @param {string} description Description of the error.
+ * @param {boolean} wasFatal Was the error fatal.
+ * @param {Error} [ex] Exception
+ */
+export function gaError(description, wasFatal, ex) {
+  const fatal = !!wasFatal;
+  logger.error('⛔️', description, fatal, ex);
+  if (window.location.hostname === 'localhost') {
+    return;
+  }
+  window.gtag('event', 'exception', {description, fatal});
 }
 
 /**

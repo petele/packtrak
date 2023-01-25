@@ -12,24 +12,12 @@ export async function deleteUserData(password) {
     throw new Error('Unable to determine user email');
   }
 
-  try {
-    await signIn(email, password);
-  } catch (ex) {
-    throw ex;
-  }
+  await signIn(email, password);
 
-  try {
-    const fromQueryPath = `userData/${userID}`;
-    const fromRef = ref(db, fromQueryPath);
-    await remove(fromRef);
-  } catch (ex) {
-    throw ex;
-  }
+  const fromQueryPath = `userData/${userID}`;
+  const fromRef = ref(db, fromQueryPath);
+  await remove(fromRef);
 
-  try {
-    const user = getUser();
-    await deleteUser(user);
-  } catch (ex) {
-    throw ex;
-  }
+  const user = getUser();
+  await deleteUser(user);
 }

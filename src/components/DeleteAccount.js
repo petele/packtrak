@@ -12,7 +12,7 @@ import {
 import ConfirmDialog from './ConfirmDialog';
 import { getUserEmail } from '../helpers/fbHelper';
 import { deleteUserData } from '../helpers/deleteUserData';
-import { logger } from '../helpers/ConsoleLogger';
+import { gaEvent, gaError } from '../helpers/gaHelper';
 
 export default function DeleteAccount() {
   const navigate = useNavigate();
@@ -21,13 +21,13 @@ export default function DeleteAccount() {
   const [cantDelete, setCantDelete] = React.useState(null);
   const [confirmDialogVisible, setConfirmDialogVisible] = React.useState(false);
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
     setCantDelete(null);
     setConfirmDialogVisible(true);
   };
 
-  const handleConfirmDelete = async (confirmed) => {
+  async function handleConfirmDelete(confirmed) {
     setConfirmDialogVisible(false);
     setCurrentPW('');
     if (confirmed !== true) {
@@ -35,14 +35,15 @@ export default function DeleteAccount() {
     }
     try {
       await deleteUserData(currentPW);
+      gaEvent('delete_account');
       navigate('/');
     } catch (ex) {
+      gaError('delete_account_failed', false, ex);
       setCantDelete(true);
-      logger.error('Unable to delete user account.', ex);
     }
   }
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     const target = event.target;
     const value = target.value;
     setCurrentPW(value);

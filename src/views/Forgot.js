@@ -15,6 +15,7 @@ import {
 import Copyright from '../components/Copyright';
 
 import { resetPassword } from '../helpers/fbHelper';
+import { gaEvent } from '../helpers/gaHelper';
 
 export default function Forgot() {
   document.title = `Forgot Password - PackTrak`;
@@ -22,15 +23,15 @@ export default function Forgot() {
   const [email, setEmail] = React.useState('');
   const [resetDone, setResetDone] = React.useState(false);
 
-
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
     resetPassword(email);
+    gaEvent('forgot_password');
     setEmail('');
     setResetDone(true);
   };
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     const target = event.target;
     const value = target.value;
     setEmail(value);

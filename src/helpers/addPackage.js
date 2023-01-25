@@ -1,6 +1,5 @@
 import { db, getUserID } from './fbHelper';
 import { push, ref } from 'firebase/database';
-import { gaEvent } from './gaHelper';
 
 // import validatePackageData from './validatePackageData';
 import { cleanPackageObject, validatePackage } from './validatePackageData';
@@ -41,9 +40,6 @@ export default async function addPackage(data) {
   pkg.dtUpdated = now;
 
   const queryPath = `userData/${userID}/data_v1/incoming`;
-
-  gaEvent('package', 'add');
-  logger.log('addPackage', queryPath, pkg);
 
   const fbRef = ref(db, queryPath);
   const newRef = await push(fbRef, pkg);

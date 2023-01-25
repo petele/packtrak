@@ -17,7 +17,7 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import ConfirmDialog from './ConfirmDialog';
 import deletePackage from '../helpers/deletePackage';
 import { getKnownShippers, getTrackingURL, guessShipper } from '../helpers/shipHelper';
-import { logger } from '../helpers/ConsoleLogger';
+import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function PackageEditor(props) {
   const navigate = useNavigate();
@@ -79,11 +79,12 @@ export default function PackageEditor(props) {
 
     return savePackage(pkg)
       .then((id) => {
+        gaEvent(`${mode}_package`);
         return navigateBack();
       })
       .catch((ex) => {
+        gaError(`${mode}_package_failed`, false, ex);
         const msg = `Unable to save package.`;
-        logger.error(msg, ex);
         setErrorMessage(msg);
       });
   }
@@ -112,11 +113,12 @@ export default function PackageEditor(props) {
     }
     deletePackage(kind, id)
       .then(() => {
+        gaEvent('delete_package');
         return navigateBack();
       })
       .catch((ex) => {
+        gaError('delete_package_failed', false, ex);
         const msg = 'An error occured while trying to delete the package.';
-        logger.error(msg, ex);
         setErrorMessage(msg);
       });
   }
@@ -191,6 +193,14 @@ export default function PackageEditor(props) {
   function trackingURLChange(event) {
     const value = event.target.value.trim();
     setTrackingURL(value);
+  }
+
+  function clickTrackingLink() {
+    gaEvent('open_link_tracking');
+  }
+
+  function clickOrderLink() {
+    gaEvent('open_link_order');
   }
 
   return (
@@ -280,7 +290,7 @@ export default function PackageEditor(props) {
               value={trackingURL}
               onChange={trackingURLChange}
             />
-            <IconButton component={Link} href={trackingURL} disabled={trackingURL === ''}  target="_blank" rel="noreferrer" aria-label="open tracking link in new window">
+            <IconButton component={Link} onClick={clickTrackingLink} href={trackingURL} disabled={trackingURL === ''}  target="_blank" rel="noreferrer" aria-label="open tracking link in new window">
               <OpenInNew />
             </IconButton>
           </Stack>
@@ -294,7 +304,7 @@ export default function PackageEditor(props) {
               value={orderURL}
               onChange={orderURLChange}
             />
-            <IconButton component={Link} href={orderURL} disabled={orderURL === ''} target="_blank" rel="noreferrer" aria-label="open order link in new window">
+            <IconButton component={Link} onClick={clickOrderLink} href={orderURL} disabled={orderURL === ''} target="_blank" rel="noreferrer" aria-label="open order link in new window">
               <OpenInNew />
             </IconButton>
           </Stack>

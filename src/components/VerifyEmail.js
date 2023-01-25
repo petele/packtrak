@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 
 import { getUser, verifyEmail } from '../helpers/fbHelper';
+import { gaEvent } from '../helpers/gaHelper';
 
 export default function VerifyEmail() {
   const [emailSent, setEmailSent] = React.useState(false);
@@ -28,6 +29,7 @@ export default function VerifyEmail() {
 
   function sendVerificationEmail() {
     verifyEmail();
+    gaEvent('resend_email_verification');
     setEmailSent(true);
   }
 

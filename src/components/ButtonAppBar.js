@@ -14,6 +14,7 @@ import {
 import { AccountCircle } from '@mui/icons-material';
 
 import { signOut } from '../helpers/fbHelper';
+import { gaEvent } from '../helpers/gaHelper';
 
 export default function ButtonAppBar({uid}) {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export default function ButtonAppBar({uid}) {
     closeMenu();
     if (isSignedIn) {
       signOut();
+      gaEvent('sign_out', {from: 'app_bar'});
       navigate('/', {replace: true});
     }
     navigate('/signin', {replace: true});

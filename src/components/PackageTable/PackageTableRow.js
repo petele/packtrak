@@ -15,6 +15,7 @@ import TrackingLinkButton from './TrackingLinkButton';
 
 import markAsDelivered from '../../helpers/markAsDelivered';
 import { formatToString,  parseDateFromString } from '../../helpers/dtHelpers';
+import { gaEvent } from '../../helpers/gaHelper';
 
 export default function PackageTableRow({row, kind, width}) {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function PackageTableRow({row, kind, width}) {
   const dtValFormatted = formatToString(dtValObj, width === 'sm');
 
   function onCheckChange(e) {
+    gaEvent('mark_package_delivered', {delivered: e.target.checked});
     markAsDelivered(kind, id, e.target.checked);
   }
 

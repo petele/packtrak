@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 
 import getTrackingURL from '../../helpers/getTrackingURL';
+import { gaEvent } from '../../helpers/gaHelper';
 
 function _getLabel(trackingNumber, width) {
   if (typeof trackingNumber !== 'string') {
@@ -28,9 +29,13 @@ export default function TrackingLink({row, width}) {
   const url = row.trackingURL || getTrackingURL(shipper, trackingNumber);
   const label = _getLabel(trackingNumber, width);
 
+  function clickLink() {
+    gaEvent('open_link_tracking');
+  }
+
   if (url && label) {
     return (
-      <Link href={url} target="_blank" rel="noreferrer" underline="hover">
+      <Link href={url} target="_blank" onClick={clickLink} rel="noreferrer" underline="hover">
         {label}
       </Link>
     );

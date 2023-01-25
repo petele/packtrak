@@ -1,7 +1,6 @@
 import { get, ref } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
 import { logger } from './ConsoleLogger';
-import { gaEvent } from './gaHelper';
 
 /**
  * Get a package from the database
@@ -21,9 +20,9 @@ export default async function getPackage(kind, id) {
   if (!['incoming', 'delivered'].includes(kind)) {
     throw new Error('not-found');
   }
-  gaEvent('package', 'get_package');
 
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
+  logger.log('getPackage', queryPath);
 
   try {
     const query = ref(db, queryPath);

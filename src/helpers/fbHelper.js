@@ -56,7 +56,7 @@ export function signIn(email, password, remember) {
  * Sign out the current user.
  */
 export function signOut() {
-  fbSignOut(auth);
+  return fbSignOut(auth);
 }
 
 /**

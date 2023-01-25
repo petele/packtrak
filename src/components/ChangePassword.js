@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 import { changePassword, getUserEmail } from '../helpers/fbHelper';
-import { logger } from '../helpers/ConsoleLogger';
+import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function ChangePassword() {
   const userEmail = getUserEmail() || '';
@@ -26,7 +26,7 @@ export default function ChangePassword() {
     setPWChangeFailed(null);
   }
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
     resetErrors();
 
@@ -40,17 +40,18 @@ export default function ChangePassword() {
 
     try {
       await changePassword(currentPW, newPW1);
+      gaEvent('change_password');
       setCurrentPW('');
       setNewPW1('');
       setNewPW2('');
       setPWChanged(true);
     } catch (ex) {
       setPWChangeFailed(true);
-      logger.error('Unable to change password.', ex);
+      gaError('change_password_failed', false, ex);
     }
   };
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     const target = event.target;
     const name = target.name;
     const value = target.value;
