@@ -1,4 +1,5 @@
 import { Container, Typography } from '@mui/material';
+import WhatIsPackTrak from '../components/WhatIsPackTrak';
 
 export default function Home() {
   document.title = 'PackTrak';
@@ -8,6 +9,7 @@ export default function Home() {
       <Typography component="h1" variant="h4">
         PackTrak
       </Typography>
+      <WhatIsPackTrak />
     </Container>
   );
 }

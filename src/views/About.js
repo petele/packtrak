@@ -5,42 +5,34 @@ import {
   Link,
   Typography
 } from '@mui/material';
+import WhatIsPackTrak from '../components/WhatIsPackTrak';
 
 export default function About() {
   document.title = `About - PackTrak`;
 
   return (
     <Container component="main" maxWidth="sm" sx={{marginTop: 2}}>
-      <Alert severity='error'>
-        <AlertTitle>Experimental</AlertTitle>
-        PackTrak is an experiement and <b>should not</b> be used with real
-        data.
-      </Alert>
-
-      <Typography variant="body1" sx={{marginTop: 4}}>
-        PackTrak is a tool to help you track your incoming
-        packages. I wrote it to experiement with, and learn about React.
-        You can find all of the source code
-        on <Link href="https://github.com/petele/packtrak">GitHub</Link>.
-      </Typography>
+      <WhatIsPackTrak />
 
       <Typography variant="h5" component="h2" sx={{marginTop: 4}}>
         Terms of Service &amp; Privacy Policy
       </Typography>
 
       <Typography variant="body1">
-        By using this site, you understand:
+        By using this site, you understand and <b>agree</b> to the following:
       </Typography>
 
       <Typography variant="body1">
         <ul>
+          <li>You will <b>NOT</b> use any real data, <b>ever</b>.</li>
+          <li>There are no terms, this is an experiment.</li>
+          <li>There is no privacy, data is not encrypted on the server.</li>
           <li>Data may be deleted at any time.</li>
           <li>
             You will not provide any <b>real</b> data, including actual
             tracking numbers.
           </li>
           <li>Google Analytics is used.</li>
-          <li>User data is not encrypted on the server.</li>
         </ul>
       </Typography>
 
