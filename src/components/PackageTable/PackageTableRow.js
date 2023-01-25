@@ -61,7 +61,7 @@ export default function PackageTableRow({row, kind, width}) {
       sx={myStyles}
     >
       <TableCell padding="checkbox">
-        <Checkbox
+        <Checkbox aria-label="Delivered"
           checked={row.delivered}
           onChange={onCheckChange}
         />
