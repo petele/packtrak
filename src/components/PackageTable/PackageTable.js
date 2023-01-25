@@ -18,7 +18,6 @@ import PackageTableBody from './PackageTableBody';
 import getPackageList from '../../helpers/getPackageList';
 import parsePackageList from '../../helpers/parsePackageList';
 
-import { logger } from '../../helpers/ConsoleLogger';
 import { gaError } from '../../helpers/gaHelper';
 import SadPanda from '../SadPanda';
 
