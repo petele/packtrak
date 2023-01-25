@@ -1,6 +1,7 @@
 {
   "short_name": "PackTrak",
   "name": "PackTrak",
+  "id": "packtrack_web",
   "description": "Track incoming packages with PackTrak",
   "icons": [
     {
@@ -12,6 +13,12 @@
       "src": "/img/box-512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "/img/box-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": "/incoming",
