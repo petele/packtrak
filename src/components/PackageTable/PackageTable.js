@@ -53,9 +53,12 @@ export default function PackageTable({kind}) {
 
   React.useEffect(() => {
     try {
+      // TODO fix add disconnect stuff here
       getPackageList(kind, (snapshot) => {
         const pkgObj = snapshot.val();
         setRows(parsePackageList(pkgObj, kind));
+      }, (err) => {
+        // TODO
       });
     } catch (ex) {
       gaError('get_package_list_failed', true, ex);

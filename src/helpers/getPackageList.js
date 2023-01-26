@@ -32,9 +32,10 @@ function _getQuery(userID, kind) {
  *
  * @param {string} kind
  * @param {Function} callback
+ * @param {Function} errCallback
  * @return FirebaseValue
  */
-export default function getPackageList(kind, callback) {
+export default function getPackageList(kind, callback, errCallback) {
 
   const userID = getUserID();
   if (!userID) {
@@ -49,6 +50,10 @@ export default function getPackageList(kind, callback) {
   return onValue(fbQuery, (snapshot) => {
     if (callback) {
       callback(snapshot);
+    }
+  }, (err) => {
+    if (errCallback) {
+      errCallback(err);
     }
   });
 }
