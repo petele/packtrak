@@ -24,14 +24,24 @@ function _getLabel(trackingNumber, width) {
 }
 
 export default function TrackingLink({row, width}) {
-  const shipper = row.shipper;
-  const trackingNumber = row.trackingNumber;
-  const url = row.trackingURL || getTrackingURL(shipper, trackingNumber);
-  const label = _getLabel(trackingNumber, width);
-
   function clickLink() {
     gaEvent('open_link_tracking');
   }
+
+  if (row.trackingURL) {
+    const url = row.trackingURL;
+    const label = row.trackingNumber || 'Track';
+    return (
+      <Link href={url} target="_blank" onClick={clickLink} rel="noreferrer" underline="hover">
+        {label}
+      </Link>
+    );
+  }
+
+  const shipper = row.shipper;
+  const trackingNumber = row.trackingNumber;
+  const url = getTrackingURL(shipper, trackingNumber);
+  const label = _getLabel(trackingNumber, width);
 
   if (url && label) {
     return (
