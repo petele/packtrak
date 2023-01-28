@@ -6,6 +6,8 @@ const _knownShippers = [
   'DHL',
   'FedEx',
   'LaserShip',
+  'OnTrac',
+  'Swiftpost',
   'UPS',
   'USPS',
   'Custom',
@@ -27,6 +29,10 @@ const _trackingURLPatterns = [
   {
     name: 'OnTrac',
     pattern: new RegExp(/\b(C\d{14})\b/i),
+  },
+  {
+    name: 'Swiftpost',
+    pattern: new RegExp(/^SP.{20}$/i),
   },
   {
     name: 'UPS',
@@ -113,6 +119,9 @@ export function getTrackingURL(shipper, trackingNumber) {
   }
   if (shipper === 'OnTrac') {
     return `https://www.ontrac.com/trackres.asp?tracking_number=${trackingNumber}`;
+  }
+  if (shipper === 'Swiftpost') {
+    return `https://www.swiftpost.com/tracking?t=${trackingNumber}`;
   }
   if (shipper === 'UPS') {
     return `https://www.ups.com/track?loc=en_US&tracknum=${trackingNumber}`;
