@@ -5,7 +5,7 @@ import {
   Link,
 } from '@mui/material';
 
-import getTrackingURL from '../../helpers/getTrackingURL';
+import { getTrackingURL } from '../../helpers/shipHelper';
 import { gaEvent } from '../../helpers/gaHelper';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
