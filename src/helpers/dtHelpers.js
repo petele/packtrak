@@ -9,9 +9,10 @@ import { logger } from "./ConsoleLogger";
 export function parseDateFromString(value) {
   const dtSplit = value.split('-');
   const result = new Date();
-  result.setFullYear(parseInt(dtSplit[0]));
-  result.setMonth(parseInt(dtSplit[1]) - 1);
-  result.setDate(parseInt(dtSplit[2]));
+  const y = parseInt(dtSplit[0]);
+  const m = parseInt(dtSplit[1]) - 1;
+  const d = parseInt(dtSplit[2]);
+  result.setFullYear(y, m, d);
   return result;
 }
 
