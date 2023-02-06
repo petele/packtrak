@@ -9,7 +9,6 @@ import {
 import Copyright from '../components/Copyright';
 
 export default function SadPanda({reason, backURL}) {
-  document.title = `Sad Panda - PackTrak`;
 
   return (
     <Container
@@ -24,7 +23,7 @@ export default function SadPanda({reason, backURL}) {
       <Typography component="h1" variant="h5">
         You found the sad Panda
       </Typography>
-      <img src="/img/sadpanda.png" alt="crying panda" />
+      <img src="/img/sadpanda.png" alt="crying panda" height="300" />
       <Typography component="p" variant="body1" sx={{marginTop: 1}}>
         Panda is sad because {reason}. Sorry.
       </Typography>
