@@ -21,7 +21,7 @@ root.render(
 reportWebVitals(gaTiming);
 
 window.addEventListener('appinstalled', () => {
-  gaEvent('pwa_installed');
+  gaEvent('pwa_install_completed');
 });
 
 window.addEventListener('beforeinstallprompt', () => {

@@ -3,9 +3,10 @@ import {
   Typography
 } from '@mui/material';
 import WhatIsPackTrak from '../components/WhatIsPackTrak';
+import { useDocumentTitle } from '../components/useDocumentTitle';
 
 export default function About() {
-  document.title = `About - PackTrak`;
+  useDocumentTitle('About');
 
   return (
     <Container component="main" maxWidth="sm" sx={{marginTop: 2}}>

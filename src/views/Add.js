@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { Container } from '@mui/material';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import PackageEditor from '../components/PackageEditor';
 import addPackage from '../helpers/addPackage';
 
 export default function Add({uid}) {
-  document.title = `Add Package - PackTrak`;
+  useDocumentTitle(`Add Package`);
 
   const navigate = useNavigate();
 

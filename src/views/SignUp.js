@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import Copyright from '../components/Copyright';
 import SignInStatusAlert from '../components/SignInStatusAlert';
 import TOSLabel from '../components/TOSLabel';
@@ -22,7 +23,7 @@ import addUser from '../helpers/addUser';
 import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function SignUp({uid}) {
-  document.title = `Sign Up - PackTrak`;
+  useDocumentTitle(`Sign Up`);
 
   const [signUpFailed, setSignUpFailed] = React.useState(false);
 

@@ -5,13 +5,14 @@ import {
   Container
 } from '@mui/material';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PackageEditor from '../components/PackageEditor';
 import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';
 
 export default function Edit({uid}) {
-  document.title = `Edit Package - PackTrak`;
+  useDocumentTitle(`Edit Package`);
 
   const {kind, id} = useParams();
   const navigate = useNavigate();

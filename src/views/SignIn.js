@@ -17,11 +17,12 @@ import {
 import Copyright from '../components/Copyright';
 import SignInStatusAlert from '../components/SignInStatusAlert';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { signIn } from '../helpers/fbHelper';
 import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function SignIn({uid}) {
-  document.title = `Sign In - PackTrak`;
+  useDocumentTitle(`Sign In`);
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');

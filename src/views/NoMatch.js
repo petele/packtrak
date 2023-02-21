@@ -1,8 +1,10 @@
+
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { gaEvent } from '../helpers/gaHelper';
 import SadPanda from '../components/SadPanda';
 
 export default function NoMatch({uid}) {
-  document.title = `Sad Panda - PackTrak`;
+  useDocumentTitle(`Sad Panda`);
 
   const backURL = uid !== null && uid !== -1 ? '/incoming' : '/';
 

@@ -14,11 +14,12 @@ import {
 
 import Copyright from '../components/Copyright';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import { resetPassword } from '../helpers/fbHelper';
 import { gaEvent } from '../helpers/gaHelper';
 
 export default function Forgot() {
-  document.title = `Forgot Password - PackTrak`;
+  useDocumentTitle(`Forgot Password`);
 
   const [email, setEmail] = React.useState('');
   const [resetDone, setResetDone] = React.useState(false);

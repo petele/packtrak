@@ -11,6 +11,7 @@ import {
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import ProfileDetails from '../components/ProfileDetails';
 import ChangePassword from '../components/ChangePassword';
 import DeleteAccount from '../components/DeleteAccount';
@@ -19,7 +20,7 @@ import VerifyEmail from '../components/VerifyEmail';
 import { getUser } from '../helpers/fbHelper';
 
 export default function Profile({uid}) {
-  document.title = `Profile - PackTrak`;
+  useDocumentTitle(`Profile`);
 
   const navigate = useNavigate();
 

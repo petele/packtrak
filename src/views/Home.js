@@ -1,8 +1,10 @@
 import { Container, Typography } from '@mui/material';
+
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import WhatIsPackTrak from '../components/WhatIsPackTrak';
 
 export default function Home() {
-  document.title = 'PackTrak';
+  useDocumentTitle('');
 
   return (
     <Container component="main" fixed sx={{mt: 4}}>

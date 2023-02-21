@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { Fragment } from 'react';
+import { useEffect, useMemo, useState, Fragment } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 
 import { blue, red } from '@mui/material/colors';
@@ -34,9 +33,9 @@ import '@fontsource/roboto/700.css';
 import CookieBanner from './components/CookieBanner';
 
 export default function App() {
-  const [uid, setUID] = React.useState(-1);
+  const [uid, setUID] = useState(-1);
 
-  React.useEffect(() => {
+  useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
       if (user) {
         setUID(user.uid);
@@ -72,7 +71,7 @@ export default function App() {
 function Layout(props) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const theme = React.useMemo(() =>
+  const theme = useMemo(() =>
     createTheme({
       palette: {
         mode: prefersDarkMode ? 'dark' : 'light',

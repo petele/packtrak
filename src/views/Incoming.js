@@ -7,10 +7,11 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
+import { useDocumentTitle } from '../components/useDocumentTitle';
 import PackageTable from '../components/PackageTable/PackageTable';
 
 export default function Incoming({uid}) {
-  document.title = `Incoming - PackTrak`;
+  useDocumentTitle('Incoming');
 
   const navigate = useNavigate();
 
