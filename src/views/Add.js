@@ -23,6 +23,7 @@ export default function Add({uid}) {
   }
 
   const savePackage = async (data) => {
+    data.delivered = false;
     return addPackage(data);
   };
 

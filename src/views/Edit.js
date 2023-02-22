@@ -17,7 +17,7 @@ export default function Edit({uid}) {
   const {kind, id} = useParams();
   const navigate = useNavigate();
 
-  const [pkgData, setPkgData] = React.useState(null);
+  const [pkgBefore, setPkgBefore] = React.useState(null);
 
   React.useEffect(() => {
     if (uid === null) {
@@ -28,7 +28,7 @@ export default function Edit({uid}) {
     }
     getPackage(kind, id)
       .then((pkgData) => {
-        setPkgData(pkgData);
+        setPkgBefore(pkgData);
       })
       .catch((ex) => {
         navigate('/not-found');
@@ -39,11 +39,11 @@ export default function Edit({uid}) {
     return null;
   }
 
-  const saveEdits = async (data) => {
-    return updatePackage(kind, id, data, pkgData);
+  const saveEdits = async (pkgAfter) => {
+    return updatePackage(kind, id, pkgBefore, pkgAfter);
   };
 
-  if (!pkgData) {
+  if (!pkgBefore) {
     return (
       <Container component="main" sx={{marginTop: 2}}>
         <LoadingSpinner />
@@ -54,7 +54,7 @@ export default function Edit({uid}) {
   return (
     <Container component="main" sx={{marginTop: 2}}>
       <PackageEditor
-          id={id} kind={kind} pkgData={pkgData} fnSave={saveEdits} />
+          id={id} kind={kind} pkgData={pkgBefore} fnSave={saveEdits} />
     </Container>
   );
 }

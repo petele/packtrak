@@ -5,16 +5,17 @@ const _testDT = (val) => /^20[2-9]\d-[0-1]\d-[0-3]\d$/.test(val);
 const _testURL = (val) => /^https?:\/\/.*$/.test(val);
 const _testShipper = (val) => _knownShippers.includes(val);
 
+const requiredKeys = ['delivered', 'dateExpected', 'from', 'what'];
 const schema = {
   delivered: {type: 'boolean'},
   dateExpected: {type: 'string', validator: _testDT},
-  dateDelivered: {type: 'string', nullable: true, validator: _testDT},
+  dateDelivered: {type: 'string', validator: _testDT},
   from: {type: 'string'},
   what: {type: 'string'},
-  shipper: {type: 'string', nullable: true, validator: _testShipper},
-  trackingNumber: {type: 'string', nullable: true},
-  trackingURL: {type: 'string', validator: _testURL, nullable: true},
-  orderURL: {type: 'string', validator:_testURL, nullable: true},
+  shipper: {type: 'string', validator: _testShipper},
+  trackingNumber: {type: 'string'},
+  trackingURL: {type: 'string', validator: _testURL},
+  orderURL: {type: 'string', validator: _testURL},
 }
 
 function _isValueOK(value, nullable, expectedType, validator) {
@@ -33,48 +34,14 @@ function _isValueOK(value, nullable, expectedType, validator) {
   return true;
 }
 
-function _trimString(val) {
-  if (val === null || val === undefined) {
-    return null;
-  }
-  if (typeof val === 'string') {
-    const result = val.trim();
-    if (result === '') {
-      return null;
-    }
-    return result;
-  }
-  return null;
-}
-
-/**
- * Trims/cleans fields in a package data object.
- *
- * @param {object} data Package data object
- * @return {object}
- */
-export function cleanPackageObject(data) {
-  const result = {
-    delivered: !!data.delivered,
-    dateExpected: _trimString(data.dateExpected),
-    dateDelivered: _trimString(data.dateDelivered),
-    from: _trimString(data.from),
-    what: _trimString(data.what),
-    trackingNumber: _trimString(data.trackingNumber),
-    shipper: _trimString(data.shipper),
-    trackingURL: _trimString(data.trackingURL),
-    orderURL: _trimString(data.orderURL),
-  };
-  return result;
-}
-
 /**
  * Validates a package data object.
  *
  * @param {object} data Package data object
- * @return {object}
+ * @param {boolean} checkForRequired Fail if required fields are not included.
+ * @return {Array} Array of errors, if valid, array is empty.
  */
-export function validatePackage(data) {
+export function validatePackage(data, checkForRequired) {
   const invalidProps = new Set();
   const extraProps = new Set(Object.keys(data));
   Object.keys(schema).forEach((key) => {
@@ -85,9 +52,14 @@ export function validatePackage(data) {
     const type = propInfo.type;
     const validator = propInfo.validator;
 
-    let nullable = !!propInfo.nullable;
-    if (key === 'dateDelivered' && data.delivered === true) {
-      nullable = false;
+    let nullable = true;
+    if (checkForRequired) {
+      if (requiredKeys.includes(key)) {
+        nullable = false;
+      }
+      if (key === 'dateDelivered' && data.delivered === true) {
+        nullable = false;
+      }
     }
 
     if (key === 'trackingURL' && data.trackingURL && data.shipper !== 'Custom') {
@@ -101,12 +73,12 @@ export function validatePackage(data) {
   });
 
   if (invalidProps.size === 0 && extraProps.size === 0) {
-    return {valid: true};
+    return [];
   }
 
   for (const extraProp of extraProps) {
     invalidProps.add(extraProp);
   }
 
-  return {valid: false, errors: [...invalidProps]};
+  return [...invalidProps];
 }

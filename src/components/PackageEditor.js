@@ -51,30 +51,42 @@ export default function PackageEditor(props) {
   const saveButtonLabel = mode === 'edit' ? 'Save' : 'Add';
   const shipperOptions = getKnownShippers();
 
+  /**
+   * Returns a trimmed string, or null for empty strings.
+   *
+   * @param {string} val String value to trim
+   * @return {?string}
+   */
+  function trimString(val) {
+    if (val === null || val === undefined) {
+      return null;
+    }
+    if (typeof val === 'string') {
+      const result = val.trim();
+      if (result === '') {
+        return null;
+      }
+      return result;
+    }
+    return null;
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     setErrorMessage(null);
 
     const pkg = {
-      dateExpected: dateExpected,
-      from: pkgFrom,
-      what: pkgWhat,
+      dateExpected: trimString(dateExpected),
+      dateDelivered: trimString(dateDelivered),
+      from: trimString(pkgFrom),
+      what: trimString(pkgWhat),
+      trackingNumber: trimString(trackingNumber),
+      shipper: trimString(pkgShipper),
+      orderURL: trimString(orderURL),
     };
-
-    if (dateDelivered) {
-      pkg.dateDelivered = dateDelivered;
-    }
-    if (trackingNumber) {
-      pkg.trackingNumber = trackingNumber;
-    }
-    if (pkgShipper) {
-      pkg.shipper = pkgShipper;
-    }
-    if (pkgShipper === 'Custom' && trackingURL) {
-      pkg.trackingURL = trackingURL;
-    }
-    if (orderURL) {
-      pkg.orderURL = orderURL;
+    const trimmedTrackingURL = trackingURL;
+    if (pkg.shipper === 'Custom' && trimmedTrackingURL) {
+      pkg.trackingURL = trimmedTrackingURL;
     }
 
     return savePackage(pkg)

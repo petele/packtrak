@@ -2,45 +2,98 @@ import { update, ref } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
 import { logger } from './ConsoleLogger';
 
-import { cleanPackageObject, validatePackage } from './validatePackageData';
+import { validatePackage } from './validatePackageData';
+
+/**
+ * Checks to see if a value has been updated.
+ *
+ * @param {string} key Object key to check.
+ * @param {object} pkgBefore Package data before edit
+ * @param {object} pkgAfter Package data after edit.
+ * @return {boolean} true if the field has been updated.
+ */
+function _hasValueChanged(key, pkgBefore, pkgAfter) {
+  if (pkgBefore[key] === undefined && pkgAfter[key] === null) {
+    return false;
+  }
+  if (pkgBefore[key] === pkgAfter[key]) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Returns a new object with only the updated properties.
+ *
+ * @param {object} pkgBefore Package data before edit.
+ * @param {object} pkgAfter Package data after edit.
+ * @return {object} object with only the updated properties.
+ */
+function _getChanges(pkgBefore, pkgAfter) {
+  const pkgChanges = {};
+  if (_hasValueChanged('dateExpected', pkgBefore, pkgAfter)) {
+    pkgChanges.dateExpected = pkgAfter.dateExpected;
+  }
+  if (_hasValueChanged('dateDelivered', pkgBefore, pkgAfter)) {
+    pkgChanges.dateDelivered = pkgAfter.dateDelivered;
+  }
+  if (_hasValueChanged('from', pkgBefore, pkgAfter)) {
+    pkgChanges.from = pkgAfter.from;
+  }
+  if (_hasValueChanged('what', pkgBefore, pkgAfter)) {
+    pkgChanges.what = pkgAfter.what;
+  }
+  if (_hasValueChanged('shipper', pkgBefore, pkgAfter)) {
+    pkgChanges.shipper = pkgAfter.shipper;
+  }
+  if (_hasValueChanged('trackingNumber', pkgBefore, pkgAfter)) {
+    pkgChanges.trackingNumber = pkgAfter.trackingNumber;
+  }
+  if (_hasValueChanged('trackingURL', pkgBefore, pkgAfter)) {
+    pkgChanges.trackingURL = pkgAfter.trackingURL;
+  }
+  if (_hasValueChanged('orderURL', pkgBefore, pkgAfter)) {
+    pkgChanges.orderURL = pkgAfter.orderURL;
+  }
+  return pkgChanges;
+}
 
 /**
  * Updates the package record in the database.
  *
  * @param {string} kind incoming or delivered
  * @param {string} id Package ID
- * @param {object} data Package details
- * @param {?string} data.dateExpected Date expected (YYYY-MM-DD)
- * @param {?string} data.from Who the package is from
- * @param {?string} data.what What's in the package
- * @param {?string} data.shipper Who the shipper is
- * @param {?string} data.orderURL URL to order
- * @param {?string} data.trackingNumber Tracking number from shipper
- * @param {?string} data.trackingURL Tracking URL from shipper
- * @param {?object} before - Same as data, but pre-edit version
+ * @param {object} pkgBefore Pre-edit version of package data
+ * @param {object} pkgAfter Post-edit version of package data
  * @return {Promise<null>} Successful update complete
  */
-export default async function updatePackage(kind, id, data, before) {
+export default async function updatePackage(kind, id, pkgBefore, pkgAfter) {
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
   }
-  if (!kind || !id || !data) {
+  if (!kind || !id || !pkgBefore || !pkgAfter) {
     throw new Error(`Missing or invalid required param.`);
   }
 
-  const pkg = cleanPackageObject(data);
-  const {valid, errors} = validatePackage(pkg);
+  const changes = _getChanges(pkgBefore, pkgAfter);
 
-  if (!valid) {
-    logger.error('Validation failed', pkg, errors);
+  const keysChanged = Object.keys(changes);
+  if (keysChanged.length === 0) {
+    logger.log('updatePackage', 'Update skipped, nothing changed.');
+    return;
+  }
+
+  const errors = validatePackage(changes, false);
+  if (errors.length > 0) {
+    logger.error('Validation failed.', changes, errors);
     throw new Error('Validation failed');
   }
 
-  pkg.dtUpdated = Date.now();
+  changes.dtUpdated = Date.now();
 
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
-
+  logger.log('updatePackage', queryPath, changes);
   const fbRef = ref(db, queryPath);
-  return await update(fbRef, pkg);
+  return await update(fbRef, changes);
 }
