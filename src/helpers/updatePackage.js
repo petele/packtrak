@@ -1,6 +1,7 @@
 import { update, ref } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
 import { logger } from './ConsoleLogger';
+import { gaTimingStart, gaTimingEnd } from './gaHelper';
 
 import { validatePackage } from './validatePackageData';
 
@@ -68,6 +69,7 @@ function _getChanges(pkgBefore, pkgAfter) {
  * @return {Promise<null>} Successful update complete
  */
 export default async function updatePackage(kind, id, pkgBefore, pkgAfter) {
+  const _perfName = 'fb_update_package';
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
@@ -75,6 +77,8 @@ export default async function updatePackage(kind, id, pkgBefore, pkgAfter) {
   if (!kind || !id || !pkgBefore || !pkgAfter) {
     throw new Error(`Missing or invalid required param.`);
   }
+
+  gaTimingStart(_perfName);
 
   const changes = _getChanges(pkgBefore, pkgAfter);
 
@@ -95,5 +99,7 @@ export default async function updatePackage(kind, id, pkgBefore, pkgAfter) {
   const queryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   logger.log('updatePackage', queryPath, changes);
   const fbRef = ref(db, queryPath);
-  return await update(fbRef, changes);
+  const r = await update(fbRef, changes);
+  gaTimingEnd(_perfName);
+  return r;
 }

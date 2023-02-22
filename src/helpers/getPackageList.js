@@ -2,6 +2,29 @@ import { db, getUserID } from './fbHelper';
 import { onValue, orderByChild, query, ref, endAt, startAt } from 'firebase/database';
 import { formatToISODate, getTodayEnd } from './dtHelpers';
 import { logger } from './ConsoleLogger';
+import { gaTimingStart, gaTimingEnd } from './gaHelper';
+
+function _getFromCache(kind) {
+  const _perfName = 'cache_get_package_list';
+  gaTimingStart(_perfName);
+  const cached = localStorage.getItem(`cached_${kind}`);
+  try {
+    const asJSON = JSON.parse(cached);
+    gaTimingEnd(_perfName);
+    return asJSON;
+  } catch (ex) {
+    return null;
+  }
+}
+
+function _saveToCache(kind, data) {
+  try {
+    const asStr = JSON.stringify(data);
+    localStorage.setItem(`cached_${kind}`, asStr);
+  } catch (ex) {
+    return null;
+  }
+}
 
 function _getQuery(userID, kind) {
   const queryPath = `userData/${userID}/data_v1/${kind}`;
@@ -14,7 +37,8 @@ function _getQuery(userID, kind) {
   const orderBy = orderByChild('dateDelivered');
 
   const eodToday = getTodayEnd();
-  const startVal = eodToday - (30 * 24 * 60 * 60 * 1000);
+  const daysBack = 30;
+  const startVal = eodToday - (daysBack * 24 * 60 * 60 * 1000);
   const startDT = new Date(startVal);
   const startStr = formatToISODate(startDT);
   const start = startAt(startStr);
@@ -36,7 +60,7 @@ function _getQuery(userID, kind) {
  * @return FirebaseValue
  */
 export default function getPackageList(kind, callback, errCallback) {
-
+  const _perfName = 'fb_get_package_list';
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
@@ -45,12 +69,29 @@ export default function getPackageList(kind, callback, errCallback) {
     return;
   }
 
+  const cached = _getFromCache(kind);
+  if (cached) {
+    if (callback) {
+      callback(cached);
+    }
+  }
+
+  gaTimingStart(_perfName);
+  let isColdStart = true;
   const fbQuery = _getQuery(userID, kind);
   logger.log('getPackageList', kind, userID);
   return onValue(fbQuery, (snapshot) => {
-    if (callback) {
-      callback(snapshot);
+    const packages = snapshot.val();
+    if (isColdStart) {
+      isColdStart = false;
+      gaTimingEnd(_perfName);
     }
+    if (callback) {
+      callback(packages);
+    }
+    setTimeout(() => {
+      _saveToCache(kind, packages);
+    }, 500)
   }, (err) => {
     if (errCallback) {
       errCallback(err);

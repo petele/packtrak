@@ -29,17 +29,19 @@ export const db = getDatabase(app);
 export const auth = getAuth(app);
 
 let timesConnected = 0;
-const connectedRef = ref(db, '.info/connected');
-onValue(connectedRef, (snap) => {
-  if (snap.val() === true) {
-    timesConnected += 1;
-    const msg = timesConnected === 1 ? 'db_connect' : 'db_reconnect';
-    gaEvent(msg);
-    return;
-  }
-  gaEvent('db_disconnected');
-});
 
+setTimeout(() => {
+  const connectedRef = ref(db, '.info/connected');
+  onValue(connectedRef, (snap) => {
+    if (snap.val() === true) {
+      timesConnected += 1;
+      const msg = timesConnected === 1 ? 'db_connect' : 'db_reconnect';
+      gaEvent(msg);
+      return;
+    }
+    gaEvent('db_disconnected');
+  });
+}, 250);
 
 /**
  * Sign in user via email & password.

@@ -1,5 +1,7 @@
 import { logger } from "./ConsoleLogger";
 
+const _timingValues = {};
+
 /**
  * Sets the user ID for analytics.
  * @param {string} userID User ID
@@ -60,4 +62,32 @@ export function gaTiming({name, delta, value, id}) {
     return;
   }
   window.gtag('event', name, details);
+}
+
+/**
+ * Marks the start time for a performance timer.
+ *
+ * @param {string} name
+ */
+export function gaTimingStart(name) {
+  _timingValues[name] = performance.now();
+}
+
+/**
+ * Marks the end for a performance timer and logs the duration.
+ *
+ * @param {string} name name of performance timer
+ * @return
+ */
+export function gaTimingEnd(name) {
+  const start = _timingValues[name];
+  if (!start) {
+    logger.warn(`gaTimingEnd - could not find start time for '${name}'.`);
+    return;
+  }
+  const dur = performance.now() - start;
+  setTimeout(() => {
+    gaTiming({name: name, value: dur});
+    delete _timingValues[name];
+  }, 0);
 }

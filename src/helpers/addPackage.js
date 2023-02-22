@@ -3,6 +3,7 @@ import { push, ref } from 'firebase/database';
 
 import { validatePackage } from './validatePackageData';
 import { logger } from './ConsoleLogger';
+import { gaTimingStart, gaTimingEnd } from './gaHelper';
 
 /**
  * Add a package to the database
@@ -18,6 +19,7 @@ import { logger } from './ConsoleLogger';
  * @return {Promise<string>} Package ID
  */
 export default async function addPackage(data) {
+  const _perfName = 'fb_add_package';
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
@@ -25,6 +27,7 @@ export default async function addPackage(data) {
   if (!data) {
     throw new Error(`No data`);
   }
+  gaTimingStart(_perfName);
 
   const errors = validatePackage(data, true);
 
@@ -41,5 +44,6 @@ export default async function addPackage(data) {
   logger.log('addPackage', queryPath, data);
   const fbRef = ref(db, queryPath);
   const newRef = await push(fbRef, data);
+  gaTimingEnd(_perfName);
   return newRef.key;
 }

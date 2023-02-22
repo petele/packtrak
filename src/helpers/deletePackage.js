@@ -1,6 +1,7 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
 import { logger } from './ConsoleLogger';
+import { gaTimingEnd, gaTimingStart } from './gaHelper';
 
 const _keepBackup = false;
 
@@ -12,6 +13,7 @@ const _keepBackup = false;
  * @return {boolean} Successful update complete
  */
 export default async function deletePackage(kind, id) {
+  const _perfName = 'fb_delete_package';
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
@@ -19,6 +21,8 @@ export default async function deletePackage(kind, id) {
   if (!kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
+
+  gaTimingStart(_perfName);
 
   const fromQueryPath = `userData/${userID}/data_v1/${kind}/${id}`;
 
@@ -39,6 +43,7 @@ export default async function deletePackage(kind, id) {
 
     // Delete the old version
     await remove(fromRef);
+    gaTimingEnd(_perfName);
     return true;
   } catch (ex) {
     logger.error('Unable to delete package.', fromQueryPath, ex);

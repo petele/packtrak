@@ -1,6 +1,7 @@
 import { set, get, ref, remove } from 'firebase/database';
 import { db, getUserID } from '../helpers/fbHelper';
 import { formatToISODate } from './dtHelpers';
+import { gaTimingEnd, gaTimingStart } from './gaHelper';
 
 /**
  * Marks the specified package as delivered.
@@ -11,6 +12,7 @@ import { formatToISODate } from './dtHelpers';
  * @return {boolean} Successful update complete
  */
 export default async function markAsDelivered(kind, id, delivered) {
+  const _perfName = 'fb_mark_as_delivered';
   const userID = getUserID();
   if (!userID) {
     throw new Error('Not Authenticated');
@@ -18,6 +20,8 @@ export default async function markAsDelivered(kind, id, delivered) {
   if (!kind || !id) {
     throw new Error(`Missing or invalid required param.`);
   }
+
+  gaTimingStart(_perfName);
 
   const fromQueryPath = `userData/${userID}/data_v1/${kind}/${id}`;
   const fromRef = ref(db, fromQueryPath);
@@ -36,6 +40,8 @@ export default async function markAsDelivered(kind, id, delivered) {
 
   // Delete the old version
   await remove(fromRef);
+
+  gaTimingEnd(_perfName);
 
   return true;
 }
