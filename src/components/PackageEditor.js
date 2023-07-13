@@ -35,6 +35,7 @@ export default function PackageEditor(props) {
   const [orderURL, setOrderURL] = React.useState(pkgData?.orderURL || '');
   const [pkgShipper, setPkgShipper] = React.useState(pkgData?.shipper || null);
   const [trackingNumber, setTrackingNumber] = React.useState(pkgData?.trackingNumber || '');
+  const [amzOrderID, setAmzOrderID] = React.useState(pkgData?.amzOrderID || '');
 
   const trackingURLTemp =
     pkgData?.trackingURL ||
@@ -44,6 +45,9 @@ export default function PackageEditor(props) {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
   const [confirmDialogVisible, setConfirmDialogVisible] = React.useState(false);
+
+  const isFromAmazon = pkgData?.from.toLowerCase() === 'amazon';
+  const [amzOrderIDVisible, setAmzOrderIDVisible] = React.useState(isFromAmazon);
 
   // const [saveDisabled, setSaveDisabled] = React.useState(false);
   const saveDisabled = false;
@@ -84,9 +88,13 @@ export default function PackageEditor(props) {
       shipper: trimString(pkgShipper),
       orderURL: trimString(orderURL),
     };
-    const trimmedTrackingURL = trackingURL;
+    const trimmedTrackingURL = trimString(trackingURL);
     if (pkg.shipper === 'Custom' && trimmedTrackingURL) {
       pkg.trackingURL = trimmedTrackingURL;
+    }
+    const trimmedOrderID = trimString(amzOrderID);
+    if (pkg.from.toLowerCase() === 'amazon' && trimmedOrderID) {
+      pkg.amzOrderID = trimmedOrderID;
     }
 
     return savePackage(pkg)
@@ -130,7 +138,7 @@ export default function PackageEditor(props) {
       })
       .catch((ex) => {
         gaError('delete_package_failed', false, ex);
-        const msg = 'An error occured while trying to delete the package.';
+        const msg = `An error occured while trying to delete the package.`;
         setErrorMessage(msg);
       });
   }
@@ -163,6 +171,7 @@ export default function PackageEditor(props) {
     if (trimmed !== pkgFrom) {
       setPkgFrom(trimmed);
     }
+    setAmzOrderIDVisible(trimmed.toLowerCase() === 'amazon');
   }
 
   function pkgWhatChange(event) {
@@ -187,7 +196,6 @@ export default function PackageEditor(props) {
     recalcTrackingURL(value, trackingNumber);
   }
 
-
   function trackingNumberChange(event) {
     const value = event.target.value.trim();
     setTrackingNumber(value);
@@ -205,6 +213,19 @@ export default function PackageEditor(props) {
   function trackingURLChange(event) {
     const value = event.target.value.trim();
     setTrackingURL(value);
+  }
+
+  function amzOrderIDBlur(event) {
+    const value = trimString(event.target.value);
+    if (pkgFrom.toLowerCase() === 'amazon' && value) {
+      const urlBase = `https://www.amazon.com/gp/your-account/order-details?orderID`
+      setOrderURL(`${urlBase}=${value}`);
+    }
+  }
+
+  function amzOrderIDChange(event) {
+    const value = event.target.value;
+    setAmzOrderID(value);
   }
 
   function clickTrackingLink() {
@@ -275,6 +296,16 @@ export default function PackageEditor(props) {
             onBlur={pkgWhatBlur}
             onChange={pkgWhatChange}
           />
+          {amzOrderIDVisible === true && (
+            <TextField
+              name="amzOrderNum"
+              fullWidth
+              label="Amazon Order ID"
+              value={amzOrderID}
+              onBlur={amzOrderIDBlur}
+              onChange={amzOrderIDChange}
+            />
+          )}
           <TextField
             name="trackingNumber"
             fullWidth

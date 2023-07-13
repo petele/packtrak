@@ -4,6 +4,7 @@ const _knownShippers = getKnownShippers();
 const _testDT = (val) => /^20[2-9]\d-[0-1]\d-[0-3]\d$/.test(val);
 const _testURL = (val) => /^https?:\/\/.*$/.test(val);
 const _testShipper = (val) => _knownShippers.includes(val);
+const _testAmazonOrderID = (val) => /^\d{3}-\d{7}-\d{7}$/.test(val);
 
 const requiredKeys = ['delivered', 'dateExpected', 'from', 'what'];
 const schema = {
@@ -16,6 +17,7 @@ const schema = {
   trackingNumber: {type: 'string'},
   trackingURL: {type: 'string', validator: _testURL},
   orderURL: {type: 'string', validator: _testURL},
+  amzOrderID: {type: 'string', validator: _testAmazonOrderID},
 }
 
 function _isValueOK(value, nullable, expectedType, validator) {

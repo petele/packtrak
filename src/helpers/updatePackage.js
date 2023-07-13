@@ -56,6 +56,9 @@ function _getChanges(pkgBefore, pkgAfter) {
   if (_hasValueChanged('orderURL', pkgBefore, pkgAfter)) {
     pkgChanges.orderURL = pkgAfter.orderURL;
   }
+  if (_hasValueChanged('amzOrderID', pkgBefore, pkgAfter)) {
+    pkgChanges.amzOrderID = pkgAfter.amzOrderID;
+  }
   return pkgChanges;
 }
 
