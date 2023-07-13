@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useDocumentTitle = title => {
+export function useDocumentTitle(title) {
   const [documentTitle, setDocumentTitle] = useState(title);
   useEffect(() => {
     if (!documentTitle || documentTitle === '') {
@@ -12,5 +12,3 @@ const useDocumentTitle = title => {
 
   return [documentTitle, setDocumentTitle];
 }
-
-export {useDocumentTitle};

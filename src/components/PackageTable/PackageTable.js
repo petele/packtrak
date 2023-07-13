@@ -16,7 +16,6 @@ import NoPackages from '../NoPackages';
 
 import PackageTableBody from './PackageTableBody';
 import getPackageList from '../../helpers/getPackageList';
-import parsePackageList from '../../helpers/parsePackageList';
 
 import { gaError } from '../../helpers/gaHelper';
 import SadPanda from '../SadPanda';
@@ -52,17 +51,12 @@ export default function PackageTable({kind}) {
   const width = _getWidth();
 
   React.useEffect(() => {
-    try {
-      // TODO fix add disconnect stuff here
-      getPackageList(kind, (pkgObj) => {
-        setRows(parsePackageList(pkgObj, kind));
-      }, (err) => {
-        // TODO
-      });
-    } catch (ex) {
-      gaError('get_package_list_failed', true, ex);
-      setError(ex);
-    }
+    return getPackageList(kind, (packages) => {
+      setRows(packages);
+    }, (err) => {
+      gaError('get_package_list_failed', true, err);
+      setError(err);
+    });
   }, [kind]);
 
   if (rows && rows.length === 0) {

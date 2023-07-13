@@ -1,8 +1,11 @@
 import { db, getUserID } from './fbHelper';
 import { onValue, orderByChild, query, ref, endAt, startAt } from 'firebase/database';
-import { formatToISODate, getTodayEnd } from './dtHelpers';
+import { formatToISODate, getTodayStart, getTodayEnd } from './dtHelpers';
 import { logger } from './ConsoleLogger';
 import { gaTimingStart, gaTimingEnd } from './gaHelper';
+import { addDeliveryStatus } from './parsePackageList';
+
+const _USE_CACHE = false;
 
 function _getFromCache(kind) {
   const _perfName = 'cache_get_package_list';
@@ -30,11 +33,12 @@ function _getQuery(userID, kind) {
   const queryPath = `userData/${userID}/data_v1/${kind}`;
   const fbRef = ref(db, queryPath);
 
-  if (kind === 'incoming') {
-    return fbRef;
-  }
+  const orderByKind = kind === 'incoming' ? 'dateExpected' : 'dateDelivered';
+  const orderBy = orderByChild(orderByKind);
 
-  const orderBy = orderByChild('dateDelivered');
+  if (kind === 'incoming') {
+    return query(fbRef, orderBy);
+  }
 
   const eodToday = getTodayEnd();
   const daysBack = 30;
@@ -63,15 +67,17 @@ export default function getPackageList(kind, callback, errCallback) {
   const _perfName = 'fb_get_package_list';
   const userID = getUserID();
   if (!userID) {
-    throw new Error('Not Authenticated');
+    errCallback('not_authenticated');
+    return () => {};
   }
-  if (!kind) {
-    return;
+  if (!kind || !['incoming', 'delivered'].includes(kind)) {
+    errCallback('invalid_kind');
+    return () => {};
   }
 
-  const cached = _getFromCache(kind);
-  if (cached) {
-    if (callback) {
+  if (_USE_CACHE) {
+    const cached = _getFromCache(kind);
+    if (cached) {
       callback(cached);
     }
   }
@@ -81,20 +87,36 @@ export default function getPackageList(kind, callback, errCallback) {
   const fbQuery = _getQuery(userID, kind);
   logger.log('getPackageList', kind, userID);
   return onValue(fbQuery, (snapshot) => {
-    const packages = snapshot.val();
+    const result = [];
+    if (!snapshot.exists()) {
+      return result;
+    }
+
+    const todayStart = getTodayStart();
+    const todayEnd = getTodayEnd();
+    snapshot.forEach((pkgSnap) => {
+      const pkg = pkgSnap.val();
+      pkg.id = pkgSnap.key;
+      if (kind === 'incoming') {
+        addDeliveryStatus(pkg, todayStart, todayEnd);
+      }
+      result.push(pkg);
+    });
+
+    if (kind === 'delivered') {
+      result.reverse();
+    }
+
     if (isColdStart) {
       isColdStart = false;
       gaTimingEnd(_perfName);
     }
-    if (callback) {
-      callback(packages);
-    }
+
+    callback(result);
     setTimeout(() => {
-      _saveToCache(kind, packages);
-    }, 500)
+      _saveToCache(kind, result);
+    }, 500);
   }, (err) => {
-    if (errCallback) {
-      errCallback(err);
-    }
+    errCallback(err);
   });
 }

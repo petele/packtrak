@@ -1,60 +1,4 @@
-import { logger } from './ConsoleLogger';
-import { getTodayStart, getTodayEnd, parseDateFromString } from './dtHelpers';
-import { gaTimingEnd, gaTimingStart } from './gaHelper';
-
-function sortByExpected(pkgA, pkgB) {
-  return Date.parse(pkgA.dateExpected) - Date.parse(pkgB.dateExpected);
-}
-
-function sortByDelivered(pkgA, pkgB) {
-  return Date.parse(pkgA.dateDelivered) - Date.parse(pkgB.dateDelivered);
-}
-
-/**
- *
- * @param {object} pkgList Raw package list from server
- * @param {string} kind Incoming or Delivered
- * @returns
- */
-export default function parsePackageList(pkgList, kind) {
-  const _perfName = 'parse_package_list';
-  if (!['incoming', 'delivered'].includes(kind)) {
-    logger.warn('parsePackageList: invalid kind:', kind);
-    kind = 'incoming';
-  }
-  if (!pkgList) {
-    return [];
-  }
-  if (typeof pkgList !== 'object') {
-    return [];
-  }
-
-  gaTimingStart(_perfName);
-
-  const todayStart = getTodayStart();
-  const todayEnd = getTodayEnd();
-
-  const result = Object.keys(pkgList).map((key) => {
-    const pkg = pkgList[key];
-    pkg.id = key;
-    if (kind === 'incoming') {
-      const status = _deliveryStatus(pkg.delivered, pkg.dateExpected, todayStart, todayEnd);
-      pkg.isOverdue = status.isOverdue;
-      pkg.isDueToday = status.isDueToday;
-    }
-    if (kind === 'delivered' && !pkg.dateDelivered) {
-      pkg.dateDelivered = pkg.dateExpected;
-    }
-    return pkg;
-  });
-
-  result.sort(kind === 'incoming' ? sortByExpected : sortByDelivered);
-  if (kind === 'delivered') {
-    result.reverse();
-  }
-  gaTimingEnd(_perfName);
-  return result;
-}
+import { parseDateFromString } from './dtHelpers';
 
 /**
  * Checks if a package is due today, overdue, etc.
@@ -79,4 +23,13 @@ function _deliveryStatus(delivered, dateExpected, todayStart, todayEnd) {
   result.isDueToday = todayStart < expectedVal &&
                       expectedVal < todayEnd;
   return result;
+}
+
+export function addDeliveryStatus(pkg, todayStart, todayEnd) {
+  const delivered = pkg.delivered;
+  const dateExpected = pkg.dateExpected;
+  const status = _deliveryStatus(delivered, dateExpected, todayStart, todayEnd);
+  pkg.isOverdue = status.isOverdue;
+  pkg.isDueToday = status.isDueToday;
+  return pkg;
 }

@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState, Fragment } from 'react';
+import { useMemo, Fragment } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 
 import { blue, red } from '@mui/material/colors';
 import { CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { onAuthStateChanged } from 'firebase/auth';
-
 import ButtonAppBar from './components/ButtonAppBar';
+// import OfflineToast from './components/OfflineToast';
 import ExperimentalRibbon from './components/ExperimentalRibbon';
+import CookieBanner from './components/CookieBanner';
 
-import { auth } from './helpers/fbHelper';
-import { gaSetUserID } from './helpers/gaHelper';
+import { useOnlineStatus } from './components/useOnlineStatus';
+import { useAuthState } from './components/useAuthState';
 
 import Home from './views/Home';
 import About from './views/About';
@@ -30,36 +30,24 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import CookieBanner from './components/CookieBanner';
 
 export default function App() {
-  const [uid, setUID] = useState(-1);
-
-  useEffect(() => {
-    return onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUID(user.uid);
-        gaSetUserID(user.uid);
-      } else {
-        setUID(null);
-        gaSetUserID('signed_out');
-      }
-    });
-  }, []);
+  const uid = useAuthState();
+  const isOnline = useOnlineStatus();
 
   return (
     <Routes>
-      <Route path="/" element={<Layout uid={uid} />}>
+      <Route path="/" element={<Layout uid={uid} isOnline={isOnline} />}>
         <Route index element={<Home />} />
-        <Route path="/incoming" element={<Incoming uid={uid} />} />
-        <Route path="/delivered" element={<Delivered uid={uid} />} />
-        <Route path="/add" element={<Add uid={uid} />} />
-        <Route path="/edit/:kind/:id" element={<Edit uid={uid} />} />
+        <Route path="/incoming" element={<Incoming uid={uid} isOnline={isOnline} />} />
+        <Route path="/delivered" element={<Delivered uid={uid} isOnline={isOnline} />} />
+        <Route path="/add" element={<Add uid={uid} isOnline={isOnline} />} />
+        <Route path="/edit/:kind/:id" element={<Edit uid={uid} isOnline={isOnline} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/signin" element={<SignIn uid={uid} />} />
-        <Route path="/signup" element={<SignUp uid={uid} />} />
-        <Route path="/forgot" element={<Forgot />} />
-        <Route path="/profile" element={<Profile uid={uid} />} />
+        <Route path="/signin" element={<SignIn uid={uid} isOnline={isOnline} />} />
+        <Route path="/signup" element={<SignUp uid={uid} isOnline={isOnline} />} />
+        <Route path="/forgot" element={<Forgot isOnline={isOnline} />} />
+        <Route path="/profile" element={<Profile uid={uid} isOnline={isOnline} />} />
         <Route path="*" element={<NoMatch uid={uid} />} />
       </Route>
     </Routes>
@@ -85,10 +73,11 @@ function Layout(props) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ExperimentalRibbon />
-        <ButtonAppBar uid={props.uid} />
+        <ButtonAppBar uid={props.uid} isOnline={props.isOnline} />
         <Toolbar />
         <Outlet />
         <CookieBanner />
+        {/* <OfflineToast isOnline={props.isOnline} /> */}
       </ThemeProvider>
     </Fragment>
   );

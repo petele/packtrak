@@ -11,7 +11,7 @@ import PackageEditor from '../components/PackageEditor';
 import getPackage from '../helpers/getPackage';
 import updatePackage from '../helpers/updatePackage';
 
-export default function Edit({uid}) {
+export default function Edit({uid, isOnline}) {
   useDocumentTitle(`Edit Package`);
 
   const {kind, id} = useParams();
@@ -54,7 +54,7 @@ export default function Edit({uid}) {
   return (
     <Container component="main" sx={{marginTop: 2}}>
       <PackageEditor
-          id={id} kind={kind} pkgData={pkgBefore} fnSave={saveEdits} />
+          id={id} kind={kind} pkgData={pkgBefore} fnSave={saveEdits} isOnline={isOnline} />
     </Container>
   );
 }

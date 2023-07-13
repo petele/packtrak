@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase } from 'firebase/database';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -13,8 +13,6 @@ import {
   browserSessionPersistence,
 } from 'firebase/auth';
 
-import { gaEvent } from './gaHelper';
-
 const firebaseConfig = {
   apiKey: "AIzaSyDRUxI1aaoNiOw-Pz0Qp1srsahwfmgKvNg",
   authDomain: "petele-packtrak.firebaseapp.com",
@@ -27,21 +25,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 export const auth = getAuth(app);
-
-let timesConnected = 0;
-
-setTimeout(() => {
-  const connectedRef = ref(db, '.info/connected');
-  onValue(connectedRef, (snap) => {
-    if (snap.val() === true) {
-      timesConnected += 1;
-      const msg = timesConnected === 1 ? 'db_connect' : 'db_reconnect';
-      gaEvent(msg);
-      return;
-    }
-    gaEvent('db_disconnected');
-  });
-}, 250);
 
 /**
  * Sign in user via email & password.
@@ -63,6 +46,8 @@ export function signIn(email, password, remember) {
  * Sign out the current user.
  */
 export function signOut() {
+  localStorage.removeItem('cached_incoming');
+  localStorage.removeItem('cached_delivered');
   return fbSignOut(auth);
 }
 
