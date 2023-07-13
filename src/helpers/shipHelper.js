@@ -13,6 +13,11 @@ const _knownShippers = [
   'Custom',
 ];
 
+const _allowedManualTrackingShippers = [
+  'Amazon',
+  'Custom',
+];
+
 const _trackingURLPatterns = [
   {
     name: 'Amazon',
@@ -63,6 +68,15 @@ function _removeSpaces(trackingNumber) {
  */
 export function getKnownShippers() {
   return _knownShippers;
+}
+
+/**
+ * Get the list of shippers allowed to provide a manual tracking URL.
+ *
+ * @return {<string>}
+ */
+export function getAllowedManualTrackingShippers() {
+  return _allowedManualTrackingShippers;
 }
 
 /**

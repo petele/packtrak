@@ -52,6 +52,7 @@ function _getChanges(pkgBefore, pkgAfter) {
   }
   if (_hasValueChanged('trackingURL', pkgBefore, pkgAfter)) {
     pkgChanges.trackingURL = pkgAfter.trackingURL;
+    pkgChanges.shipper = pkgAfter.shipper;
   }
   if (_hasValueChanged('orderURL', pkgBefore, pkgAfter)) {
     pkgChanges.orderURL = pkgAfter.orderURL;

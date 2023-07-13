@@ -1,6 +1,7 @@
-import { getKnownShippers } from "./shipHelper";
+import { getKnownShippers, getAllowedManualTrackingShippers } from "./shipHelper";
 
 const _knownShippers = getKnownShippers();
+const _allowedManualTrackingShippers = getAllowedManualTrackingShippers();
 const _testDT = (val) => /^20[2-9]\d-[0-1]\d-[0-3]\d$/.test(val);
 const _testURL = (val) => /^https?:\/\/.*$/.test(val);
 const _testShipper = (val) => _knownShippers.includes(val);
@@ -64,7 +65,7 @@ export function validatePackage(data, checkForRequired) {
       }
     }
 
-    if (key === 'trackingURL' && data.trackingURL && data.shipper !== 'Custom') {
+    if (key === 'trackingURL' && data.trackingURL && !_allowedManualTrackingShippers.includes(data.shipper)) {
       invalidProps.add('shipper/trackingURL');
     }
 

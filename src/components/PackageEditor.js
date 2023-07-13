@@ -16,7 +16,12 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 
 import ConfirmDialog from './ConfirmDialog';
 import deletePackage from '../helpers/deletePackage';
-import { getKnownShippers, getTrackingURL, guessShipper } from '../helpers/shipHelper';
+import {
+  getKnownShippers,
+  getTrackingURL,
+  guessShipper,
+  getAllowedManualTrackingShippers
+} from '../helpers/shipHelper';
 import { gaError, gaEvent } from '../helpers/gaHelper';
 
 export default function PackageEditor(props) {
@@ -28,6 +33,8 @@ export default function PackageEditor(props) {
   const mode = pkgData ? 'edit' : 'add';
   const savePackage = props.fnSave;
 
+  const allowedManualTrackingShippers = getAllowedManualTrackingShippers();
+
   const [dateExpected, setDateExpected] = React.useState(pkgData?.dateExpected || '');
   const [dateDelivered, setDateDelivered] = React.useState(pkgData?.dateDelivered || '');
   const [pkgFrom, setPkgFrom] = React.useState(pkgData?.from || '');
@@ -36,18 +43,21 @@ export default function PackageEditor(props) {
   const [pkgShipper, setPkgShipper] = React.useState(pkgData?.shipper || null);
   const [trackingNumber, setTrackingNumber] = React.useState(pkgData?.trackingNumber || '');
   const [amzOrderID, setAmzOrderID] = React.useState(pkgData?.amzOrderID || '');
-
-  const trackingURLTemp =
+  const initialTrackingURL =
     pkgData?.trackingURL ||
     getTrackingURL(pkgData?.shipper, pkgData?.trackingNumber) ||
     '';
-  const [trackingURL, setTrackingURL] = React.useState(trackingURLTemp);
+  const [trackingURL, setTrackingURL] = React.useState(initialTrackingURL);
 
   const [errorMessage, setErrorMessage] = React.useState(null);
   const [confirmDialogVisible, setConfirmDialogVisible] = React.useState(false);
 
   const isFromAmazon = pkgData?.from.toLowerCase() === 'amazon';
   const [amzOrderIDVisible, setAmzOrderIDVisible] = React.useState(isFromAmazon);
+
+  const initialCanEditTrackingURL =
+    allowedManualTrackingShippers.includes(pkgData?.shipper);
+  const [canEditTrackingURL, setCanEditTrackingURL] = React.useState(initialCanEditTrackingURL);
 
   // const [saveDisabled, setSaveDisabled] = React.useState(false);
   const saveDisabled = false;
@@ -89,8 +99,10 @@ export default function PackageEditor(props) {
       orderURL: trimString(orderURL),
     };
     const trimmedTrackingURL = trimString(trackingURL);
-    if (pkg.shipper === 'Custom' && trimmedTrackingURL) {
+    if (canEditTrackingURL && trimmedTrackingURL) {
       pkg.trackingURL = trimmedTrackingURL;
+    } else {
+      pkg.trackingURL = null;
     }
     const trimmedOrderID = trimString(amzOrderID);
     if (pkg.from.toLowerCase() === 'amazon' && trimmedOrderID) {
@@ -144,7 +156,8 @@ export default function PackageEditor(props) {
   }
 
   function recalcTrackingURL(ship, tNum) {
-    if (ship === 'Custom') {
+    if (canEditTrackingURL) {
+      setTrackingURL('');
       return;
     }
     const url = getTrackingURL(ship, tNum) || '';
@@ -193,6 +206,11 @@ export default function PackageEditor(props) {
 
   function pkgShipperChange(event, value) {
     setPkgShipper(value);
+    if (allowedManualTrackingShippers.includes(value)) {
+      setCanEditTrackingURL(true);
+    } else {
+      setCanEditTrackingURL(false);
+    }
     recalcTrackingURL(value, trackingNumber);
   }
 
@@ -328,7 +346,7 @@ export default function PackageEditor(props) {
               fullWidth
               type="url"
               inputMode="url"
-              disabled={pkgShipper !== 'Custom'}
+              disabled={!canEditTrackingURL}
               label="Tracking URL"
               value={trackingURL}
               onChange={trackingURLChange}
