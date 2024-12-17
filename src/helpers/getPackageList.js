@@ -89,7 +89,8 @@ export default function getPackageList(kind, callback, errCallback) {
   return onValue(fbQuery, (snapshot) => {
     const result = [];
     if (!snapshot.exists()) {
-      return result;
+      callback(result);
+      return;
     }
 
     const todayStart = getTodayStart();
