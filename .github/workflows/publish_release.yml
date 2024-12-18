@@ -4,22 +4,30 @@ on:
   release:
     types: [published]
 
+# Use color in output
+env:
+  FORCE_COLOR: 3
+  GIT_REF: ${{ github.ref }}
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "deployment"
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node and Build App
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
           registry-url: "https://registry.npmjs.org"
-      - run: npm ci
-      - name: Build
+      - name: Install packages
+        run: npm ci
+      - name: Build project
         run: npm run build
-        env:
-          GIT_REF: ${{ github.ref }}
-      - run: echo ${{ github.ref }}
-      - run: echo $GIT_REF
