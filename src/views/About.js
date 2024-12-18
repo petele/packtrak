@@ -39,6 +39,12 @@ export default function About() {
         the <b>Delete Account</b> feature to immediately delete
         all of your data and your account.
       </Typography>
+
+      <Typography variant="body1" sx={{marginTop: 4}}>
+        TEST TEST TEST <br />
+        node env {process.env.NODE_ENV}<br />
+        pub at {process.env.REACT_APP_PUBLISHED_AT} <br/>
+      </Typography>
     </Container>
   );
 }

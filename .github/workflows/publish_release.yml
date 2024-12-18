@@ -7,11 +7,11 @@ on:
 # Use color in output
 env:
   FORCE_COLOR: 3
-  GIT_SHA: ${{ github.sha }}
-  GIT_REF: ${{ github.ref }}
-  UPDATED_AT: ${{ github.event.repository.updated_at}}
-  PUBLISHED_AT: ${{ github.event.release.published_at }}
-  TAG_NAME: ${{ github.event.release.tag_name }}
+  REACT_APP_GIT_SHA: ${{ github.sha }}
+  REACT_APP_GIT_REF: ${{ github.ref }}
+  REACT_APP_UPDATED_AT: ${{ github.event.repository.updated_at}}
+  REACT_APP_PUBLISHED_AT: ${{ github.event.release.published_at }}
+  REACT_APP_TAG_NAME: ${{ github.event.release.tag_name }}
   GENERATE_SOURCEMAP: false
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
@@ -36,3 +36,10 @@ jobs:
         run: npm ci
       - name: Build project
         run: npm run build
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PETELE_PACKTRAK }}'
+          channelId: live
+          projectId: petele-packtrak
