@@ -40,10 +40,11 @@ export default function About() {
         all of your data and your account.
       </Typography>
 
-      <Typography variant="body1" sx={{marginTop: 4}}>
-        TEST TEST TEST <br />
-        node env {process.env.NODE_ENV}<br />
-        pub at {process.env.REACT_APP_PUBLISHED_AT} <br/>
+      <Typography variant="body2" sx={{marginTop: 4}}>
+        Build info<br />
+        <b>Environment:</b> {process.env.NODE_ENV}<br />
+        <b>Release ID:</b> {process.env.REACT_APP_TAG_NAME} <br/>
+        <b>Released on:</b> {process.env.REACT_APP_PUBLISHED_AT}
       </Typography>
     </Container>
   );
