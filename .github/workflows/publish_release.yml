@@ -7,12 +7,17 @@ on:
 # Use color in output
 env:
   FORCE_COLOR: 3
+  GIT_SHA: ${{ github.sha }}
   GIT_REF: ${{ github.ref }}
+  UPDATED_AT: ${{ github.event.repository.updated_at}}
+  PUBLISHED_AT: ${{ github.event.release.published_at }}
+  TAG_NAME: ${{ github.event.release.tag_name }}
+  GENERATE_SOURCEMAP: false
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "deployment"
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
