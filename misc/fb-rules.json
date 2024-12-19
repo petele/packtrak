@@ -4,8 +4,19 @@
       "$uid": {
         // Allow only authenticated content owners access to their data
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
-      }
-    },
+        ".write": "auth != null && auth.uid == $uid",
+        "data_v1": {
+          "deleted": {
+            ".indexOn": ["dateExpected", "dateDelivered"]
+          },
+          "delivered": {
+            ".indexOn": ["dateExpected", "dateDelivered"]
+          },
+          "incoming": {
+            ".indexOn": ["dateExpected", "dateDelivered"]
+          },
+        },
+      },
+    }
   }
 }
