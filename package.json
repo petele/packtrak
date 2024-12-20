@@ -31,7 +31,9 @@
       "react-app",
       "react-app/jest"
     ],
-    "plugins": ["react-hooks"],
+    "plugins": [
+      "react-hooks"
+    ],
     "rules": {
       "no-console": "error",
       "react-hooks/rules-of-hooks": "warn",
