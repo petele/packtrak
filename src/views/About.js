@@ -20,7 +20,7 @@ export default function About() {
         By using this site, you understand and <b>agree</b> to the following:
       </Typography>
 
-      <Typography variant="body1">
+      <Typography variant="body1" component="div">
         <ul>
           <li>You will <b>NOT</b> use any real data, <b>ever</b>.</li>
           <li>There are no terms, this is an experiment.</li>
