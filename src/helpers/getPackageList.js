@@ -58,7 +58,7 @@ function _getQuery(userID, kind, daysBack=30) {
  * Gets data from Firebase.
  *
  * @param {string} kind
- * @param {Number} daysBack
+ * @param {Number} daysBack - used only for delivered packages
  * @param {Function} callback
  * @param {Function} errCallback
  * @return FirebaseValue
