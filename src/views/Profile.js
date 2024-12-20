@@ -51,7 +51,7 @@ export default function Profile({uid}) {
           <ProfileDetails />
         </AccordionDetails>
       </Accordion>
-      <Accordion disableGutters disabled={isVerified}>
+      <Accordion disableGutters hidden={isVerified}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography sx={{ width: '33%', flexShrink: 0 }}>Verify Email</Typography>
           <Typography sx={{ color: 'text.secondary' }}>
