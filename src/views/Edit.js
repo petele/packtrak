@@ -33,6 +33,10 @@ export default function Edit({uid, isOnline}) {
       .catch((ex) => {
         navigate('/not-found');
       });
+    window.gtag('event', 'page_view', {
+      page_title: 'Edit Package',
+      page_location: `/edit/${kind}/`,
+    });
   }, [uid, kind, id, navigate]);
 
   if (uid === null || uid === -1) {
