@@ -29,7 +29,7 @@ function _saveToCache(kind, data) {
   }
 }
 
-function _getQuery(userID, kind) {
+function _getQuery(userID, kind, daysBack=30) {
   const queryPath = `userData/${userID}/data_v1/${kind}`;
   const fbRef = ref(db, queryPath);
 
@@ -41,7 +41,6 @@ function _getQuery(userID, kind) {
   }
 
   const eodToday = getTodayEnd();
-  const daysBack = 30;
   const startVal = eodToday - (daysBack * 24 * 60 * 60 * 1000);
   const startDT = new Date(startVal);
   const startStr = formatToISODate(startDT);
@@ -59,11 +58,12 @@ function _getQuery(userID, kind) {
  * Gets data from Firebase.
  *
  * @param {string} kind
+ * @param {Number} daysBack
  * @param {Function} callback
  * @param {Function} errCallback
  * @return FirebaseValue
  */
-export default function getPackageList(kind, callback, errCallback) {
+export default function getPackageList(kind, daysBack, callback, errCallback) {
   const _perfName = 'fb_get_package_list';
   const userID = getUserID();
   if (!userID) {
@@ -84,8 +84,8 @@ export default function getPackageList(kind, callback, errCallback) {
 
   gaTimingStart(_perfName);
   let isColdStart = true;
-  const fbQuery = _getQuery(userID, kind);
-  logger.log('getPackageList', kind, userID);
+  const fbQuery = _getQuery(userID, kind, daysBack);
+  logger.log('getPackageList', kind, daysBack, userID);
   return onValue(fbQuery, (snapshot) => {
     const result = [];
     if (!snapshot.exists()) {
